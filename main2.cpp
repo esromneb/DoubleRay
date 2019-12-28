@@ -48,17 +48,24 @@ void copyBuffer(void) {
     float scale = 100000;
 
     // glBegin(GL_POINTS);
-    for( int j = 0; j < px; j++ ) {
-        for( int i = 0; i < px; i++ ) {
-            float r = engine->r[i+j*px];
+    for( int y = 0; y < px; y++ ) {
+        for( int x = 0; x < px; x++ ) {
+            float r = engine->r[x+y*px];
+            float g = engine->g[x+y*px];
+            float b = engine->b[x+y*px];
             uint8_t rb = r / scale;
-            buffer[i][j] = rb;
+            uint8_t gb = g / scale;
+            uint8_t bb = b / scale;
+
+
+            buffer[x][y] = (rb<<16) | (gb<<8) | bb;
+            // buffer[x][y] = rb;
             // cout << r << "\n";
             // if( r > rmax ) {
             //     rmax = r;
             // }
-            // glColor3f( r[i+j*px], g[i+j*px], b[i+j*px] );
-            // glVertex2i( i, j );
+            // glColor3f( r[x+y*px], g[x+y*px], b[x+y*px] );
+            // glVertex2i( x, y );
         }
     }
 
@@ -109,9 +116,9 @@ int main(int argc, char ** argv) {
     // printf("Hello Precilla\n");
     t1();
     setupEngine();
-    // render();
-    // copyBuffer();
-    fakeBuffer();
+    render();
+    copyBuffer();
+    // fakeBuffer();
     cout << "Hello Precilla\n";
 }
 
