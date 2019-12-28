@@ -115,6 +115,8 @@ void rayEngine::paint( void )
 	{
 		r[asf] = 1.0f;
 	}*/
+
+	/*
 	glBegin(GL_POINTS);
 	for( int j = 0; j < px; j++ )
 		for( int i = 0; i < px; i++ )
@@ -123,6 +125,7 @@ void rayEngine::paint( void )
 			glVertex2i( i, j );
 		}
 	glEnd();
+	*/
 
 }
 

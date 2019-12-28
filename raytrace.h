@@ -2,7 +2,7 @@
 #define _RAYTRACE_H_
 
 #include <vector>
-#include <QGLWidget>
+// #include <QGLWidget>
 #include "vec3.h"
 
 using namespace::std;

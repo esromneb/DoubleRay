@@ -15,7 +15,7 @@ vec3::vec3()
     //data = new double[DEFAULT_vec3];
 }
 
-vec3::vec3( double x, double y, double z )
+vec3::vec3( const double x, const double y, const double z )
 {
     data[0] = x;
     data[1] = y;
