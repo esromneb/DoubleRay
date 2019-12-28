@@ -104,9 +104,37 @@
   <body>
     <script type="text/javascript">
       function renderClick() {
-          const doRender = Module.cwrap('doRender', 'void');
-          doRender();
+        const doRender = Module.cwrap('doRender', 'void');
+        doRender();
+        setTimeout(bufferToCanv,1000);
       }
+
+      function renderDebugClick() {
+        const doDebugRender = Module.cwrap('doDebugRender', 'void');
+        doDebugRender();
+        setTimeout(bufferToCanv,1000);
+      }
+
+      function setScaleClick() {
+        // var val = 'hi';
+
+        var el = document.getElementById("scaleText");
+
+        const val = parseFloat(el.value);
+
+        console.log(val);
+
+        // alert(val);
+
+        const setScale = Module.cwrap('setScale', 'void', ['number']);
+
+        setScale(val);
+
+        // const doDebugRender = Module.cwrap('doDebugRender', 'void');
+        // doDebugRender();
+        // setTimeout(bufferToCanv,1000);
+      }
+
     </script>
     <table>
       <tr><td>
@@ -116,9 +144,9 @@
 
 
 <input type="button" value="Render" onclick="renderClick()"/><br>
-<input type="button" value="RenderDebug" onclick=""/><br>
-<input type="button" value="SetScale" onclick=""/>
-<input type="text" value="10000"/>
+<input type="button" value="RenderDebug" onclick="renderDebugClick()"/><br>
+<input type="button" value="SetScale" onclick="setScaleClick()"/>
+<input type="text" value="10000" id="scaleText"/>
 
 
 
@@ -134,17 +162,17 @@ var ctx = mycanv.getContext("2d");
 
 
 var id = ctx.createImageData(1,1); // only do this once per page
-var d  = id.data;                        // only do this once per page
-d[0]   = 0; // r
-d[1]   = 0; // g
-d[2]   = 0; // b
-d[3]   = 255;
+var cdat  = id.data;                        // only do this once per page
+cdat[0]   = 0; // r
+cdat[1]   = 0; // g
+cdat[2]   = 0; // b
+cdat[3]   = 255;
 
 
 
 // console.log('hii');
 
-function render1() {
+function bufferToCanv() {
   const get4 = Module.cwrap('get4', 'number');
   const getNext = Module.cwrap('getNext', 'number');
   const getPixel = Module.cwrap('getPixel', 'number', ['number','number']);
@@ -162,9 +190,9 @@ function render1() {
       // if( r != 0 ) {
       //   console.log(r);
       // }
-      d[0] = r;
-      d[1] = g;
-      d[2] = b;
+      cdat[0] = r;
+      cdat[1] = g;
+      cdat[2] = b;
       ctx.putImageData( id, i, j );
 
     }
@@ -175,7 +203,7 @@ function render1() {
 
 setTimeout(()=>{
 
-  render1();
+  bufferToCanv();
   // console.log('hii');
   // console.log(get4());
   // console.log(getNext());

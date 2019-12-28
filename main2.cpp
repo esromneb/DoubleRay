@@ -14,7 +14,8 @@ using namespace std;
 rayEngine* engine;
 bool renderDone = false;
 std::vector<std::vector<uint32_t>> buffer;
-float scale = 10000;
+float scale = 0.004;
+float gain = 1.1;
 
 void t1(void) {
     vec3 v1(1,2,3);
@@ -25,7 +26,14 @@ void t1(void) {
 }
 
 void setupEngine(void) {
-    engine = new rayEngine;
+    engine = new rayEngine();
+    engine->resize(400);
+    engine->makeObjects();
+
+
+    // engine->makeObjects();
+    // engine->render();
+
     uint32_t x = 400;
     uint32_t y = 400;
     buffer.resize(x);
@@ -56,9 +64,13 @@ void copyBuffer(void) {
             float r = engine->r[x+y*px];
             float g = engine->g[x+y*px];
             float b = engine->b[x+y*px];
-            uint8_t rb = r / scale;
-            uint8_t gb = g / scale;
-            uint8_t bb = b / scale;
+            float rs = gain + (r / scale);
+            float gs = gain + (g / scale);
+            float bs = gain + (b / scale);
+
+            uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
+            uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
+            uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
 
 
             buffer[x][y] = (rb<<16) | (gb<<8) | bb;
@@ -75,6 +87,40 @@ void copyBuffer(void) {
     // cout << rmax << "\n";   
     // glEnd();
 }
+
+
+
+
+void printBuffer(void) {
+    uint32_t px = 400;
+
+    float rmax = 0;
+
+
+    // glBegin(GL_POINTS);
+    for( int y = 0; y < px; y++ ) {
+        for( int x = 0; x < px; x++ ) {
+            float r = engine->r[x+y*px];
+            float g = engine->g[x+y*px];
+            float b = engine->b[x+y*px];
+            
+
+            cout << r << "\n";
+
+            // buffer[x][y] = rb;
+            // cout << r << "\n";
+            // if( r > rmax ) {
+            //     rmax = r;
+            // }
+            // glColor3f( r[x+y*px], g[x+y*px], b[x+y*px] );
+            // glVertex2i( x, y );
+        }
+    }
+
+    // cout << rmax << "\n";   
+    // glEnd();
+}
+
 
 
 
@@ -121,6 +167,7 @@ int main(int argc, char ** argv) {
     setupEngine();
     render();
     copyBuffer();
+    // printBuffer();
     // fakeBuffer();
     cout << "Hello Precilla\n";
 }
