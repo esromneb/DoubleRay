@@ -112,8 +112,10 @@ class rayEngine
 {
 
 public:
-    explicit rayEngine( void );
+    rayEngine( void );
     void makeObjects( void );
+    void scene1( void );
+    void scene2( void );
     void paint( void );
     void render( void );
     void trace( ray r, int depthIn, double effect, vec3 &color, bool click, bool &bSphere, vec3 &objectNum, bool shdFeeling );
@@ -129,7 +131,7 @@ public:
     vec3 ia;
     double c;
     sphere spheres[8];
-    static const int nSphere = 5;
+    int nSphere = 5;
     light lights[2];
     static const int nLight = 2;
     int depth;
