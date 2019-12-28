@@ -17,7 +17,10 @@ raytrace.cpp
 EXPORT_STRING = \
 "_get4", \
 "_getNext", \
-"_getPixel",
+"_getPixel", \
+"_doRender", \
+"_doDebugRender", \
+"_setScale",
 
 
 

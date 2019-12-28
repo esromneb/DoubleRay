@@ -14,6 +14,7 @@ using namespace std;
 rayEngine* engine;
 bool renderDone = false;
 std::vector<std::vector<uint32_t>> buffer;
+float scale = 10000;
 
 void t1(void) {
     vec3 v1(1,2,3);
@@ -33,6 +34,7 @@ void setupEngine(void) {
     }
 }
 
+extern "C" {
 
 void render(void) {
     renderDone = false;
@@ -40,12 +42,13 @@ void render(void) {
     renderDone = true;
 }
 
+}
+
 void copyBuffer(void) {
     uint32_t px = 400;
 
     float rmax = 0;
 
-    float scale = 100000;
 
     // glBegin(GL_POINTS);
     for( int y = 0; y < px; y++ ) {
@@ -114,7 +117,7 @@ void fakeBuffer(void) {
 
 int main(int argc, char ** argv) {
     // printf("Hello Precilla\n");
-    t1();
+    // t1();
     setupEngine();
     render();
     copyBuffer();
@@ -127,6 +130,19 @@ uint32_t nextVal = 0;
 
 extern "C" {
 
+void doRender(void) {
+    // return 4;
+    render();
+    copyBuffer();
+    cout << "Render finished\n";
+}
+
+
+void doDebugRender(void) {
+    // return 4;
+    fakeBuffer();
+}
+
 uint32_t get4(void) {
     return 4;
 }
@@ -137,6 +153,10 @@ uint32_t getNext(void) {
 
 uint32_t getPixel(const uint32_t x, const uint32_t y) {
     return buffer[x][y];
+}
+
+void setScale(const float s) {
+    scale = s;
 }
 
 
