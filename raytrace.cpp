@@ -506,8 +506,16 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
                 lightRefl = tmp * 2 * norm.dot(lights[iLight].d);
                 lightRefl.normalize();
 
-                color = color + ( lights[iLight].color / ( fp.mag() + this->c )  )*( s.kd * lights[iLight].d.dot( norm )  + s.ks * pow( lightRefl.dot( r.d ), s.n) );
+                const vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
+
+                const float specular = s.ks * pow( lightRefl.dot( r.d ), s.n);
+
+                const vec3 lightEffects =
+                      ( lights[iLight].color / ( fp.mag() + this->c ) ) 
+                    * (diffuse + specular);
                 
+                color = color + lightEffects;
+                    
             }
 
             savedColor = color;
