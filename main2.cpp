@@ -43,14 +43,26 @@ void render(void) {
 void copyBuffer(void) {
     uint32_t px = 400;
 
+    float rmax = 0;
+
+    float scale = 100000;
+
     // glBegin(GL_POINTS);
     for( int j = 0; j < px; j++ ) {
         for( int i = 0; i < px; i++ ) {
-            cout << engine->r[i+j*px];
+            float r = engine->r[i+j*px];
+            uint8_t rb = r / scale;
+            buffer[i][j] = rb;
+            // cout << r << "\n";
+            // if( r > rmax ) {
+            //     rmax = r;
+            // }
             // glColor3f( r[i+j*px], g[i+j*px], b[i+j*px] );
             // glVertex2i( i, j );
         }
     }
+
+    // cout << rmax << "\n";   
     // glEnd();
 
 }
@@ -78,7 +90,7 @@ uint32_t getNext(void) {
 }
 
 uint32_t getPixel(const uint32_t x, const uint32_t y) {
-    return x+y;
+    return buffer[x][y];
 }
 
 

@@ -1,6 +1,8 @@
 # Project
 
-out/
+out/ray.html
+out/ray.wasm
+out/ray.js
 
 # Compiled Object files
 *.slo
