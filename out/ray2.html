@@ -142,11 +142,18 @@ function render1() {
 
   for(let i = 0; i < px; i++) {
     for(let j = 0; j < px; j++) {
-      let r = getPixel(i,j);
-      if( r != 0 ) {
-        console.log(r);
-      }
+      let p = getPixel(i,j);
+
+      let r = ((p>>>16)&0xff) >> 0;
+      let g = ((p>>>8)&0xff) >> 0;
+      let b = ((p>>>0)&0xff) >> 0;
+
+      // if( r != 0 ) {
+      //   console.log(r);
+      // }
       d[0] = r;
+      d[1] = g;
+      d[2] = b;
       ctx.putImageData( id, i, j );
 
     }

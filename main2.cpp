@@ -64,15 +64,54 @@ void copyBuffer(void) {
 
     // cout << rmax << "\n";   
     // glEnd();
+}
 
+
+
+// ^
+// |
+// |
+// y
+// x---->
+//
+
+void fakeBuffer(void) {
+    uint32_t px = 400;
+
+    // uint32_t m = 25
+
+    for( int x = 0; x < px; x++ ) { // x
+        for( int y = 0; y < px; y++ ) { // y
+
+            uint8_t rb = 255;
+            if( y < 255 ) {
+                rb = y;
+            }
+
+            uint8_t gb = 200;
+            if( x < 255 ) {
+                gb = 255-x;
+            }
+
+            uint8_t bb = 0;
+
+            if( y > 100 && y < 300 ) {
+                bb = 240;
+            }
+
+            buffer[x][y] = (rb<<16) | (gb<<8) | bb;
+
+        }
+    }
 }
 
 int main(int argc, char ** argv) {
     // printf("Hello Precilla\n");
     t1();
     setupEngine();
-    render();
-    copyBuffer();
+    // render();
+    // copyBuffer();
+    fakeBuffer();
     cout << "Hello Precilla\n";
 }
 
