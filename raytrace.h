@@ -116,6 +116,7 @@ public:
     void makeObjects( void );
     void scene1( void );
     void scene2( void );
+    void scene3( void );
     void paint( void );
     void render( void );
     void trace( ray r, int depthIn, double effect, vec3 &color, bool click, bool &bSphere, vec3 &objectNum, bool shdFeeling );
@@ -133,7 +134,7 @@ public:
     sphere spheres[8];
     int nSphere = 5;
     light lights[2];
-    static const int nLight = 2;
+    int nLight = 2;
     int depth;
 
     int numPoly;

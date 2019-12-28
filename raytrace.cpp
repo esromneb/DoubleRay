@@ -124,7 +124,7 @@ void rayEngine::scene2(void) {
     spheres[0].r = 1.0f;
     spheres[0].c = vec3( 1, 0, 3.0f );
     spheres[0].ka = 0.4f;
-    spheres[0].ks = 0.7f;
+    spheres[0].ks = 0.2f;
     spheres[0].kr = 0.0f;
     spheres[0].kd = vec3( 0.0f, 1.0f, 0.0f );
     spheres[0].n = 8;
@@ -183,6 +183,87 @@ void rayEngine::scene2(void) {
     polygons[1].kr = 1.0f;
 
     //lights
+    // lights[0].color = vec3( 0, 0, 0 );
+    // lights[0].d = vec3( 1, 1, -0.7f );
+    // lights[0].d.normalize();
+
+    lights[0].color = vec3( 10, 10, 10 );
+    lights[0].d = vec3( 0, -1, -0.5 );
+    lights[0].d.normalize();
+
+    nLight = 1;
+
+    //global
+    ia = vec3( 0.2f, 0.2f, 0.2f );
+    c = 7;
+    depth = 3;
+
+    nSphere = 1;
+}
+
+
+// original scene submitted for homework
+void rayEngine::scene3(void) {
+    //camera
+    camera.o = vec3( 0, 1, -2 );
+    camera.d = vec3( 0, -0.2, 1 );
+    camera.d.normalize();
+    up = vec3( 0, 1, 0 );
+
+
+    //spheres
+    spheres[0].c = vec3( 1, 0, 3.0f );
+    spheres[0].r = 1.0f;
+    spheres[0].ka = 0.4f;
+    spheres[0].kd = vec3( 0.0f, 1.0f, 0.0f );
+    spheres[0].ks = 0.2f;
+    spheres[0].n = 8;
+    spheres[0].kr = 0.7f;
+    spheres[0].kt = 0.0f;
+
+    spheres[1].c = vec3( -1.0f, 0, 3.0 );
+    spheres[1].r = 0.7f;
+    spheres[1].ka = 1.0f;
+    spheres[1].kd = vec3( 1.0f, 0.8f, 0.0f );
+    spheres[1].ks = 0.2f;
+    spheres[1].n = 7;
+    spheres[1].kr = 0.5f;
+    spheres[1].kt = 0.0f; //*/
+
+    spheres[2].c = vec3( .4, 1.5, 3.0 );
+    spheres[2].r = 0.2f;
+    spheres[2].ka = 1.0f;
+    spheres[2].kd = vec3( 0.4f, 0.8f, 0.0f );
+    spheres[2].ks = 0.1f;
+    spheres[2].n = 10;
+    spheres[2].kr = 0.5f;
+    spheres[2].kt = 0.0f;
+
+    spheres[3].c = vec3( -.7, 1.7, 3.0 );
+    spheres[3].r = 0.3f;
+    spheres[3].ka = 1.0f;
+    spheres[3].kd = vec3( 1.0f, 1, 1 );
+    spheres[3].ks = 0.2f;
+    spheres[3].n = 11;
+    spheres[3].kr = 0.5f;
+    spheres[3].kt = 0.0f;
+
+
+    spheres[4].c = vec3( 0, -11, 0 );
+    spheres[4].r = 10;
+    spheres[4].ka = 1.0f;
+    spheres[4].kd = vec3( 0.5, 0.5, 0.5 );
+    spheres[4].ks = 0.1f;
+    spheres[4].n = 11;
+    spheres[4].kr = 0.3f;
+    spheres[4].kt = 0.0f;
+
+
+    //objects
+
+    polygons[1].kr = 1.0f;
+
+    //lights
     lights[0].color = vec3( 5, 10, 8 );
     lights[0].d = vec3( 1, 1, -0.7f );
     lights[0].d.normalize();
@@ -196,13 +277,15 @@ void rayEngine::scene2(void) {
     c = 7;
     depth = 3;
 
-    nSphere = 1;
+    nSphere = 5;
 }
+
 
 void rayEngine::makeObjects( void )
 {
     // scene1();
     scene2();
+    // scene3();
 }
 
 void rayEngine::paint( void )
@@ -508,7 +591,9 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
 
                 const vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
 
-                const float specular = s.ks * pow( lightRefl.dot( r.d ), s.n);
+                 vec3 lightPlusOrigin = r.d + lights[iLight].d;
+
+                const float specular = s.ks * pow( lightRefl.dot( lightPlusOrigin ), s.n);
 
                 const vec3 lightEffects =
                       ( lights[iLight].color / ( fp.mag() + this->c ) ) 
