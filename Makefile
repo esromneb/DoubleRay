@@ -1,7 +1,7 @@
 
 .PHONY: all
 
-all: wasm
+all: out/ray.wasm
 
 
 
@@ -11,8 +11,8 @@ main2.cpp \
 vec3.cpp
 
 
-wasm:
-	emcc $(CPP_FILES) -s WASM=1 -o hello.html \
+out/ray.wasm: $(CPP_FILES)
+	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	-s EXPORTED_FUNCTIONS='["_get4", "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
 
