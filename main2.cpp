@@ -73,7 +73,7 @@ void copyBuffer(void) {
             uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
 
 
-            buffer[x][y] = (rb<<16) | (gb<<8) | bb;
+            buffer[x][px-y] = (rb<<16) | (gb<<8) | bb;
             // buffer[x][y] = rb;
             // cout << r << "\n";
             // if( r > rmax ) {

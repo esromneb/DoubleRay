@@ -176,7 +176,7 @@ void rayEngine::render( void )
             r.d.normalize();
             //red = green = blue = 0;
             trace( r, 0, 0, color, false, nUsedB, nUsedI, false );
-            this->r[i+j*px] = color[0];            
+            this->r[i+j*px] = color[0];
             this->g[i+j*px] = color[1];
             this->b[i+j*px] = color[2];
 
