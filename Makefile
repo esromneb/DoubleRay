@@ -24,11 +24,15 @@ EXPORT_STRING = \
 
 
 
-out/ray.wasm: $(CPP_FILES) $(HPP_FILES)
+out/ray.wasm: $(CPP_FILES) $(HPP_FILES) Makefile
 	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a'
+
+# not working due to chrome not liking these options
+#-s USE_PTHREADS=1 -s RESERVED_FUNCTION_POINTERS=1
+#-s PTHREAD_POOL_SIZE=4
 
 
 clean:
