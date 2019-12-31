@@ -62,7 +62,7 @@ double vec3::mag( void )
     return ret;
 }
 
-double vec3::dot( vec3 &rhs )
+double vec3::dot( const vec3 &rhs )
 {
 
     vec3 tmp = (*this)*rhs;

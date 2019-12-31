@@ -142,9 +142,9 @@ void rayEngine::scene2(void) {
 
     spheres[1].r = 0.7f;
     spheres[1].c = vec3( -1.0f, 0, 3.0 );
-    spheres[1].ka = 1.0f;
+    spheres[1].ka = 0.0f;
     spheres[1].ks = 0.0f;
-    spheres[1].kr = 0.0f;
+    spheres[1].kr = 1.0f;
     spheres[1].kd = vec3( 1.0f, 0.8f, 0.0f );
     spheres[1].n = 7;
     spheres[1].kt = 0.0f; //*/
@@ -170,13 +170,14 @@ void rayEngine::scene2(void) {
 
     spheres[2].r = 10;
     spheres[2].c = vec3( 0, -11, 0 );
-    spheres[2].ka = 1.0f;
+    spheres[2].ka = 0.0f;
     spheres[2].ks = 0.0f;
-    spheres[2].kr = 0.7f;
+    spheres[2].kr = 1.0f;
     spheres[2].kt = 0.0f;
-    spheres[2].kd = vec3( 0.5, 0.5, 0.5 );
+    spheres[2].kd = vec3( 0.0, 0.0, 0.0 );
     spheres[2].n = 11;
 
+    nSphere = 2;
 
     //objects
 
@@ -198,7 +199,6 @@ void rayEngine::scene2(void) {
     c = 7;
     depth = 3;
 
-    nSphere = 1;
 }
 
 
@@ -591,7 +591,7 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
 
                 const vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
 
-                 vec3 lightPlusOrigin = r.d + lights[iLight].d;
+                const vec3 lightPlusOrigin = r.d + lights[iLight].d;
 
                 const float specular = s.ks * pow( lightRefl.dot( lightPlusOrigin ), s.n);
 
