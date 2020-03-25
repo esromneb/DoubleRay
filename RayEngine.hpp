@@ -67,7 +67,7 @@ public:
     int x, y; //pixels
     double alpha;
     //void setxy( int xin, int yin ); //resize output image
-    void resize( int x );
+    void resize( const int _x );
     float *r, *g, *b;
     int px;
     Vec3 ia;

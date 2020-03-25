@@ -321,9 +321,9 @@ void RayEngine::paint( void )
 
 }
 
-void RayEngine::resize( int x )
+void RayEngine::resize( const int _x )
 {
-    px = x;
+    px = _x;
     if( r && g && b )
     {
         delete r;
@@ -331,9 +331,9 @@ void RayEngine::resize( int x )
         delete b;
     }
 
-    r = new float[x*x];
-    g = new float[x*x];
-    b = new float[x*x];
+    r = new float[_x*_x];
+    g = new float[_x*_x];
+    b = new float[_x*_x];
 }
 
 
