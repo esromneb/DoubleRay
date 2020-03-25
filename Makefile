@@ -12,6 +12,7 @@ vec3.h
 CPP_FILES = \
 main2.cpp \
 vec3.cpp \
+Poly.cpp \
 raytrace.cpp
 
 EXPORT_STRING = \
