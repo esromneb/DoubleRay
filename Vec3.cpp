@@ -62,7 +62,7 @@ double Vec3::mag( void )
     return ret;
 }
 
-double Vec3::dot( const Vec3 &rhs )
+double Vec3::dot( const Vec3 &rhs ) const
 {
 
     Vec3 tmp = (*this)*rhs;
@@ -73,10 +73,9 @@ double Vec3::dot( const Vec3 &rhs )
     }
 
     return ret;
-        
 }
 
-Vec3 Vec3::operator *( const Vec3 &rhs)
+Vec3 Vec3::operator *( const Vec3 &rhs) const
 {
     Vec3 ret;
 

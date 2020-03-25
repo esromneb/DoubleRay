@@ -392,13 +392,12 @@ void RayEngine::trace(
     double b,c,t0,t1;
     Vec3 intersect;
     Vec3 from, fp, refl, lightRefl, tmp, norm, newColor;
-    Ray reflRay;
     color[0] = color[1] = color[2] = 0;
     double srInverse;
 
     Vec3 pn;
     double vd, vo, t;
-    float det1, det2, det3;
+    
     Vec3 d1,d2,d3;
     //double normDotDir;
     numHit = 0;
@@ -415,7 +414,7 @@ void RayEngine::trace(
 
     for( int iP = 0; iP < this->numPoly; iP++ )
     {
-        Poly &poly = polygons[iP];
+        const Poly &poly = polygons[iP];
         for( int iTri = 0; iTri < poly.trianglePointCount / 3; iTri++ )
         {
             //continue;
@@ -460,7 +459,7 @@ void RayEngine::trace(
             mat->data[2][1] = 1;
             mat->data[2][2] = 1;
 
-            det1 = mat->det();
+            const float det1 = mat->det();
 
             mat->data[0][0] = d2[0];
             mat->data[0][1] = d2[1];
@@ -469,7 +468,7 @@ void RayEngine::trace(
             mat->data[1][1] = d3[1];
             mat->data[1][2] = d3[2];
 
-            det2 = mat->det();
+            const float det2 = mat->det();
 
             mat->data[0][0] = d3[0];
             mat->data[0][1] = d3[1];
@@ -478,7 +477,7 @@ void RayEngine::trace(
             mat->data[1][1] = d1[1];
             mat->data[1][2] = d1[2];
 
-            det3 = mat->det();
+            const float det3 = mat->det();
 
             //at this point we know we hit the plane
             //now we have to check if we hit inside the triangle
@@ -544,7 +543,7 @@ void RayEngine::trace(
     const int nSphere = spheres.size();
     for( int i = 0; i < nSphere; i++ )
     {
-        Sphere &s = spheres[i];
+        const Sphere &s = spheres[i];
 
         b = 2*(r.d[0] * (r.o[0] - s.c[0]) + r.d[1] * (r.o[1] - s.c[1]) + r.d[2] * (r.o[2] - s.c[2]));
         c = pow((r.o[0] - s.c[0]),2) + pow((r.o[1] - s.c[1]),2) + pow((r.o[2] - s.c[2]),2) - s.r*s.r;
@@ -638,24 +637,20 @@ void RayEngine::trace(
 
     //final actions after main loops--------
 
-    //if this was from a click we don care about colors etc
-    if( click )
-    {
+    //if this was from a click we don't care about colors etc
+    if( click ) {
         bSphere = hitSphere;
         return;
     }
 
 
-    if( minHit != 999999 )
-    {
-
+    if( minHit != 999999 ) {
+        Ray reflRay;
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;
         trace( reflRay, depthIn+1, effect, newColor, false, bSphere, objectNum, false );
         color = savedColor + newColor * savedKr;
-    }
-    else
-    {
+    } else {
         //we hit nothing
         color = Vec3( 0, 0, 0 );
     }
