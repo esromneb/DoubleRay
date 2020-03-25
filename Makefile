@@ -6,7 +6,7 @@ all: out/ray.wasm
 
 
 HPP_FILES = \
-raytrace.h \
+RayEngine.hpp \
 Vec3.hpp \
 Poly.hpp
 
@@ -14,7 +14,7 @@ CPP_FILES = \
 main2.cpp \
 Vec3.cpp \
 Poly.cpp \
-raytrace.cpp
+RayEngine.cpp
 
 EXPORT_STRING = \
 "_get4", \

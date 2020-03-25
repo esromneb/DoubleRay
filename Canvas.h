@@ -7,7 +7,7 @@
 #include "ui_control.h"
 //#include "control.h"
 
-#include "raytrace.h"
+#include "RayEngine.hpp"
 
 #define WINDOW_PX 800
 #define DISPLAY_WIDTH 400

@@ -9,10 +9,10 @@
 using namespace std;
 
 #include "Vec3.hpp"
-#include "raytrace.h"
+#include "RayEngine.hpp"
 
 
-rayEngine* engine;
+RayEngine* engine;
 bool renderDone = false;
 std::vector<std::vector<uint32_t>> buffer;
 float scale = 0.006;
@@ -27,7 +27,7 @@ void t1(void) {
 }
 
 void setupEngine(void) {
-    engine = new rayEngine();
+    engine = new RayEngine();
     engine->resize(400);
     engine->makeObjects();
 

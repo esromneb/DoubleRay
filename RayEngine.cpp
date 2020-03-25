@@ -1,4 +1,4 @@
-#include "raytrace.h"
+#include "RayEngine.hpp"
 #include <math.h>
 
 ray::ray()
@@ -6,7 +6,7 @@ ray::ray()
 
 }
 
-rayEngine::rayEngine( void )
+RayEngine::RayEngine( void )
 {
     numPoly = 0;
     this->polygons.resize(POLYGONS);
@@ -24,7 +24,7 @@ rayEngine::rayEngine( void )
 }
 
 // original scene submitted for homework
-void rayEngine::scene1(void) {
+void RayEngine::scene1(void) {
     //camera
     camera.o = Vec3( 0, 1, -2 );
     camera.d = Vec3( 0, -0.2, 1 );
@@ -112,7 +112,7 @@ void rayEngine::scene1(void) {
 }
 
 // trying to debug whats wrong
-void rayEngine::scene2(void) {
+void RayEngine::scene2(void) {
     //camera
     camera.o = Vec3( 0, 1, -2 );
     camera.d = Vec3( 0, -0.2, 1 );
@@ -203,7 +203,7 @@ void rayEngine::scene2(void) {
 
 
 // original scene submitted for homework
-void rayEngine::scene3(void) {
+void RayEngine::scene3(void) {
     //camera
     camera.o = Vec3( 0, 1, -2 );
     camera.d = Vec3( 0, -0.2, 1 );
@@ -281,14 +281,14 @@ void rayEngine::scene3(void) {
 }
 
 
-void rayEngine::makeObjects( void )
+void RayEngine::makeObjects( void )
 {
     // scene1();
     scene2();
     // scene3();
 }
 
-void rayEngine::paint( void )
+void RayEngine::paint( void )
 {
 /*    for( int asf=343; asf<4555; asf++)
     {
@@ -308,7 +308,7 @@ void rayEngine::paint( void )
 
 }
 
-void rayEngine::resize( int x )
+void RayEngine::resize( int x )
 {
     px = x;
     if( r && g && b )
@@ -325,7 +325,7 @@ void rayEngine::resize( int x )
 
 
 
-void rayEngine::render( void )
+void RayEngine::render( void )
 {
     bool nUsedB = false;
     Vec3 nUsedI;
@@ -362,7 +362,7 @@ void rayEngine::render( void )
         }
 }
 
-void rayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling )
+void RayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling )
 {
 
     if( depthIn > this->depth )

@@ -52,11 +52,11 @@ public:
 
 
 
-class rayEngine
+class RayEngine
 {
 
 public:
-    rayEngine( void );
+    RayEngine( void );
     void makeObjects( void );
     void scene1( void );
     void scene2( void );
