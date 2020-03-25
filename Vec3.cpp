@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "Vec3.hpp"
 #include <math.h>
 
 vec3::vec3( const vec3 &in )

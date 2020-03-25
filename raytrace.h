@@ -3,7 +3,7 @@
 
 #include <vector>
 // #include <QGLWidget>
-#include "vec3.h"
+#include "Vec3.hpp"
 #include "Poly.hpp"
 #include "Macros.hpp"
 

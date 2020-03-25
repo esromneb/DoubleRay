@@ -1,4 +1,5 @@
 // #include <stdio.h>
+
 #include <iostream>
 #include <vector>
 #include <stdint.h>
@@ -7,7 +8,7 @@
 
 using namespace std;
 
-#include "vec3.h"
+#include "Vec3.hpp"
 #include "raytrace.h"
 
 

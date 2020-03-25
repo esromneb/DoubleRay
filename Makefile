@@ -7,11 +7,12 @@ all: out/ray.wasm
 
 HPP_FILES = \
 raytrace.h \
-vec3.h
+Vec3.hpp \
+Poly.hpp
 
 CPP_FILES = \
 main2.cpp \
-vec3.cpp \
+Vec3.cpp \
 Poly.cpp \
 raytrace.cpp
 

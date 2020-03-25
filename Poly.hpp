@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Macros.hpp"
-#include "vec3.h"
+#include "Vec3.hpp"
 #include <vector>
 
 using namespace std; //fixme remove
