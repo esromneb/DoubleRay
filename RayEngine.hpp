@@ -1,8 +1,6 @@
-#ifndef _RAYTRACE_H_
-#define _RAYTRACE_H_
+#pragma once
 
 #include <vector>
-// #include <QGLWidget>
 #include "Macros.hpp"
 #include "Vec3.hpp"
 #include "Poly.hpp"
@@ -73,7 +71,7 @@ public:
     int px;
     Vec3 ia;
     double c;
-    Sphere Spheres[8];
+    Sphere spheres[8];
     int nSphere = 5;
     Light lights[2];
     int nLight = 2;
@@ -88,5 +86,3 @@ public:
 
 };
 
-
-#endif
