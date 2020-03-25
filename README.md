@@ -8,7 +8,6 @@ Deps
 On ubuntu:
 
 ```bash
-git clone git clone https://github.com/emscripten-core/emsdk.git
 git clone https://github.com/emscripten-core/emsdk.git
 cd emsdk/
 git pull
