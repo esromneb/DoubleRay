@@ -74,8 +74,10 @@ public:
     double c;
     std::vector<Sphere> spheres;
     // int nSphere = 5;
-    Light lights[2];
-    int nLight = 2;
+
+    std::vector<Light> lights;
+    // Light lights[2];
+    // int nLight = 2;
     int depth;
 
     int numPoly;

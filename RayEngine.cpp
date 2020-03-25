@@ -196,11 +196,13 @@ void RayEngine::scene2(void) {
     // lights[0].d = Vec3( 1, 1, -0.7f );
     // lights[0].d.normalize();
 
+    lights.resize(1);
+
     lights[0].color = Vec3( 10, 10, 10 );
     lights[0].d = Vec3( 0, -1, -0.5 );
     lights[0].d.normalize();
 
-    nLight = 1;
+    // nLight = 1;
 
     //global
     ia = Vec3( 0.2f, 0.2f, 0.2f );
@@ -506,20 +508,21 @@ void RayEngine::trace(
 
                     savedColor = this->ia * poly.ka;
 
-                    if( !click )
-                    for( int iLight = 0; iLight < nLight; iLight++ )
-                    {
-                        shadowFeeler.o = intersect;
-                        shadowFeeler.d = lights[iLight].d * -1;
-                        shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
-                        trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                        if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
-                            continue;
-                        tmp = poly.abcnorm[iTri] - lights[iLight].d;
-                        lightRefl = tmp * 2 * poly.abcnorm[iTri].dot(lights[iLight].d);
-                        lightRefl.normalize();
+                    if( !click ) {
+                        for( int iLight = 0; iLight < lights.size(); iLight++ )
+                        {
+                            shadowFeeler.o = intersect;
+                            shadowFeeler.d = lights[iLight].d * -1;
+                            shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
+                            trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
+                            if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
+                                continue;
+                            tmp = poly.abcnorm[iTri] - lights[iLight].d;
+                            lightRefl = tmp * 2 * poly.abcnorm[iTri].dot(lights[iLight].d);
+                            lightRefl.normalize();
 
-                        savedColor = savedColor + ( lights[iLight].color / ( fp.mag() + this->c )  )*( poly.kd * lights[iLight].d.dot( poly.abcnorm[iTri] ) + poly.ks * pow( lightRefl.dot( r.d ), poly.n) );
+                            savedColor = savedColor + ( lights[iLight].color / ( fp.mag() + this->c )  )*( poly.kd * lights[iLight].d.dot( poly.abcnorm[iTri] ) + poly.ks * pow( lightRefl.dot( r.d ), poly.n) );
+                        }
                     }
 
 
@@ -594,32 +597,33 @@ void RayEngine::trace(
             //we aleways have ambient light
             color = this->ia * s.ka;
     
-            if( !click )
-            for( int iLight = 0; iLight < nLight; iLight++ )
-            {
-                shadowFeeler.o = intersect;
-                shadowFeeler.d = lights[iLight].d * -1;
-                shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
-                shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
-                trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
-                    continue;
-                tmp = norm - lights[iLight].d;
-                lightRefl = tmp * 2 * norm.dot(lights[iLight].d);
-                lightRefl.normalize();
+            if( !click ) {
+                for( int iLight = 0; iLight < lights.size(); iLight++ )
+                {
+                    shadowFeeler.o = intersect;
+                    shadowFeeler.d = lights[iLight].d * -1;
+                    shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
+                    shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
+                    trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
+                    if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
+                        continue;
+                    tmp = norm - lights[iLight].d;
+                    lightRefl = tmp * 2 * norm.dot(lights[iLight].d);
+                    lightRefl.normalize();
 
-                const Vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
+                    const Vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
 
-                const Vec3 lightPlusOrigin = r.d + lights[iLight].d;
+                    const Vec3 lightPlusOrigin = r.d + lights[iLight].d;
 
-                const float specular = s.ks * pow( lightRefl.dot( lightPlusOrigin ), s.n);
+                    const float specular = s.ks * pow( lightRefl.dot( lightPlusOrigin ), s.n);
 
-                const Vec3 lightEffects =
-                      ( lights[iLight].color / ( fp.mag() + this->c ) ) 
-                    * (diffuse + specular);
-                
-                color = color + lightEffects;
+                    const Vec3 lightEffects =
+                          ( lights[iLight].color / ( fp.mag() + this->c ) ) 
+                        * (diffuse + specular);
                     
+                    color = color + lightEffects;
+                        
+                }
             }
 
             savedColor = color;
