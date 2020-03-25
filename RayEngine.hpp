@@ -3,25 +3,15 @@
 
 #include <vector>
 // #include <QGLWidget>
+#include "Macros.hpp"
 #include "Vec3.hpp"
 #include "Poly.hpp"
-#include "Macros.hpp"
+#include "Matrix.hpp"
 
 using namespace::std;
 
 
 
-class matrix {
-public:
-    int x;
-    int y;
-    matrix( int xin, int yin );
-    ~matrix( void );
-//    vec operator* ( vec &rhs );
-    double ** data;
-    double det( void );
-    matrix *m1, *m2, *m3;
-};
 
 class light
 {
@@ -84,7 +74,7 @@ public:
     int numPoly;
     vector<Poly> polygons;
 
-    matrix *mat;
+    Matrix *mat;
     vector<double> hits;
     int numHit;
 

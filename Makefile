@@ -8,13 +8,15 @@ all: out/ray.wasm
 HPP_FILES = \
 RayEngine.hpp \
 Vec3.hpp \
-Poly.hpp
+Poly.hpp \
+Matrix.hpp
 
 CPP_FILES = \
 main2.cpp \
 Vec3.cpp \
 Poly.cpp \
-RayEngine.cpp
+Matrix.cpp \
+RayEngine.cpp 
 
 EXPORT_STRING = \
 "_get4", \

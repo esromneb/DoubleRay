@@ -37,7 +37,7 @@ class Poly
     void rot_x( double theta );
     void rot_y( double theta );
     void rot_z( double theta );
-//    void matrixMult( matrix &in );
+//    void MatrixMult( Matrix &in );
     void old_rast(void);
     void rast( int view );
 
