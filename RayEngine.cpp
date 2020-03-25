@@ -372,8 +372,9 @@ void RayEngine::trace(
     Vec3 &objectNum,
     const bool shdFeeling ) {
 
-    if( depthIn > this->depth )
+    if( depthIn > this->depth ) {
         return;
+    }
 
     double b,c,t0,t1;
     Vec3 intersect;

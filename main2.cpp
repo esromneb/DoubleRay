@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <stdint.h>
+#include <chrono>
 
 
 
@@ -47,8 +48,18 @@ extern "C" {
 
 void render(void) {
     renderDone = false;
+    const auto start = std::chrono::steady_clock::now();
     engine->render();
+    const auto end = std::chrono::steady_clock::now();
     renderDone = true;
+
+    if( true ) {
+        const size_t elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>( 
+            end - start
+        ).count();
+        const double elapsed_ms = elapsed_us / 1000.0;
+        cout << "Render took " << elapsed_ms << "ms" << "\n";
+    }
 }
 
 }

@@ -69,7 +69,7 @@ public:
     double alpha;
     //void setxy( int xin, int yin ); //resize output image
     void resize( int x );
-    float *r,*g, *b;
+    float *r, *g, *b;
     int px;
     Vec3 ia;
     double c;
