@@ -25,7 +25,7 @@ Poly::Poly()
     trianglePointCount = 0;
 
     ka = 0.25f;
-    kd = vec3( 0.9, 0.9, 0.9f );
+    kd = Vec3( 0.9, 0.9, 0.9f );
     ks = 0.3;
     kr = 1;
     kt = 0;
@@ -71,7 +71,7 @@ void Poly::insertTriangle( int *edges, int num )
     if( num == 3 )
     {
         int offset = trianglePointCount/3;
-         vec3 ab, ac, n, tmp;
+         Vec3 ab, ac, n, tmp;
          ab[0] = x[ triangles[offset+1] ] - x[ triangles[offset+0] ];
          ab[1] = y[ triangles[offset+1] ] - y[ triangles[offset+0] ];
          ab[2] = z[ triangles[offset+1] ] - z[ triangles[offset+0] ];

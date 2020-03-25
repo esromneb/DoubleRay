@@ -176,19 +176,19 @@ glClearColor(1.0, 1.0, 1.0, 1.0);
 void Canvas:: mousePressEvent (QMouseEvent * e)
 {
 
-	vec3 ee = engine.camera.o;//( -0.1, 0, 0 );
-	vec3 a = ee + engine.camera.d;//( 0.4f, 0, 0 );
-	vec3 w = ee-a;
+	Vec3 ee = engine.camera.o;//( -0.1, 0, 0 );
+	Vec3 a = ee + engine.camera.d;//( 0.4f, 0, 0 );
+	Vec3 w = ee-a;
 	w.normalize();
 	bool bSphere;
-	vec3 objectNum;
+	Vec3 objectNum;
 	ray r;
-	vec3 pixel;
+	Vec3 pixel;
 	double cu,cv;
 
-	vec3 u = cross( engine.up, ee-a );
+	Vec3 u = cross( engine.up, ee-a );
 	u.normalize();
-	vec3 v = cross( w, u );
+	Vec3 v = cross( w, u );
 
 	int i = e->x();
 	int j = engine.px - e->y();

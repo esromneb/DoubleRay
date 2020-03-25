@@ -26,27 +26,27 @@ public:
 class light
 {
 public:
-    vec3 color;
-    vec3 d;
+    Vec3 color;
+    Vec3 d;
 };
 
 class ray
 {
 public:
     explicit ray();
-    vec3 o;
-    vec3 d;
+    Vec3 o;
+    Vec3 d;
 };
 
 class sphere
 {
 public:
     double r; //radius
-    vec3 c; //center
+    Vec3 c; //center
     // %ambient, %specular, %reflected, %transmitted
     float ka, ks, kr, kt;
     // %diffuse (also specifies color of this object)
-    vec3 kd;
+    Vec3 kd;
     int n;
 };
 
@@ -63,17 +63,17 @@ public:
     void scene3( void );
     void paint( void );
     void render( void );
-    void trace( ray r, int depthIn, double effect, vec3 &color, bool click, bool &bSphere, vec3 &objectNum, bool shdFeeling );
+    void trace( ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling );
 
     ray camera;
-    vec3 up;
+    Vec3 up;
     int x, y; //pixels
     double alpha;
     //void setxy( int xin, int yin ); //resize output image
     void resize( int x );
     float *r,*g, *b;
     int px;
-    vec3 ia;
+    Vec3 ia;
     double c;
     sphere spheres[8];
     int nSphere = 5;

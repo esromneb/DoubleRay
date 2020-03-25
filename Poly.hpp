@@ -14,8 +14,8 @@ class Poly
     vector<double> y;
     vector<double> z;
 
-    vector<vec3> norm;
-    vector<vec3> triNorm;
+    vector<Vec3> norm;
+    vector<Vec3> triNorm;
 
     vector<double> red;
     vector<double> green;
@@ -50,12 +50,12 @@ class Poly
     //lighting stuff
     void calcLighting( vector<double>* viewX, vector<double>* viewY, int view );
     float ka, ks, kr, kt;
-    vec3 kd;
+    Vec3 kd;
     int n;
     /*vector<double> a;
     vector<double> b;
     vector<double> c;*/
-    vector<vec3> abcnorm;
+    vector<Vec3> abcnorm;
     vector<double> d;
     //double a,b,c,d;
 

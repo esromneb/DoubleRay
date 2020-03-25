@@ -26,64 +26,64 @@ rayEngine::rayEngine( void )
 // original scene submitted for homework
 void rayEngine::scene1(void) {
     //camera
-    camera.o = vec3( 0, 1, -2 );
-    camera.d = vec3( 0, -0.2, 1 );
+    camera.o = Vec3( 0, 1, -2 );
+    camera.d = Vec3( 0, -0.2, 1 );
     camera.d.normalize();
-    up = vec3( 0, 1, 0 );
+    up = Vec3( 0, 1, 0 );
 
 
     //spheres
-    spheres[0].c = vec3( 1, 0, 3.0f );
+    spheres[0].c = Vec3( 1, 0, 3.0f );
     spheres[0].r = 1.0f;
     spheres[0].ka = 0.4f;
-    spheres[0].kd = vec3( 0.0f, 1.0f, 0.0f );
+    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
     spheres[0].ks = 0.7f;
     spheres[0].n = 8;
     spheres[0].kr = 0.7f;
     spheres[0].kt = 0.0f;
 /*
-    spheres[1].c = vec3( -1, 0.5f, 4.0f );
+    spheres[1].c = Vec3( -1, 0.5f, 4.0f );
     spheres[1].r = 1.0f;
     spheres[1].ka = 0.4f;
-    spheres[1].kd = vec3( 1.0f, 0.0f, 0.0f );
+    spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
     spheres[1].ks = 0.7f;
     spheres[1].n = 3;
     spheres[1].kr = 0.7f;
     spheres[1].kt = 0.0f;
 */
 
-    spheres[1].c = vec3( -1.0f, 0, 3.0 );
+    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
     spheres[1].r = 0.7f;
     spheres[1].ka = 1.0f;
-    spheres[1].kd = vec3( 1.0f, 0.8f, 0.0f );
+    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
     spheres[1].ks = 0.7f;
     spheres[1].n = 7;
     spheres[1].kr = 0.5f;
     spheres[1].kt = 0.0f; //*/
 
-    spheres[2].c = vec3( .4, 1.5, 3.0 );
+    spheres[2].c = Vec3( .4, 1.5, 3.0 );
     spheres[2].r = 0.2f;
     spheres[2].ka = 1.0f;
-    spheres[2].kd = vec3( 0.4f, 0.8f, 0.0f );
+    spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
     spheres[2].ks = 0.7f;
     spheres[2].n = 10;
     spheres[2].kr = 0.5f;
     spheres[2].kt = 0.0f;
 
-    spheres[3].c = vec3( -.7, 1.7, 3.0 );
+    spheres[3].c = Vec3( -.7, 1.7, 3.0 );
     spheres[3].r = 0.3f;
     spheres[3].ka = 1.0f;
-    spheres[3].kd = vec3( 1.0f, 1, 1 );
+    spheres[3].kd = Vec3( 1.0f, 1, 1 );
     spheres[3].ks = 0.7f;
     spheres[3].n = 11;
     spheres[3].kr = 0.5f;
     spheres[3].kt = 0.0f;
 
 
-    spheres[4].c = vec3( 0, -11, 0 );
+    spheres[4].c = Vec3( 0, -11, 0 );
     spheres[4].r = 10;
     spheres[4].ka = 1.0f;
-    spheres[4].kd = vec3( 0.5, 0.5, 0.5 );
+    spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
     spheres[4].ks = 0.7f;
     spheres[4].n = 11;
     spheres[4].kr = 0.3f;
@@ -95,16 +95,16 @@ void rayEngine::scene1(void) {
     polygons[1].kr = 1.0f;
 
     //lights
-    lights[0].color = vec3( 5, 10, 8 );
-    lights[0].d = vec3( 1, 1, -0.7f );
+    lights[0].color = Vec3( 5, 10, 8 );
+    lights[0].d = Vec3( 1, 1, -0.7f );
     lights[0].d.normalize();
 
-    lights[1].color = vec3( 7, 2, 2 );
-    lights[1].d = vec3( 0, -1, -0.5 );
+    lights[1].color = Vec3( 7, 2, 2 );
+    lights[1].d = Vec3( 0, -1, -0.5 );
     lights[1].d.normalize();
 
     //global
-    ia = vec3( 0.2f, 0.2f, 0.2f );
+    ia = Vec3( 0.2f, 0.2f, 0.2f );
     c = 7;
     depth = 3;
 
@@ -114,26 +114,26 @@ void rayEngine::scene1(void) {
 // trying to debug whats wrong
 void rayEngine::scene2(void) {
     //camera
-    camera.o = vec3( 0, 1, -2 );
-    camera.d = vec3( 0, -0.2, 1 );
+    camera.o = Vec3( 0, 1, -2 );
+    camera.d = Vec3( 0, -0.2, 1 );
     camera.d.normalize();
-    up = vec3( 0, 1, 0 );
+    up = Vec3( 0, 1, 0 );
 
 
     //spheres
     spheres[0].r = 1.0f;
-    spheres[0].c = vec3( 1, 0, 3.0f );
+    spheres[0].c = Vec3( 1, 0, 3.0f );
     spheres[0].ka = 0.4f;
     spheres[0].ks = 0.2f;
     spheres[0].kr = 0.0f;
-    spheres[0].kd = vec3( 0.0f, 1.0f, 0.0f );
+    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
     spheres[0].n = 8;
     spheres[0].kt = 0.7f;
 /*
-    spheres[1].c = vec3( -1, 0.5f, 4.0f );
+    spheres[1].c = Vec3( -1, 0.5f, 4.0f );
     spheres[1].r = 1.0f;
     spheres[1].ka = 0.4f;
-    spheres[1].kd = vec3( 1.0f, 0.0f, 0.0f );
+    spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
     spheres[1].ks = 0.7f;
     spheres[1].n = 3;
     spheres[1].kr = 0.7f;
@@ -141,27 +141,27 @@ void rayEngine::scene2(void) {
 */
 
     spheres[1].r = 0.7f;
-    spheres[1].c = vec3( -1.0f, 0, 3.0 );
+    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
     spheres[1].ka = 0.0f;
     spheres[1].ks = 0.0f;
     spheres[1].kr = 1.0f;
-    spheres[1].kd = vec3( 1.0f, 0.8f, 0.0f );
+    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
     spheres[1].n = 7;
     spheres[1].kt = 0.0f; //*/
 
-    // spheres[2].c = vec3( .4, 1.5, 3.0 );
+    // spheres[2].c = Vec3( .4, 1.5, 3.0 );
     // spheres[2].r = 0.2f;
     // spheres[2].ka = 1.0f;
-    // spheres[2].kd = vec3( 0.4f, 0.8f, 0.0f );
+    // spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
     // spheres[2].ks = 0.7f;
     // spheres[2].n = 10;
     // spheres[2].kr = 0.5f;
     // spheres[2].kt = 0.0f;
 
-    // spheres[3].c = vec3( -.7, 1.7, 3.0 );
+    // spheres[3].c = Vec3( -.7, 1.7, 3.0 );
     // spheres[3].r = 0.3f;
     // spheres[3].ka = 1.0f;
-    // spheres[3].kd = vec3( 1.0f, 1, 1 );
+    // spheres[3].kd = Vec3( 1.0f, 1, 1 );
     // spheres[3].ks = 0.7f;
     // spheres[3].n = 11;
     // spheres[3].kr = 0.5f;
@@ -169,12 +169,12 @@ void rayEngine::scene2(void) {
 
 
     spheres[2].r = 10;
-    spheres[2].c = vec3( 0, -11, 0 );
+    spheres[2].c = Vec3( 0, -11, 0 );
     spheres[2].ka = 0.0f;
     spheres[2].ks = 0.0f;
     spheres[2].kr = 1.0f;
     spheres[2].kt = 0.0f;
-    spheres[2].kd = vec3( 0.0, 0.0, 0.0 );
+    spheres[2].kd = Vec3( 0.0, 0.0, 0.0 );
     spheres[2].n = 11;
 
     nSphere = 2;
@@ -184,18 +184,18 @@ void rayEngine::scene2(void) {
     polygons[1].kr = 1.0f;
 
     //lights
-    // lights[0].color = vec3( 0, 0, 0 );
-    // lights[0].d = vec3( 1, 1, -0.7f );
+    // lights[0].color = Vec3( 0, 0, 0 );
+    // lights[0].d = Vec3( 1, 1, -0.7f );
     // lights[0].d.normalize();
 
-    lights[0].color = vec3( 10, 10, 10 );
-    lights[0].d = vec3( 0, -1, -0.5 );
+    lights[0].color = Vec3( 10, 10, 10 );
+    lights[0].d = Vec3( 0, -1, -0.5 );
     lights[0].d.normalize();
 
     nLight = 1;
 
     //global
-    ia = vec3( 0.2f, 0.2f, 0.2f );
+    ia = Vec3( 0.2f, 0.2f, 0.2f );
     c = 7;
     depth = 3;
 
@@ -205,54 +205,54 @@ void rayEngine::scene2(void) {
 // original scene submitted for homework
 void rayEngine::scene3(void) {
     //camera
-    camera.o = vec3( 0, 1, -2 );
-    camera.d = vec3( 0, -0.2, 1 );
+    camera.o = Vec3( 0, 1, -2 );
+    camera.d = Vec3( 0, -0.2, 1 );
     camera.d.normalize();
-    up = vec3( 0, 1, 0 );
+    up = Vec3( 0, 1, 0 );
 
 
     //spheres
-    spheres[0].c = vec3( 1, 0, 3.0f );
+    spheres[0].c = Vec3( 1, 0, 3.0f );
     spheres[0].r = 1.0f;
     spheres[0].ka = 0.4f;
-    spheres[0].kd = vec3( 0.0f, 1.0f, 0.0f );
+    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
     spheres[0].ks = 0.2f;
     spheres[0].n = 8;
     spheres[0].kr = 0.7f;
     spheres[0].kt = 0.0f;
 
-    spheres[1].c = vec3( -1.0f, 0, 3.0 );
+    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
     spheres[1].r = 0.7f;
     spheres[1].ka = 1.0f;
-    spheres[1].kd = vec3( 1.0f, 0.8f, 0.0f );
+    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
     spheres[1].ks = 0.2f;
     spheres[1].n = 7;
     spheres[1].kr = 0.5f;
     spheres[1].kt = 0.0f; //*/
 
-    spheres[2].c = vec3( .4, 1.5, 3.0 );
+    spheres[2].c = Vec3( .4, 1.5, 3.0 );
     spheres[2].r = 0.2f;
     spheres[2].ka = 1.0f;
-    spheres[2].kd = vec3( 0.4f, 0.8f, 0.0f );
+    spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
     spheres[2].ks = 0.1f;
     spheres[2].n = 10;
     spheres[2].kr = 0.5f;
     spheres[2].kt = 0.0f;
 
-    spheres[3].c = vec3( -.7, 1.7, 3.0 );
+    spheres[3].c = Vec3( -.7, 1.7, 3.0 );
     spheres[3].r = 0.3f;
     spheres[3].ka = 1.0f;
-    spheres[3].kd = vec3( 1.0f, 1, 1 );
+    spheres[3].kd = Vec3( 1.0f, 1, 1 );
     spheres[3].ks = 0.2f;
     spheres[3].n = 11;
     spheres[3].kr = 0.5f;
     spheres[3].kt = 0.0f;
 
 
-    spheres[4].c = vec3( 0, -11, 0 );
+    spheres[4].c = Vec3( 0, -11, 0 );
     spheres[4].r = 10;
     spheres[4].ka = 1.0f;
-    spheres[4].kd = vec3( 0.5, 0.5, 0.5 );
+    spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
     spheres[4].ks = 0.1f;
     spheres[4].n = 11;
     spheres[4].kr = 0.3f;
@@ -264,16 +264,16 @@ void rayEngine::scene3(void) {
     polygons[1].kr = 1.0f;
 
     //lights
-    lights[0].color = vec3( 5, 10, 8 );
-    lights[0].d = vec3( 1, 1, -0.7f );
+    lights[0].color = Vec3( 5, 10, 8 );
+    lights[0].d = Vec3( 1, 1, -0.7f );
     lights[0].d.normalize();
 
-    lights[1].color = vec3( 7, 2, 2 );
-    lights[1].d = vec3( 0, -1, -0.5 );
+    lights[1].color = Vec3( 7, 2, 2 );
+    lights[1].d = Vec3( 0, -1, -0.5 );
     lights[1].d.normalize();
 
     //global
-    ia = vec3( 0.2f, 0.2f, 0.2f );
+    ia = Vec3( 0.2f, 0.2f, 0.2f );
     c = 7;
     depth = 3;
 
@@ -328,21 +328,21 @@ void rayEngine::resize( int x )
 void rayEngine::render( void )
 {
     bool nUsedB = false;
-    vec3 nUsedI;
+    Vec3 nUsedI;
     ray r;
-    vec3 pixel;
+    Vec3 pixel;
     double cu,cv;
     //float red, green, blue;
-    vec3 color;
+    Vec3 color;
 
-    vec3 e = camera.o;//( -0.1, 0, 0 );
-    vec3 a = e + camera.d;//( 0.4f, 0, 0 );
-    vec3 w = e-a;
+    Vec3 e = camera.o;//( -0.1, 0, 0 );
+    Vec3 a = e + camera.d;//( 0.4f, 0, 0 );
+    Vec3 w = e-a;
     w.normalize();
 
-    vec3 u = cross( up, e-a );
+    Vec3 u = cross( up, e-a );
     u.normalize();
-    vec3 v = cross( w, u );
+    Vec3 v = cross( w, u );
 
     for( int j = 0; j < px; j++ )
         for( int i = 0; i < px; i++ )
@@ -362,31 +362,31 @@ void rayEngine::render( void )
         }
 }
 
-void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool click, bool &bSphere, vec3 &objectNum, bool shdFeeling )
+void rayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling )
 {
 
     if( depthIn > this->depth )
         return;
 
     double b,c,t0,t1;
-    vec3 intersect;
-    vec3 from, fp, refl, lightRefl, tmp, norm, newColor;
+    Vec3 intersect;
+    Vec3 from, fp, refl, lightRefl, tmp, norm, newColor;
     ray reflRay;
     color[0] = color[1] = color[2] = 0;
     double srInverse;
 
-    vec3 pn;
+    Vec3 pn;
     double vd, vo, t;
     float det1, det2, det3;
-    vec3 d1,d2,d3;
+    Vec3 d1,d2,d3;
     //double normDotDir;
     numHit = 0;
     double minHit = 999999;
-    vec3 savedColor;
-    vec3 savedRefl;
-    vec3 savedIntersect;
+    Vec3 savedColor;
+    Vec3 savedRefl;
+    Vec3 savedIntersect;
     ray shadowFeeler;
-    vec3 shadowColor;
+    Vec3 shadowColor;
     bool tmpBool;
     double savedKr;
     bool hitSphere;
@@ -504,7 +504,7 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
                     }
 
 
-                    //savedColor = vec3( 1.0f, 0.0f, 0.0f );
+                    //savedColor = Vec3( 1.0f, 0.0f, 0.0f );
 
                 }
             }
@@ -513,7 +513,7 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
                 continue;
             }
 
-            //color = vec3( 1.0, 0, 0 );
+            //color = Vec3( 1.0, 0, 0 );
         }
 
     }
@@ -556,12 +556,12 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
             hitSphere = true;
             objectNum[0] = i;
             minHit = t0;
-            intersect = vec3( r.o[0] + r.d[0]*t0,
+            intersect = Vec3( r.o[0] + r.d[0]*t0,
                               r.o[1] + r.d[1]*t0,
                               r.o[2] + r.d[2]*t0 );
             srInverse = 1.0f/s.r;
 
-            norm = vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
+            norm = Vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
             //norm = intersect - s.c;
             norm.normalize();
 
@@ -589,13 +589,13 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
                 lightRefl = tmp * 2 * norm.dot(lights[iLight].d);
                 lightRefl.normalize();
 
-                const vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
+                const Vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
 
-                const vec3 lightPlusOrigin = r.d + lights[iLight].d;
+                const Vec3 lightPlusOrigin = r.d + lights[iLight].d;
 
                 const float specular = s.ks * pow( lightRefl.dot( lightPlusOrigin ), s.n);
 
-                const vec3 lightEffects =
+                const Vec3 lightEffects =
                       ( lights[iLight].color / ( fp.mag() + this->c ) ) 
                     * (diffuse + specular);
                 
@@ -634,7 +634,7 @@ void rayEngine::trace( ray r, int depthIn, double effect, vec3 &color, bool clic
     else
     {
         //we hit nothing
-        color = vec3( 0, 0, 0 );
+        color = Vec3( 0, 0, 0 );
     }
 }
 

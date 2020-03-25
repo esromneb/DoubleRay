@@ -19,7 +19,7 @@ float scale = 0.006;
 float gain = 1.1;
 
 void t1(void) {
-    vec3 v1(1,2,3);
+    Vec3 v1(1,2,3);
 
     cout << v1.str() << "\n";
 

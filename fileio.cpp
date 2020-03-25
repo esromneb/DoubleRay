@@ -43,7 +43,7 @@ void read( rayEngine &engine )
 	ifstream file;
 	int tmpVerts[ 1000 ];
 	int tmpNum;
-	vec3* verts = new vec3[ 1000 ];
+	Vec3* verts = new Vec3[ 1000 ];
 	int numVerts = 0;
 	int vertOffset = 0;
 

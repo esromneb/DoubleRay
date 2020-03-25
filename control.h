@@ -20,7 +20,7 @@ public:
 	int tool;
 	//TreDEngine* engine;
 	Canvas* canvas1;
-	vec3 obj;
+	Vec3 obj;
 	bool lightUpdate;
 	controlData(QWidget *parent = 0)
 	{
@@ -90,7 +90,7 @@ public:
 
 public slots:
 
-	void load_object( bool sphere, vec3 objectNum, int nIN, vec3 kd, float ka, float kr, float ks, float kt )
+	void load_object( bool sphere, Vec3 objectNum, int nIN, Vec3 kd, float ka, float kr, float ks, float kt )
 	{
 		char buf[256];
 		
