@@ -362,7 +362,7 @@ void RayEngine::render( void )
         }
 }
 
-void RayEngine::trace( Ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling )
+void RayEngine::trace(const Ray& r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling )
 {
 
     if( depthIn > this->depth )

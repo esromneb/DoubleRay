@@ -87,7 +87,7 @@ Vec3 Vec3::operator *( const Vec3 &rhs)
     return ret;
 }
 
-Vec3 Vec3::operator* ( double rhs )
+Vec3 Vec3::operator* ( double rhs ) const
 {
     Vec3 ret;
     for( int i = 0; i < 3; i++ ) {
@@ -96,7 +96,7 @@ Vec3 Vec3::operator* ( double rhs )
     return ret;
 }
 
-Vec3 Vec3::operator/ ( double rhs )
+Vec3 Vec3::operator/ ( double rhs ) const
 {
     Vec3 ret;// = new Vec3(y);
     for( int i = 0; i < 3; i++ ) {
