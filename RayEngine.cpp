@@ -1,7 +1,7 @@
 #include "RayEngine.hpp"
 #include <math.h>
 
-ray::ray()
+Ray::Ray()
 {
 
 }
@@ -329,7 +329,7 @@ void RayEngine::render( void )
 {
     bool nUsedB = false;
     Vec3 nUsedI;
-    ray r;
+    Ray r;
     Vec3 pixel;
     double cu,cv;
     //float red, green, blue;
@@ -362,7 +362,7 @@ void RayEngine::render( void )
         }
 }
 
-void RayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling )
+void RayEngine::trace( Ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling )
 {
 
     if( depthIn > this->depth )
@@ -371,7 +371,7 @@ void RayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool clic
     double b,c,t0,t1;
     Vec3 intersect;
     Vec3 from, fp, refl, lightRefl, tmp, norm, newColor;
-    ray reflRay;
+    Ray reflRay;
     color[0] = color[1] = color[2] = 0;
     double srInverse;
 
@@ -385,7 +385,7 @@ void RayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool clic
     Vec3 savedColor;
     Vec3 savedRefl;
     Vec3 savedIntersect;
-    ray shadowFeeler;
+    Ray shadowFeeler;
     Vec3 shadowColor;
     bool tmpBool;
     double savedKr;

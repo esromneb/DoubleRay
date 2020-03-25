@@ -20,10 +20,10 @@ public:
     Vec3 d;
 };
 
-class ray
+class Ray
 {
 public:
-    explicit ray();
+    explicit Ray();
     Vec3 o;
     Vec3 d;
 };
@@ -53,9 +53,9 @@ public:
     void scene3( void );
     void paint( void );
     void render( void );
-    void trace( ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling );
+    void trace( Ray r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling );
 
-    ray camera;
+    Ray camera;
     Vec3 up;
     int x, y; //pixels
     double alpha;
