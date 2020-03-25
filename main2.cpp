@@ -48,9 +48,11 @@ extern "C" {
 
 void render(void) {
     renderDone = false;
+
     const auto start = std::chrono::steady_clock::now();
     engine->render();
     const auto end = std::chrono::steady_clock::now();
+    
     renderDone = true;
 
     if( true ) {

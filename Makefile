@@ -30,9 +30,12 @@ EXPORT_STRING = \
 
 out/ray.wasm: $(CPP_FILES) $(HPP_FILES) Makefile
 	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
+	--shell-file template/controls.html \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a'
+
+# '-Wshadow-all'
 
 # not working due to chrome not liking these options
 #-s USE_PTHREADS=1 -s RESERVED_FUNCTION_POINTERS=1
