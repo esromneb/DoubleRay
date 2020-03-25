@@ -13,7 +13,7 @@ using namespace::std;
 
 
 
-class light
+class Light
 {
 public:
     Vec3 color;
@@ -67,7 +67,7 @@ public:
     double c;
     Sphere Spheres[8];
     int nSphere = 5;
-    light lights[2];
+    Light lights[2];
     int nLight = 2;
     int depth;
 
