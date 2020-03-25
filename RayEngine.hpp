@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vector>
 #include "Macros.hpp"
 #include "Vec3.hpp"
 #include "Poly.hpp"
 #include "Matrix.hpp"
+
+#include <vector>
 
 using namespace::std;
 
@@ -71,8 +72,8 @@ public:
     int px;
     Vec3 ia;
     double c;
-    Sphere spheres[8];
-    int nSphere = 5;
+    std::vector<Sphere> spheres;
+    // int nSphere = 5;
     Light lights[2];
     int nLight = 2;
     int depth;

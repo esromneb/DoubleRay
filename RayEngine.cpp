@@ -23,6 +23,8 @@ RayEngine::RayEngine( void )
     
 }
 
+/*
+
 // original scene submitted for homework
 void RayEngine::scene1(void) {
     //camera
@@ -41,16 +43,16 @@ void RayEngine::scene1(void) {
     spheres[0].n = 8;
     spheres[0].kr = 0.7f;
     spheres[0].kt = 0.0f;
-/*
-    spheres[1].c = Vec3( -1, 0.5f, 4.0f );
-    spheres[1].r = 1.0f;
-    spheres[1].ka = 0.4f;
-    spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
-    spheres[1].ks = 0.7f;
-    spheres[1].n = 3;
-    spheres[1].kr = 0.7f;
-    spheres[1].kt = 0.0f;
-*/
+
+    // spheres[1].c = Vec3( -1, 0.5f, 4.0f );
+    // spheres[1].r = 1.0f;
+    // spheres[1].ka = 0.4f;
+    // spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
+    // spheres[1].ks = 0.7f;
+    // spheres[1].n = 3;
+    // spheres[1].kr = 0.7f;
+    // spheres[1].kt = 0.0f;
+
 
     spheres[1].c = Vec3( -1.0f, 0, 3.0 );
     spheres[1].r = 0.7f;
@@ -59,7 +61,7 @@ void RayEngine::scene1(void) {
     spheres[1].ks = 0.7f;
     spheres[1].n = 7;
     spheres[1].kr = 0.5f;
-    spheres[1].kt = 0.0f; //*/
+    spheres[1].kt = 0.0f;
 
     spheres[2].c = Vec3( .4, 1.5, 3.0 );
     spheres[2].r = 0.2f;
@@ -111,6 +113,8 @@ void RayEngine::scene1(void) {
     nSphere = 5;
 }
 
+*/
+
 // trying to debug whats wrong
 void RayEngine::scene2(void) {
     //camera
@@ -118,6 +122,8 @@ void RayEngine::scene2(void) {
     camera.d = Vec3( 0, -0.2, 1 );
     camera.d.normalize();
     up = Vec3( 0, 1, 0 );
+
+    spheres.resize(3);
 
 
     //spheres
@@ -177,7 +183,9 @@ void RayEngine::scene2(void) {
     spheres[2].kd = Vec3( 0.0, 0.0, 0.0 );
     spheres[2].n = 11;
 
-    nSphere = 2;
+    spheres.resize(2); // delete last one
+
+    // nSphere = 2;
 
     //objects
 
@@ -201,6 +209,7 @@ void RayEngine::scene2(void) {
 
 }
 
+/*
 
 // original scene submitted for homework
 void RayEngine::scene3(void) {
@@ -228,7 +237,7 @@ void RayEngine::scene3(void) {
     spheres[1].ks = 0.2f;
     spheres[1].n = 7;
     spheres[1].kr = 0.5f;
-    spheres[1].kt = 0.0f; //*/
+    spheres[1].kt = 0.0f;
 
     spheres[2].c = Vec3( .4, 1.5, 3.0 );
     spheres[2].r = 0.2f;
@@ -279,6 +288,8 @@ void RayEngine::scene3(void) {
 
     nSphere = 5;
 }
+
+*/
 
 
 void RayEngine::makeObjects( void )
@@ -527,7 +538,7 @@ void RayEngine::trace(
     }
 
 
-    
+    const int nSphere = spheres.size();
     for( int i = 0; i < nSphere; i++ )
     {
         Sphere &s = spheres[i];
