@@ -53,7 +53,15 @@ public:
     void scene3( void );
     void paint( void );
     void render( void );
-    void trace(const Ray& r, int depthIn, double effect, Vec3 &color, bool click, bool &bSphere, Vec3 &objectNum, bool shdFeeling );
+    void trace(
+        const Ray& r, 
+        const int depthIn,
+        const double effect,
+        Vec3 &color,
+        const bool click,
+        bool &bSphere,
+        Vec3 &objectNum,
+        const bool shdFeeling );
 
     Ray camera;
     Vec3 up;

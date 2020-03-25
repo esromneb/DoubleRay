@@ -170,7 +170,7 @@ int main(int argc, char ** argv) {
     copyBuffer();
     // printBuffer();
     // fakeBuffer();
-    cout << "Hello Precilla\n";
+    // cout << "Hello Precilla\n";
 }
 
 uint32_t nextVal = 0;
