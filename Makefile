@@ -18,12 +18,14 @@ Poly.cpp \
 Matrix.cpp \
 RayEngine.cpp 
 
+# all lines must have trailing comma
 EXPORT_STRING = \
 "_get4", \
 "_getNext", \
 "_getPixel", \
 "_doRender", \
 "_doDebugRender", \
+"_debug2", \
 "_setScale",
 
 TEMPLATE_FILE = template/controls.html
