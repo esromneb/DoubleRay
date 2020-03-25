@@ -1,16 +1,20 @@
 // #include <stdio.h>
 
+#include "Vec3.hpp"
+#include "RayEngine.hpp"
+
 #include <iostream>
 #include <vector>
 #include <stdint.h>
 #include <chrono>
+#include <unistd.h> //usleep
+
+#include <emscripten.h>
 
 
 
 using namespace std;
 
-#include "Vec3.hpp"
-#include "RayEngine.hpp"
 
 
 RayEngine* engine;
@@ -30,7 +34,6 @@ void t1(void) {
 void setupEngine(void) {
     engine = new RayEngine();
     engine->resize(400);
-    engine->makeObjects();
 
 
     // engine->makeObjects();
@@ -42,6 +45,8 @@ void setupEngine(void) {
     for(auto &row : buffer) {
         row.resize(y);
     }
+
+    engine->makeObjects();
 }
 
 extern "C" {
@@ -52,7 +57,7 @@ void render(void) {
     const auto start = std::chrono::steady_clock::now();
     engine->render();
     const auto end = std::chrono::steady_clock::now();
-    
+
     renderDone = true;
 
     if( true ) {
@@ -177,6 +182,7 @@ void fakeBuffer(void) {
 
 int main(int argc, char ** argv) {
     // printf("Hello Precilla\n");
+    cout << "Enter main()" << "\n";
     // t1();
     setupEngine();
     render();
@@ -220,7 +226,16 @@ void setScale(const float s) {
     scale = s;
 }
 
-
-
+void debug2(void) {
+    cout << "start debug2" << "\n";
+    usleep(2E6);
+    cout << "exit debug2" << "\n";
 }
+
+
+} // extern C
+
+
+
+
 

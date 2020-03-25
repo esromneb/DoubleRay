@@ -135,6 +135,15 @@
         // setTimeout(bufferToCanv,1000);
       }
 
+      function debug2Click() {
+        const fn = Module.cwrap('debug2', 'void');
+        Module.jsPrint('before');
+        setTimeout(()=>{console.log('mid')},300);
+        fn();
+        Module.jsPrint('after');
+
+      }
+
     </script>
     <table>
       <tr><td>
@@ -147,6 +156,9 @@
 <input type="button" value="RenderDebug" onclick="renderDebugClick()"/><br>
 <input type="button" value="SetScale" onclick="setScaleClick()"/>
 <input type="text" value="0.006" id="scaleText"/>
+<br>
+<br>
+<input type="button" value="debug2()" onclick="debug2Click()"/>
 
 
 
@@ -183,9 +195,9 @@ function bufferToCanv() {
     for(let j = 0; j < px; j++) {
       let p = getPixel(i,j);
 
-      let r = ((p>>>16)&0xff) >> 0;
-      let g = ((p>>>8)&0xff) >> 0;
-      let b = ((p>>>0)&0xff) >> 0;
+      const r = ((p>>>16)&0xff) >> 0;
+      const g = ((p>>>8)&0xff) >> 0;
+      const b = ((p>>>0)&0xff) >> 0;
 
       // if( r != 0 ) {
       //   console.log(r);
@@ -300,6 +312,7 @@ setTimeout(()=>{
           Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
         }
       };
+      Module.jsPrint = (x)=>{Module.print('JS: ' + x)};
       Module.setStatus('Downloading...');
       window.onerror = function(event) {
         // TODO: do not warn on ok events like simulating an infinite loop or exitStatus
