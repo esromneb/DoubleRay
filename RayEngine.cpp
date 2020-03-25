@@ -32,62 +32,62 @@ void RayEngine::scene1(void) {
     up = Vec3( 0, 1, 0 );
 
 
-    //spheres
-    spheres[0].c = Vec3( 1, 0, 3.0f );
-    spheres[0].r = 1.0f;
-    spheres[0].ka = 0.4f;
-    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
-    spheres[0].ks = 0.7f;
-    spheres[0].n = 8;
-    spheres[0].kr = 0.7f;
-    spheres[0].kt = 0.0f;
+    //Spheres
+    Spheres[0].c = Vec3( 1, 0, 3.0f );
+    Spheres[0].r = 1.0f;
+    Spheres[0].ka = 0.4f;
+    Spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
+    Spheres[0].ks = 0.7f;
+    Spheres[0].n = 8;
+    Spheres[0].kr = 0.7f;
+    Spheres[0].kt = 0.0f;
 /*
-    spheres[1].c = Vec3( -1, 0.5f, 4.0f );
-    spheres[1].r = 1.0f;
-    spheres[1].ka = 0.4f;
-    spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
-    spheres[1].ks = 0.7f;
-    spheres[1].n = 3;
-    spheres[1].kr = 0.7f;
-    spheres[1].kt = 0.0f;
+    Spheres[1].c = Vec3( -1, 0.5f, 4.0f );
+    Spheres[1].r = 1.0f;
+    Spheres[1].ka = 0.4f;
+    Spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
+    Spheres[1].ks = 0.7f;
+    Spheres[1].n = 3;
+    Spheres[1].kr = 0.7f;
+    Spheres[1].kt = 0.0f;
 */
 
-    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
-    spheres[1].r = 0.7f;
-    spheres[1].ka = 1.0f;
-    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
-    spheres[1].ks = 0.7f;
-    spheres[1].n = 7;
-    spheres[1].kr = 0.5f;
-    spheres[1].kt = 0.0f; //*/
+    Spheres[1].c = Vec3( -1.0f, 0, 3.0 );
+    Spheres[1].r = 0.7f;
+    Spheres[1].ka = 1.0f;
+    Spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
+    Spheres[1].ks = 0.7f;
+    Spheres[1].n = 7;
+    Spheres[1].kr = 0.5f;
+    Spheres[1].kt = 0.0f; //*/
 
-    spheres[2].c = Vec3( .4, 1.5, 3.0 );
-    spheres[2].r = 0.2f;
-    spheres[2].ka = 1.0f;
-    spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
-    spheres[2].ks = 0.7f;
-    spheres[2].n = 10;
-    spheres[2].kr = 0.5f;
-    spheres[2].kt = 0.0f;
+    Spheres[2].c = Vec3( .4, 1.5, 3.0 );
+    Spheres[2].r = 0.2f;
+    Spheres[2].ka = 1.0f;
+    Spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
+    Spheres[2].ks = 0.7f;
+    Spheres[2].n = 10;
+    Spheres[2].kr = 0.5f;
+    Spheres[2].kt = 0.0f;
 
-    spheres[3].c = Vec3( -.7, 1.7, 3.0 );
-    spheres[3].r = 0.3f;
-    spheres[3].ka = 1.0f;
-    spheres[3].kd = Vec3( 1.0f, 1, 1 );
-    spheres[3].ks = 0.7f;
-    spheres[3].n = 11;
-    spheres[3].kr = 0.5f;
-    spheres[3].kt = 0.0f;
+    Spheres[3].c = Vec3( -.7, 1.7, 3.0 );
+    Spheres[3].r = 0.3f;
+    Spheres[3].ka = 1.0f;
+    Spheres[3].kd = Vec3( 1.0f, 1, 1 );
+    Spheres[3].ks = 0.7f;
+    Spheres[3].n = 11;
+    Spheres[3].kr = 0.5f;
+    Spheres[3].kt = 0.0f;
 
 
-    spheres[4].c = Vec3( 0, -11, 0 );
-    spheres[4].r = 10;
-    spheres[4].ka = 1.0f;
-    spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
-    spheres[4].ks = 0.7f;
-    spheres[4].n = 11;
-    spheres[4].kr = 0.3f;
-    spheres[4].kt = 0.0f;
+    Spheres[4].c = Vec3( 0, -11, 0 );
+    Spheres[4].r = 10;
+    Spheres[4].ka = 1.0f;
+    Spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
+    Spheres[4].ks = 0.7f;
+    Spheres[4].n = 11;
+    Spheres[4].kr = 0.3f;
+    Spheres[4].kt = 0.0f;
 
 
     //objects
@@ -120,62 +120,62 @@ void RayEngine::scene2(void) {
     up = Vec3( 0, 1, 0 );
 
 
-    //spheres
-    spheres[0].r = 1.0f;
-    spheres[0].c = Vec3( 1, 0, 3.0f );
-    spheres[0].ka = 0.4f;
-    spheres[0].ks = 0.2f;
-    spheres[0].kr = 0.0f;
-    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
-    spheres[0].n = 8;
-    spheres[0].kt = 0.7f;
+    //Spheres
+    Spheres[0].r = 1.0f;
+    Spheres[0].c = Vec3( 1, 0, 3.0f );
+    Spheres[0].ka = 0.4f;
+    Spheres[0].ks = 0.2f;
+    Spheres[0].kr = 0.0f;
+    Spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
+    Spheres[0].n = 8;
+    Spheres[0].kt = 0.7f;
 /*
-    spheres[1].c = Vec3( -1, 0.5f, 4.0f );
-    spheres[1].r = 1.0f;
-    spheres[1].ka = 0.4f;
-    spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
-    spheres[1].ks = 0.7f;
-    spheres[1].n = 3;
-    spheres[1].kr = 0.7f;
-    spheres[1].kt = 0.0f;
+    Spheres[1].c = Vec3( -1, 0.5f, 4.0f );
+    Spheres[1].r = 1.0f;
+    Spheres[1].ka = 0.4f;
+    Spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
+    Spheres[1].ks = 0.7f;
+    Spheres[1].n = 3;
+    Spheres[1].kr = 0.7f;
+    Spheres[1].kt = 0.0f;
 */
 
-    spheres[1].r = 0.7f;
-    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
-    spheres[1].ka = 0.0f;
-    spheres[1].ks = 0.0f;
-    spheres[1].kr = 1.0f;
-    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
-    spheres[1].n = 7;
-    spheres[1].kt = 0.0f; //*/
+    Spheres[1].r = 0.7f;
+    Spheres[1].c = Vec3( -1.0f, 0, 3.0 );
+    Spheres[1].ka = 0.0f;
+    Spheres[1].ks = 0.0f;
+    Spheres[1].kr = 1.0f;
+    Spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
+    Spheres[1].n = 7;
+    Spheres[1].kt = 0.0f; //*/
 
-    // spheres[2].c = Vec3( .4, 1.5, 3.0 );
-    // spheres[2].r = 0.2f;
-    // spheres[2].ka = 1.0f;
-    // spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
-    // spheres[2].ks = 0.7f;
-    // spheres[2].n = 10;
-    // spheres[2].kr = 0.5f;
-    // spheres[2].kt = 0.0f;
+    // Spheres[2].c = Vec3( .4, 1.5, 3.0 );
+    // Spheres[2].r = 0.2f;
+    // Spheres[2].ka = 1.0f;
+    // Spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
+    // Spheres[2].ks = 0.7f;
+    // Spheres[2].n = 10;
+    // Spheres[2].kr = 0.5f;
+    // Spheres[2].kt = 0.0f;
 
-    // spheres[3].c = Vec3( -.7, 1.7, 3.0 );
-    // spheres[3].r = 0.3f;
-    // spheres[3].ka = 1.0f;
-    // spheres[3].kd = Vec3( 1.0f, 1, 1 );
-    // spheres[3].ks = 0.7f;
-    // spheres[3].n = 11;
-    // spheres[3].kr = 0.5f;
-    // spheres[3].kt = 0.0f;
+    // Spheres[3].c = Vec3( -.7, 1.7, 3.0 );
+    // Spheres[3].r = 0.3f;
+    // Spheres[3].ka = 1.0f;
+    // Spheres[3].kd = Vec3( 1.0f, 1, 1 );
+    // Spheres[3].ks = 0.7f;
+    // Spheres[3].n = 11;
+    // Spheres[3].kr = 0.5f;
+    // Spheres[3].kt = 0.0f;
 
 
-    spheres[2].r = 10;
-    spheres[2].c = Vec3( 0, -11, 0 );
-    spheres[2].ka = 0.0f;
-    spheres[2].ks = 0.0f;
-    spheres[2].kr = 1.0f;
-    spheres[2].kt = 0.0f;
-    spheres[2].kd = Vec3( 0.0, 0.0, 0.0 );
-    spheres[2].n = 11;
+    Spheres[2].r = 10;
+    Spheres[2].c = Vec3( 0, -11, 0 );
+    Spheres[2].ka = 0.0f;
+    Spheres[2].ks = 0.0f;
+    Spheres[2].kr = 1.0f;
+    Spheres[2].kt = 0.0f;
+    Spheres[2].kd = Vec3( 0.0, 0.0, 0.0 );
+    Spheres[2].n = 11;
 
     nSphere = 2;
 
@@ -211,52 +211,52 @@ void RayEngine::scene3(void) {
     up = Vec3( 0, 1, 0 );
 
 
-    //spheres
-    spheres[0].c = Vec3( 1, 0, 3.0f );
-    spheres[0].r = 1.0f;
-    spheres[0].ka = 0.4f;
-    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
-    spheres[0].ks = 0.2f;
-    spheres[0].n = 8;
-    spheres[0].kr = 0.7f;
-    spheres[0].kt = 0.0f;
+    //Spheres
+    Spheres[0].c = Vec3( 1, 0, 3.0f );
+    Spheres[0].r = 1.0f;
+    Spheres[0].ka = 0.4f;
+    Spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
+    Spheres[0].ks = 0.2f;
+    Spheres[0].n = 8;
+    Spheres[0].kr = 0.7f;
+    Spheres[0].kt = 0.0f;
 
-    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
-    spheres[1].r = 0.7f;
-    spheres[1].ka = 1.0f;
-    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
-    spheres[1].ks = 0.2f;
-    spheres[1].n = 7;
-    spheres[1].kr = 0.5f;
-    spheres[1].kt = 0.0f; //*/
+    Spheres[1].c = Vec3( -1.0f, 0, 3.0 );
+    Spheres[1].r = 0.7f;
+    Spheres[1].ka = 1.0f;
+    Spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
+    Spheres[1].ks = 0.2f;
+    Spheres[1].n = 7;
+    Spheres[1].kr = 0.5f;
+    Spheres[1].kt = 0.0f; //*/
 
-    spheres[2].c = Vec3( .4, 1.5, 3.0 );
-    spheres[2].r = 0.2f;
-    spheres[2].ka = 1.0f;
-    spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
-    spheres[2].ks = 0.1f;
-    spheres[2].n = 10;
-    spheres[2].kr = 0.5f;
-    spheres[2].kt = 0.0f;
+    Spheres[2].c = Vec3( .4, 1.5, 3.0 );
+    Spheres[2].r = 0.2f;
+    Spheres[2].ka = 1.0f;
+    Spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
+    Spheres[2].ks = 0.1f;
+    Spheres[2].n = 10;
+    Spheres[2].kr = 0.5f;
+    Spheres[2].kt = 0.0f;
 
-    spheres[3].c = Vec3( -.7, 1.7, 3.0 );
-    spheres[3].r = 0.3f;
-    spheres[3].ka = 1.0f;
-    spheres[3].kd = Vec3( 1.0f, 1, 1 );
-    spheres[3].ks = 0.2f;
-    spheres[3].n = 11;
-    spheres[3].kr = 0.5f;
-    spheres[3].kt = 0.0f;
+    Spheres[3].c = Vec3( -.7, 1.7, 3.0 );
+    Spheres[3].r = 0.3f;
+    Spheres[3].ka = 1.0f;
+    Spheres[3].kd = Vec3( 1.0f, 1, 1 );
+    Spheres[3].ks = 0.2f;
+    Spheres[3].n = 11;
+    Spheres[3].kr = 0.5f;
+    Spheres[3].kt = 0.0f;
 
 
-    spheres[4].c = Vec3( 0, -11, 0 );
-    spheres[4].r = 10;
-    spheres[4].ka = 1.0f;
-    spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
-    spheres[4].ks = 0.1f;
-    spheres[4].n = 11;
-    spheres[4].kr = 0.3f;
-    spheres[4].kt = 0.0f;
+    Spheres[4].c = Vec3( 0, -11, 0 );
+    Spheres[4].r = 10;
+    Spheres[4].ka = 1.0f;
+    Spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
+    Spheres[4].ks = 0.1f;
+    Spheres[4].n = 11;
+    Spheres[4].kr = 0.3f;
+    Spheres[4].kt = 0.0f;
 
 
     //objects
@@ -522,7 +522,7 @@ void RayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool clic
     
     for( int i = 0; i < nSphere; i++ )
     {
-        sphere &s = spheres[i];
+        Sphere &s = Spheres[i];
 
         b = 2*(r.d[0] * (r.o[0] - s.c[0]) + r.d[1] * (r.o[1] - s.c[1]) + r.d[2] * (r.o[2] - s.c[2]));
         c = pow((r.o[0] - s.c[0]),2) + pow((r.o[1] - s.c[1]),2) + pow((r.o[2] - s.c[2]),2) - s.r*s.r;
@@ -610,7 +610,7 @@ void RayEngine::trace( ray r, int depthIn, double effect, Vec3 &color, bool clic
         }
         
 
-    }//spheres
+    }//Spheres
 
 
     //final actions after main loops--------

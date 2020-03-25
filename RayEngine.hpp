@@ -28,7 +28,7 @@ public:
     Vec3 d;
 };
 
-class sphere
+class Sphere
 {
 public:
     double r; //radius
@@ -65,7 +65,7 @@ public:
     int px;
     Vec3 ia;
     double c;
-    sphere spheres[8];
+    Sphere Spheres[8];
     int nSphere = 5;
     light lights[2];
     int nLight = 2;
