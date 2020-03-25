@@ -34,12 +34,13 @@ TEMPLATE_FILE = template/controls.html
 
 out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) Makefile
 	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
-	--shell-file $(TEMPLATE_FILE) \
+	--proxy-to-worker \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a'
 
 # '-Wshadow-all'
+#--proxy-to-worker \
 
 # not working due to chrome not liking these options
 #-s USE_PTHREADS=1 -s RESERVED_FUNCTION_POINTERS=1

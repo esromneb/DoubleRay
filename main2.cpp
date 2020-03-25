@@ -9,7 +9,13 @@
 #include <chrono>
 #include <unistd.h> //usleep
 
+
+#include <stdio.h>
+#include <SDL/SDL.h>
+
+#ifdef __EMSCRIPTEN__
 #include <emscripten.h>
+#endif
 
 
 
@@ -180,7 +186,7 @@ void fakeBuffer(void) {
     }
 }
 
-int main(int argc, char ** argv) {
+int main3(int argc, char ** argv) {
     // printf("Hello Precilla\n");
     cout << "Enter main()" << "\n";
     // t1();
@@ -190,10 +196,113 @@ int main(int argc, char ** argv) {
     // printBuffer();
     // fakeBuffer();
     // cout << "Hello Precilla\n";
+    return 0;
 }
 
-uint32_t nextVal = 0;
+SDL_Surface *screen = 0;
 
+std::chrono::steady_clock::time_point frames_then;
+unsigned frames = 0;
+unsigned frames_p = 0;
+
+
+void officialRender(bool boolA, bool boolB) {
+    if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
+      for (int i = 0; i < 256; i++) {
+        for (int j = 0; j < 256; j++) {
+
+// #ifdef TEST_SDL_LOCK_OPTS
+          // Alpha behaves like in the browser, so write proper opaque pixels.
+          const uint8_t alpha = 255;
+// #else
+//           // To emulate native behavior with blitting to screen, alpha component is ignored. Test that it is so by outputting
+//           // data (and testing that it does get discarded)
+          // int alpha = (i+j) % 255;
+// #endif
+
+          const uint8_t r = boolA ? (255-i) : i;
+          const uint8_t g = boolB ? (255-j) : j;
+          const uint8_t b = 255-i;
+
+
+          *((Uint32*)screen->pixels + i * 256 + j) = SDL_MapRGBA(screen->format, r, g, b, alpha);
+        }
+      }
+      if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
+      SDL_Flip(screen);
+      frames++;
+      // usleep(10E3);
+
+      if( (frames & (0xfff>>1)) == 0 ) {
+        unsigned delta = frames - frames_p;
+        auto frames_now = std::chrono::steady_clock::now();
+
+        const size_t elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>( 
+            frames_now - frames_then
+        ).count();
+
+        double elapsed_s = elapsed_us / 1E6;
+        double fps = delta / elapsed_s;
+
+        // cout << "Frames: " << frames << "\n";
+        cout << "FPS: " << fps << "\n";
+
+        frames_then = frames_now;
+        frames_p = frames;
+      }
+
+}
+
+int main(int argc, char ** argv) {
+    SDL_Init(SDL_INIT_VIDEO);
+    screen = SDL_SetVideoMode(256, 256, 32, SDL_SWSURFACE);
+
+    #ifdef TEST_SDL_LOCK_OPTS
+    EM_ASM("SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = true; SDL.defaults.opaqueFrontBuffer = false;");
+    #endif
+
+    frames_then = std::chrono::steady_clock::now();
+
+
+    officialRender(false, false);
+
+    while(1) {
+        officialRender(false, false);
+        officialRender(false, true);
+        officialRender(true, false);
+        officialRender(true, true);
+    }
+
+      // printf("you should see a smoothly-colored square - no sharp lines but the square borders!\n");
+      // printf("and here is some text that should be HTML-friendly: amp: |&| double-quote: |\"| quote: |'| less-than, greater-than, html-like tags: |<cheez></cheez>|\nanother line.\n");
+
+      // SDL_Quit();
+
+      return 0;
+}
+
+static uint32_t nextVal = 0;
+
+
+
+
+///
+/// These are all of the C++ -> Javascript
+///
+
+EM_JS(void, call_alert, (), {
+  alert('hello world!');
+  // throw 'all done';
+});
+
+
+
+
+
+
+///
+/// These are all of the Javascript -> C++ functions
+///
 
 extern "C" {
 
@@ -227,9 +336,18 @@ void setScale(const float s) {
 }
 
 void debug2(void) {
-    cout << "start debug2" << "\n";
-    usleep(2E6);
-    cout << "exit debug2" << "\n";
+    // cout << "start debug2" << "\n";
+    // usleep(2E6);
+    // cout << "exit debug2" << "\n";
+
+    // officialRender(true, true);
+
+    while(1) {
+        officialRender(false, false);
+        officialRender(false, true);
+        officialRender(true, false);
+        officialRender(true, true);
+    }
 }
 
 
