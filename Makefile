@@ -26,11 +26,13 @@ EXPORT_STRING = \
 "_doDebugRender", \
 "_setScale",
 
+TEMPLATE_FILE = template/controls.html
 
 
-out/ray.wasm: $(CPP_FILES) $(HPP_FILES) Makefile
+
+out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) Makefile
 	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
-	--shell-file template/controls.html \
+	--shell-file $(TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a'

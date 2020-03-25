@@ -50,3 +50,9 @@ See Also
 ===
 * https://emscripten.org/docs/compiling/Deploying-Pages.html - emscripten instructions for custom html
 * https://blog.scottlogic.com/2014/03/12/native-code-emscripten-webgl-simmer-gently.html - webgl
+
+
+
+Notes
+===
+Last version with my canvas and emscripten official canvas is in templates/both.html
