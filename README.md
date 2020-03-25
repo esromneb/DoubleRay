@@ -3,6 +3,30 @@ Raytracer
 From UC Davis ECS175
 
 
+Compile
+===
+```bash
+make
+```
+
+Run
+===
+```bash
+cd out
+sudo python -m SimpleHTTPServer 80
+```
+
+open ray2.html in firefox (chrome is slower for me)
+
+
+Notes
+===
+My initial version hand modifies the output (ray.html) and calls it (ray2.html).
+
+
+
+
+
 Deps
 ===
 On ubuntu:

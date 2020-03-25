@@ -68,8 +68,9 @@ double vec3::dot( const vec3 &rhs )
     vec3 tmp = (*this)*rhs;
     double ret = 0;
 
-    for( int i = 0; i < 3; i++ )
+    for( int i = 0; i < 3; i++ ) {
         ret += tmp[i];
+    }
 
     return ret;
         
@@ -79,8 +80,9 @@ vec3 vec3::operator *( const vec3 &rhs)
 {
     vec3 ret;
 
-    for( int i = 0; i < 3; i++ )
+    for( int i = 0; i < 3; i++ ) {
         ret.data[i] = data[i] * rhs.data[i];
+    }
 
     return ret;
 }
@@ -88,8 +90,7 @@ vec3 vec3::operator *( const vec3 &rhs)
 vec3 vec3::operator* ( double rhs )
 {
     vec3 ret;
-    for( int i = 0; i < 3; i++ )
-    {
+    for( int i = 0; i < 3; i++ ) {
         ret.data[i] = data[i] * rhs;
     }
     return ret;
@@ -98,8 +99,7 @@ vec3 vec3::operator* ( double rhs )
 vec3 vec3::operator/ ( double rhs )
 {
     vec3 ret;// = new vec3(y);
-    for( int i = 0; i < 3; i++ )
-    {
+    for( int i = 0; i < 3; i++ ) {
         ret.data[i] = data[i] / rhs;
     }
     return ret;
@@ -108,8 +108,7 @@ vec3 vec3::operator/ ( double rhs )
 const vec3 vec3::operator+ ( const vec3 &rhs ) const
 {
     vec3 ret;// = new vec3(y);
-    for( int i = 0; i < 3; i++ )
-    {
+    for( int i = 0; i < 3; i++ ) {
         ret.data[i] = data[i] + rhs.data[i];
     }
     return ret;
@@ -117,8 +116,7 @@ const vec3 vec3::operator+ ( const vec3 &rhs ) const
 const vec3 vec3::operator- ( const vec3 &rhs ) const
 {
     vec3 ret;// = new vec3(3);
-    for( int i = 0; i < 3; i++ )
-    {
+    for( int i = 0; i < 3; i++ ) {
         ret.data[i] = data[i] - rhs.data[i];
     }
     return ret;
@@ -126,8 +124,7 @@ const vec3 vec3::operator- ( const vec3 &rhs ) const
 const vec3 vec3::operator+ ( const double rhs ) const
 {
     vec3 ret;// = new vec3(y);
-    for( int i = 0; i < 3; i++ )
-    {
+    for( int i = 0; i < 3; i++ ) {
         ret.data[i] = data[i] + rhs;
     }
     return ret;
@@ -143,7 +140,7 @@ vec3 cross( const vec3 &left, const vec3 &right )
 
 void vec3::normalize( void )
 {
-    double mag = this->mag();
+    const double mag = this->mag();
     data[0] = data[0] / mag;
     data[1] = data[1] / mag;
     data[2] = data[2] / mag;
