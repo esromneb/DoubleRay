@@ -14,7 +14,7 @@ using namespace std;
 rayEngine* engine;
 bool renderDone = false;
 std::vector<std::vector<uint32_t>> buffer;
-float scale = 0.004;
+float scale = 0.006;
 float gain = 1.1;
 
 void t1(void) {
