@@ -3,7 +3,7 @@
 ////////////////////////////////////////
 
 Module["onCustomMessage"] = (x) => {
-  console.log('worker got msg: ' + JSON.stringify(x));
+  console.log('wworker got msg: ' + JSON.stringify(x.data));
 }
 
 ////////////////////////////////////////
