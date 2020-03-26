@@ -299,7 +299,7 @@ void officialCopyBuffer(void) {
     if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
     SDL_Flip(screen);
 
-    // cout << rmax << "\n";   
+    // cout << rmax << "\n";
     // glEnd();
 }
 
