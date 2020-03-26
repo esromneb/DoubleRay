@@ -1,5 +1,6 @@
 #include "RayEngine.hpp"
 #include <math.h>
+#include <iostream>
 
 Ray::Ray()
 {
@@ -149,8 +150,8 @@ void RayEngine::scene2(void) {
     spheres[1].r = 0.7f;
     spheres[1].c = Vec3( -1.0f, 0, 3.0 );
     spheres[1].ka = 0.0f;
-    spheres[1].ks = 0.0f;
-    spheres[1].kr = 1.0f;
+    spheres[1].ks = 0.00f;
+    spheres[1].kr = 0.99f;
     spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
     spheres[1].n = 7;
     spheres[1].kt = 0.0f; //*/
@@ -184,6 +185,8 @@ void RayEngine::scene2(void) {
     spheres[2].n = 11;
 
     spheres.resize(2); // delete last one
+
+    spheres.erase(spheres.begin());
 
     // nSphere = 2;
 
@@ -372,6 +375,10 @@ void RayEngine::render( void )
             this->g[i+j*px] = color[1];
             this->b[i+j*px] = color[2];
 
+            if( j == 250 && (i > 258 && i < 268) ) {
+                cout << color[2] << "\n";
+            }
+
         }
 }
 
@@ -402,7 +409,7 @@ void RayEngine::trace(
     //double normDotDir;
     numHit = 0;
     double minHit = 999999;
-    Vec3 savedColor;
+    Vec3 savedColor((Vec3){1,1,1});
     Vec3 savedRefl;
     Vec3 savedIntersect;
     Ray shadowFeeler;
@@ -550,8 +557,8 @@ void RayEngine::trace(
         if( b*b - 4*c < 0 )
             continue;
         
-        if( i == 1 )
-            i = 1;
+        // if( i == 1 )
+        //     i = 1;
 
         t0 = (-1* b - sqrt(b*b - 4*c)) / 2;
         t1 = (-1* b + sqrt(b*b - 4*c)) / 2;
@@ -628,6 +635,8 @@ void RayEngine::trace(
             savedColor = color;
             savedRefl = refl;
             savedKr = s.kr;
+
+            // std::cout << s.kr << ",";
             savedIntersect = intersect;
         }
         

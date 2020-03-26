@@ -35,7 +35,7 @@ out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) Makefile
 	--shell-file $(TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
-	'-std=c++2a'
+	'-std=c++2a' '-Wmissing-field-initializers' '-Wall' '-Wuninitialized'
 
 # '-Wshadow-all'
 
