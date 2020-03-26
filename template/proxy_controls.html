@@ -109,6 +109,17 @@
         setTimeout(bufferToCanv,1000);
       }
 
+      function doRenderOfficialClick() {
+        // const doRender = Module.cwrap('doRender', 'void');
+        // doRender();
+        // setTimeout(bufferToCanv,1000);
+        postCustomMessage({type:'call',fn:'doRenderOfficial',rt:'void'});
+      }
+
+      function setupEngineClick() {
+        postCustomMessage({type:'call',fn:'setupEngine',rt:'void'});
+      }
+
       function renderDebugClick() {
         const doDebugRender = Module.cwrap('doDebugRender', 'void');
         doDebugRender();
@@ -161,13 +172,19 @@
     </script>
     <table>
 <td valign="top">
+<!--
 <input type="button" value="Render" onclick="renderClick()"/><br>
 <input type="button" value="RenderDebug" onclick="renderDebugClick()"/><br>
 <input type="button" value="SetScale" onclick="setScaleClick()"/>
 <input type="text" value="0.006" id="scaleText"/>
-<br>
-<br>
 <input type="button" value="debug2()" onclick="debug2Click()"/><br>
+<br>
+<br>
+-->
+<input type="button" value="Setup Engine" onclick="setupEngineClick()"/><br>
+<input type="button" value="Render Official" onclick="doRenderOfficialClick()"/><br>
+<br>
+<br>
 <input type="button" value="Next Rainbow" onclick="nextRainbowClick()"/><br>
 <input type="button" value="Cout from C++" onclick="coutIntClick()"/><br>
 <input type="button" value="Cout from C++ dual" onclick="coutIntDualClick()"/><br>

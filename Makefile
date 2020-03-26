@@ -28,6 +28,7 @@ EXPORT_STRING = \
 "_getPixel", \
 "_doRender", \
 "_doDebugRender", \
+"_setupEngine", \
 "_debug2", \
 "_setFrameSleep", \
 "_onRuntimeInitialized", \
@@ -35,6 +36,7 @@ EXPORT_STRING = \
 "_renderNextRainbow", \
 "_coutInt", \
 "_coutIntDual", \
+"_doRenderOfficial", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

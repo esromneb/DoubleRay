@@ -37,6 +37,8 @@ void t1(void) {
     // cout << v1.str() << "\n";
 }
 
+extern "C" {
+    
 void setupEngine(void) {
     engine = new RayEngine();
     engine->resize(400);
@@ -55,7 +57,6 @@ void setupEngine(void) {
     engine->makeObjects();
 }
 
-extern "C" {
 
 void render(void) {
     renderDone = false;
@@ -257,6 +258,45 @@ void officialRenderRainbow(bool boolA, bool boolB) {
       usleep(frame_sleep);
 }
 
+
+void officialCopyBuffer(void) {
+    const uint32_t px = 400;
+
+    // float rmax = 0;
+
+
+    // glBegin(GL_POINTS);
+    for( int y = 0; y < px; y++ ) {
+        for( int x = 0; x < px; x++ ) {
+            float r = engine->r[x+y*px];
+            float g = engine->g[x+y*px];
+            float b = engine->b[x+y*px];
+            float rs = gain + (r / scale);
+            float gs = gain + (g / scale);
+            float bs = gain + (b / scale);
+
+            uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
+            uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
+            uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
+
+
+            buffer[x][px-y] = (rb<<16) | (gb<<8) | bb;
+            // buffer[x][y] = rb;
+            // cout << r << "\n";
+            // if( r > rmax ) {
+            //     rmax = r;
+            // }
+            // glColor3f( r[x+y*px], g[x+y*px], b[x+y*px] );
+            // glVertex2i( x, y );
+        }
+    }
+
+    // cout << rmax << "\n";   
+    // glEnd();
+}
+
+
+
 // sets global screen
 void initSetResolution(const unsigned x, const unsigned y) {
     SDL_Init(SDL_INIT_VIDEO);
@@ -323,6 +363,14 @@ void doRender(void) {
     render();
     copyBuffer();
     cout << "Render finished\n";
+}
+
+void doRenderOfficial(void) {
+    // return 4;
+    render();
+    cout << "Render finished\n";
+    officialCopyBuffer();
+    cout << "Copy finished\n";
 }
 
 
