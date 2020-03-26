@@ -26,21 +26,27 @@ EXPORT_STRING = \
 "_doRender", \
 "_doDebugRender", \
 "_debug2", \
+"_setFrameSleep", \
+"_onRuntimeInitialized", \
+"_onCustomMessage", \
 "_setScale",
 
 TEMPLATE_FILE = template/controls.html
+JS_TEMPLATE_FILE = template/pre.ray.js
 
 
 
-out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) Makefile
+out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	--proxy-to-worker \
+	--pre-jses $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a'
 
 # '-Wshadow-all'
 #--proxy-to-worker \
+#-s PROXY_TO_WORKER_FILENAME='custom.ray' \
 
 # not working due to chrome not liking these options
 #-s USE_PTHREADS=1 -s RESERVED_FUNCTION_POINTERS=1

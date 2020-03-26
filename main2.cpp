@@ -206,6 +206,9 @@ unsigned frames = 0;
 unsigned frames_p = 0;
 
 
+unsigned frame_sleep = 0;
+
+
 void officialRender(bool boolA, bool boolB) {
     if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
       for (int i = 0; i < 256; i++) {
@@ -251,6 +254,8 @@ void officialRender(bool boolA, bool boolB) {
         frames_p = frames;
       }
 
+      usleep(frame_sleep);
+
 }
 
 int main(int argc, char ** argv) {
@@ -266,12 +271,12 @@ int main(int argc, char ** argv) {
 
     officialRender(false, false);
 
-    while(1) {
-        officialRender(false, false);
-        officialRender(false, true);
-        officialRender(true, false);
-        officialRender(true, true);
-    }
+    // while(1) {
+    //     officialRender(false, false);
+    //     officialRender(false, true);
+    //     officialRender(true, false);
+    //     officialRender(true, true);
+    // }
 
       // printf("you should see a smoothly-colored square - no sharp lines but the square borders!\n");
       // printf("and here is some text that should be HTML-friendly: amp: |&| double-quote: |\"| quote: |'| less-than, greater-than, html-like tags: |<cheez></cheez>|\nanother line.\n");
@@ -348,6 +353,19 @@ void debug2(void) {
         officialRender(true, false);
         officialRender(true, true);
     }
+}
+
+
+void setFrameSleep(const int s) {
+    frame_sleep = s;
+}
+
+void onRuntimeInitialized(void) {
+    cout << "onRuntimeInitialized()" << "\n";
+}
+
+void onCustomMessage(void) {
+    cout << "onCustomMessage()" << "\n";
 }
 
 
