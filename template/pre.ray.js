@@ -12,6 +12,21 @@ Module['onCustomMessage'] = (x) => {
 }
 
 
+///
+/// The main thread posts a js object to us that looks like
+///
+/// {"type":"call","fn":"renderNextRainbow","rt":"void"}
+/// {"type":"call","fn":"coutIntDual","rt":"void","at":["number","number"],"av":[5,6]}
+///
+/// Which allows us to specify the full function signature as well as input values for the signature
+/// The keys are
+/// fn -> function name
+/// rt -> return type
+/// at -> argument types
+/// av -> argument values
+///
+
+
 Module['dispatchCustomMessageType'] = (x) => {
   console.log('in dispatchCustomMessageType' + JSON.stringify(x));
 
