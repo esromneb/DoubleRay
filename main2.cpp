@@ -211,8 +211,8 @@ unsigned frame_sleep = 0;
 
 void officialRenderRainbow(bool boolA, bool boolB) {
     if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
-      for (int i = 0; i < 256; i++) {
-        for (int j = 0; j < 256; j++) {
+      for (int i = 0; i < 400; i++) {
+        for (int j = 0; j < 400; j++) {
 
 // #ifdef TEST_SDL_LOCK_OPTS
           // Alpha behaves like in the browser, so write proper opaque pixels.
@@ -228,7 +228,7 @@ void officialRenderRainbow(bool boolA, bool boolB) {
           const uint8_t b = 255-i;
 
 
-          *((Uint32*)screen->pixels + i * 256 + j) = SDL_MapRGBA(screen->format, r, g, b, alpha);
+          *((Uint32*)screen->pixels + i * 400 + j) = SDL_MapRGBA(screen->format, r, g, b, alpha);
         }
       }
       if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
@@ -255,17 +255,24 @@ void officialRenderRainbow(bool boolA, bool boolB) {
       }
 
       usleep(frame_sleep);
-
 }
 
-int main(int argc, char ** argv) {
+// sets global screen
+void initSetResolution(const unsigned x, const unsigned y) {
     SDL_Init(SDL_INIT_VIDEO);
-    screen = SDL_SetVideoMode(256, 256, 32, SDL_SWSURFACE);
+    screen = SDL_SetVideoMode(x, y, 32, SDL_SWSURFACE);
 
     #ifdef TEST_SDL_LOCK_OPTS
     EM_ASM("SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = true; SDL.defaults.opaqueFrontBuffer = false;");
     #endif
 
+}
+
+int main(int argc, char ** argv) {
+
+    // initSetResolution(256, 256);
+    initSetResolution(400, 400);
+    
     frames_then = std::chrono::steady_clock::now();
 
 

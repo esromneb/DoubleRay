@@ -33,20 +33,21 @@ Module['dispatchCustomMessageType'] = (x) => {
   switch(x.type) {
     case 'call': {
 
-        // debug
-        // const setScale = Module.cwrap('coutInt', 'void', ['number']);
-        // setScale(101);
-        // break;
+        ///
+        /// Handle most specific cases first so that we can try objets with missing keys below
+        ///
 
         if ( x.fn && x.rt && x.at && x.av ) {
-          console.log('in void, any case');
           // handle the void, any case
+          // console.log('in void, any case');
+
           const boundFn = Module.cwrap(x.fn, 'void', x.at);
-          // const boundFn = Module.cwrap(x.fn, 'void', ['number']);
+          // this is the spread operator
           boundFn(...x.av);
-          // boundFn(99);
+
         } else if( x.fn && x.rt ) {
           // handle void, void case
+          
           const boundFn = Module.cwrap(x.fn, 'void');
           boundFn();
         } else {
