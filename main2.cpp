@@ -391,6 +391,14 @@ void onCustomMessage(void) {
     cout << "onCustomMessage()" << "\n";
 }
 
+void coutInt(const int a) {
+    cout << "C++ got this int: " << a << "\n";
+}
+
+void coutIntDual(const int a, const int b) {
+    cout << "C++ got these ints: " << a << ", " << b << "\n";
+}
+
 
 } // extern C
 

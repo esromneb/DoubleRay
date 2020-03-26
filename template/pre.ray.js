@@ -17,8 +17,21 @@ Module['dispatchCustomMessageType'] = (x) => {
 
   switch(x.type) {
     case 'call': {
-        // handle void void case
-        if( x.fn && x.rt ) {
+
+        // debug
+        // const setScale = Module.cwrap('coutInt', 'void', ['number']);
+        // setScale(101);
+        // break;
+
+        if ( x.fn && x.rt && x.at && x.av ) {
+          console.log('in void, any case');
+          // handle the void, any case
+          const boundFn = Module.cwrap(x.fn, 'void', x.at);
+          // const boundFn = Module.cwrap(x.fn, 'void', ['number']);
+          boundFn(...x.av);
+          // boundFn(99);
+        } else if( x.fn && x.rt ) {
+          // handle void, void case
           const boundFn = Module.cwrap(x.fn, 'void');
           boundFn();
         } else {

@@ -148,9 +148,15 @@
         postCustomMessage({type:'call',fn:'renderNextRainbow',rt:'void'});
       }
 
-      function proxyCall() {
 
+      function coutIntClick() {
+        postCustomMessage({type:'call',fn:'coutInt',rt:'void',at:['number'],av:[4]});
       }
+
+      function coutIntDualClick() {
+        postCustomMessage({type:'call',fn:'coutIntDual',rt:'void',at:['number','number'],av:[5,6]});
+      }
+
 
     </script>
     <table>
@@ -162,7 +168,9 @@
 <br>
 <br>
 <input type="button" value="debug2()" onclick="debug2Click()"/><br>
-<input type="button" value="Next Rainbow" onclick="nextRainbowClick()"/>
+<input type="button" value="Next Rainbow" onclick="nextRainbowClick()"/><br>
+<input type="button" value="Cout from C++" onclick="coutIntClick()"/><br>
+<input type="button" value="Cout from C++ dual" onclick="coutIntDualClick()"/><br>
 </td></tr></table>
 
 

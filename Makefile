@@ -18,6 +18,9 @@ Poly.cpp \
 Matrix.cpp \
 RayEngine.cpp 
 
+# this is a list of all C functions we want to publish to javascript
+# In the main cpp file, each of these is wrapped in extern "C" {}
+# the version here has a prepended underscore
 # all lines must have trailing comma
 EXPORT_STRING = \
 "_get4", \
@@ -30,6 +33,8 @@ EXPORT_STRING = \
 "_onRuntimeInitialized", \
 "_onCustomMessage", \
 "_renderNextRainbow", \
+"_coutInt", \
+"_coutIntDual", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
