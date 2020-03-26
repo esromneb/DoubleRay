@@ -70,7 +70,7 @@ public:
     void resize( const int _x );
     float *r, *g, *b;
     int px;
-    Vec3 ia;
+    Vec3 ia; // Ambient color
     double c;
     std::vector<Sphere> spheres;
     // int nSphere = 5;

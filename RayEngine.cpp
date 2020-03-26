@@ -176,7 +176,7 @@ void RayEngine::scene2(void) {
 
     spheres[2].r = 10;
     spheres[2].c = Vec3( 0, -11, 0 );
-    spheres[2].ka = 0.0f;
+    spheres[2].ka = 0.4f;
     spheres[2].ks = 0.0f;
     spheres[2].kr = 1.0f;
     spheres[2].kt = 0.0f;
@@ -204,8 +204,8 @@ void RayEngine::scene2(void) {
 
     // nLight = 1;
 
-    //global
-    ia = Vec3( 0.2f, 0.2f, 0.2f );
+    // global
+    ia = Vec3( 0.4f, 0.4f, 0.4f ); // Global Ambient color
     c = 7;
     depth = 3;
 
