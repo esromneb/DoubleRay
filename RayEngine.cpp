@@ -391,7 +391,7 @@ void RayEngine::trace(
 
     double b,c,t0,t1;
     Vec3 intersect;
-    Vec3 from, fp, refl, lightRefl, tmp, norm, newColor;
+    Vec3 from, fp, refl, lightRefl, tmp, norm;
     color[0] = color[1] = color[2] = 0;
     double srInverse;
 
@@ -648,6 +648,7 @@ void RayEngine::trace(
         Ray reflRay;
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;
+        Vec3 newColor(0,0,0);
         trace( reflRay, depthIn+1, effect, newColor, false, bSphere, objectNum, false );
         color = savedColor + newColor * savedKr;
     } else {
