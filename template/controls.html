@@ -135,6 +135,29 @@
         // setTimeout(bufferToCanv,1000);
       }
 
+      function fa() {
+        const fn = Module.cwrap('setupEngine', 'void');
+        fn();
+        // setTimeout(bufferToCanv,1000);
+      }
+
+      function fb() {
+        const fn = Module.cwrap('render', 'void');
+        fn();
+        // setTimeout(bufferToCanv,1000);
+      }
+
+      function fc() {
+        const fn = Module.cwrap('copyBuffer', 'void');
+        fn();
+        // setTimeout(bufferToCanv,1000);
+      }
+
+      function fd() {
+        bufferToCanv();
+        // setTimeout(bufferToCanv,1000);
+      }
+
     </script>
     <table>
       <tr><td>
@@ -203,7 +226,7 @@ function bufferToCanv() {
 
 setTimeout(()=>{
 
-  bufferToCanv();
+  // bufferToCanv();
   // console.log('hii');
   // console.log(get4());
   // console.log(getNext());

@@ -27,6 +27,7 @@ void t1(void) {
     // cout << v1.str() << "\n";
 }
 
+extern "C" {
 void setupEngine(void) {
     engine = new RayEngine();
     engine->resize(400);
@@ -44,7 +45,6 @@ void setupEngine(void) {
     }
 }
 
-extern "C" {
 
 void render(void) {
     renderDone = false;
@@ -64,7 +64,7 @@ void render(void) {
     }
 }
 
-}
+
 
 void copyBuffer(void) {
     uint32_t px = 400;
@@ -103,7 +103,7 @@ void copyBuffer(void) {
 }
 
 
-
+} // export
 
 void printBuffer(void) {
     uint32_t px = 400;
@@ -178,9 +178,16 @@ void fakeBuffer(void) {
 int main(int argc, char ** argv) {
     // printf("Hello Precilla\n");
     // t1();
-    setupEngine();
-    render();
-    copyBuffer();
+
+
+
+
+    // setupEngine();
+    // render();
+    // copyBuffer();
+
+
+
     // printBuffer();
     // fakeBuffer();
     // cout << "Hello Precilla\n";
@@ -194,8 +201,9 @@ extern "C" {
 void doRender(void) {
     // return 4;
     render();
-    copyBuffer();
     cout << "Render finished\n";
+    copyBuffer();
+    cout << "Copy finished\n";
 }
 
 

@@ -23,6 +23,9 @@ EXPORT_STRING = \
 "_getNext", \
 "_getPixel", \
 "_doRender", \
+"_render", \
+"_setupEngine", \
+"_copyBuffer", \
 "_doDebugRender", \
 "_setScale",
 

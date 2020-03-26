@@ -183,7 +183,7 @@ void RayEngine::scene2(void) {
     spheres[2].kd = Vec3( 0.0, 0.0, 0.0 );
     spheres[2].n = 11;
 
-    spheres.resize(2); // delete last one
+    // spheres.resize(2); // delete last one
 
     // nSphere = 2;
 
