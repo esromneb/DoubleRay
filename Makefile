@@ -37,6 +37,7 @@ EXPORT_STRING = \
 "_coutInt", \
 "_coutIntDual", \
 "_doRenderOfficial", \
+"_setCamera", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

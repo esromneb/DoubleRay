@@ -168,6 +168,43 @@
         postCustomMessage({type:'call',fn:'coutIntDual',rt:'void',at:['number','number'],av:[5,6]});
       }
 
+      function addVec3Signature(vin, n) {
+        var vin2 = typeof vin !== 'undefined' ? vin : [];
+        var n2 = typeof n !== 'undefined' ? n : 1;
+
+        for(let i = 0; i < n2; i++) {
+
+          vin2.push('number');
+          vin2.push('number');
+          vin2.push('number');
+        }
+
+        return vin2;
+      }
+
+      function setCamera(location, direction, rotation) {
+        if( !Array.isArray(location) || location.length != 3 ) {
+          console.log("Illegal argument passed to setCamera()");
+          return;
+        }
+
+        if( !Array.isArray(direction) || direction.length != 3 ) {
+          console.log("Illegal argument passed to setCamera()");
+          return;
+        }
+
+        if( !Array.isArray(rotation) || rotation.length != 3 ) {
+          console.log("Illegal argument passed to setCamera()");
+          return;
+        }
+
+        const sig = addVec3Signature([],3);
+
+        const args = [location,direction,rotation].flat();
+
+        postCustomMessage({type:'call',fn:'setCamera',rt:'void',at:sig,av:args});
+      }
+
 
     </script>
     <table>

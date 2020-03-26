@@ -456,10 +456,33 @@ void onCustomMessage(void) {
 
 void coutInt(const int a) {
     cout << "C++ got this int: " << a << "\n";
+
+    // // float fly_0;
+    // ARG_VEC3_SIG(fly);
+
+    // fly_0 = 42;
+
+    // cout << "fly " << fly_0 << "\n";
+
 }
 
 void coutIntDual(const int a, const int b) {
     cout << "C++ got these ints: " << a << ", " << b << "\n";
+}
+
+void setCamera(VEC3_ARG(location), VEC3_ARG(direction), VEC3_ARG(rotation)) {
+    cout << "Rot: " << rotation_0 << "," << rotation_1 << "," << rotation_2 << "\n";
+
+    auto &camera = engine->camera;
+
+    camera.o = VEC3_ARG_CTONS(location);
+
+    camera.d = VEC3_ARG_CTONS(direction);
+    camera.d.normalize();
+    
+    engine->up = VEC3_ARG_CTONS(rotation);
+    engine->up.normalize();
+
 }
 
 
