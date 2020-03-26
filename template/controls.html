@@ -158,6 +158,18 @@
         // setTimeout(bufferToCanv,1000);
       }
 
+
+      function pr() {
+        const fn = Module.cwrap('printRow', 'void');
+        fn();
+        // setTimeout(bufferToCanv,1000);
+      }
+      function aao() {
+        const fn = Module.cwrap('allAtOnce', 'void');
+        fn();
+        // setTimeout(bufferToCanv,1000);
+      }
+
     </script>
     <table>
       <tr><td>

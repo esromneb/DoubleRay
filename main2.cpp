@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdint.h>
 #include <chrono>
+#include <unistd.h>
 
 
 
@@ -103,7 +104,7 @@ void copyBuffer(void) {
 }
 
 
-} // export
+
 
 void printBuffer(void) {
     uint32_t px = 400;
@@ -135,8 +136,43 @@ void printBuffer(void) {
     // glEnd();
 }
 
+void printRow(void) {
+    uint32_t px = 400;
+    uint32_t row = 10;
+    uint32_t col_max = 16;
+
+    // float rmax = 0;
 
 
+    // glBegin(GL_POINTS);
+    for( int y = row; y < row+1; y++ ) {
+        for( int x = 0; x < col_max; x++ ) {
+            float r = engine->r[x+y*px];
+            float g = engine->g[x+y*px];
+            float b = engine->b[x+y*px];
+            
+
+            cout << b << ",";
+
+            // buffer[x][y] = rb;
+            // cout << r << "\n";
+            // if( r > rmax ) {
+            //     rmax = r;
+            // }
+            // glColor3f( r[x+y*px], g[x+y*px], b[x+y*px] );
+            // glVertex2i( x, y );
+        }
+    }
+
+    cout << "\n";
+
+    // cout << rmax << "\n";   
+    // glEnd();
+}
+
+
+
+} // export
 
 // ^
 // |
@@ -197,6 +233,14 @@ uint32_t nextVal = 0;
 
 
 extern "C" {
+
+void allAtOnce(void) {
+    setupEngine();
+    // usleep(1E6);
+    render();
+    // usleep(1E6);
+    copyBuffer();
+}
 
 void doRender(void) {
     // return 4;

@@ -27,6 +27,8 @@ EXPORT_STRING = \
 "_setupEngine", \
 "_copyBuffer", \
 "_doDebugRender", \
+"_printRow", \
+"_allAtOnce", \
 "_setScale",
 
 TEMPLATE_FILE = template/controls.html
