@@ -339,10 +339,12 @@ void RayEngine::resize( const int _x )
     b = new float[_x*_x];
 }
 
-
+bool g_print = false;
+std::vector<float> g_buf;
 
 void RayEngine::render( void )
 {
+    g_buf.resize(0);
     bool nUsedB = false;
     Vec3 nUsedI;
     Ray r;
@@ -370,16 +372,32 @@ void RayEngine::render( void )
             r.d = pixel-e;
             r.d.normalize();
             //red = green = blue = 0;
+
+            if( j == 250 && (i > 258 && i < 268) ) {
+                // cout << color[2] << "\n";
+                g_print = true;
+            } else {
+                g_print = false;
+
+            }
+
             trace( r, 0, 0, color, false, nUsedB, nUsedI, false );
             this->r[i+j*px] = color[0];
             this->g[i+j*px] = color[1];
             this->b[i+j*px] = color[2];
 
             if( j == 250 && (i > 258 && i < 268) ) {
-                cout << color[2] << "\n";
+                cout << "\nfinal: " << color[2] << "\n" << endl;
             }
 
+
         }
+
+    cout << "g_buf:\n";
+    for(const auto w : g_buf) {
+        cout << w << ",";
+    }
+    cout << "\n";
 }
 
 void RayEngine::trace(
@@ -400,6 +418,7 @@ void RayEngine::trace(
     Vec3 intersect;
     Vec3 from, fp, refl, lightRefl, tmp, norm, newColor;
     color[0] = color[1] = color[2] = 0;
+    newColor[0] = newColor[1] = newColor[2] = 0;
     double srInverse;
 
     Vec3 pn;
@@ -519,6 +538,13 @@ void RayEngine::trace(
                         {
                             shadowFeeler.o = intersect;
                             shadowFeeler.d = lights[iLight].d * -1;
+
+                            // if( g_print ) {
+                            //     cout << "  " << shadowFeeler.o.str() << "\n";
+                            //     cout << "  " << shadowFeeler.d.str() << "\n";
+                            // }
+            
+
                             shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
                             trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
                             if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
@@ -564,11 +590,17 @@ void RayEngine::trace(
         t1 = (-1* b + sqrt(b*b - 4*c)) / 2;
 
 
+
+
         if( shdFeeling && t0 < 0 )
         {
             color[0] = 1;
             continue;
         }
+
+        // if( g_print ) {
+        //     cout << "past shadow\n";
+        // }
 
         t0 = min( t0, t1 );
 
@@ -598,10 +630,20 @@ void RayEngine::trace(
 
             //lighting
             fp = r.o - intersect;
+
+            // if( g_print ) {
+            //     cout << "  " << intersect.str() << "\n";
+            //     cout << "  " << norm.str() << "\n";
+            //     cout << "  " << refl.str() << "\n";
+            //     cout << "  " << fp.str() << "\n";
+            // }
             
             
-            //we aleways have ambient light
+            // we always have ambient light
             color = this->ia * s.ka;
+            // if( g_print ) {
+            //     cout << "  c: " << color.str() << "\n";
+            // }
     
             if( !click ) {
                 for( int iLight = 0; iLight < lights.size(); iLight++ )
@@ -609,13 +651,33 @@ void RayEngine::trace(
                     shadowFeeler.o = intersect;
                     shadowFeeler.d = lights[iLight].d * -1;
                     shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
+
+
+                    // if( g_print ) {
+                    //     cout << "  " << shadowFeeler.o.str() << "\n";
+                    //     cout << "  " << shadowFeeler.d.str() << "\n";
+                    // }
+
                     shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
                     trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
                     if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
                         continue;
+
+                    // if( g_print ) {
+                    //     cout << "past shadow2\n";
+                    // }
+
+                    
+
                     tmp = norm - lights[iLight].d;
                     lightRefl = tmp * 2 * norm.dot(lights[iLight].d);
                     lightRefl.normalize();
+
+
+                    // if( g_print ) {
+                    //     cout << "  " << tmp.str() << "\n";
+                    //     cout << "  " << lightRefl.str() << "\n";
+                    // }
 
                     const Vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
 
@@ -628,13 +690,26 @@ void RayEngine::trace(
                         * (diffuse + specular);
                     
                     color = color + lightEffects;
-                        
+
+                    // if( g_print ) {
+                    //     cout << "  " << color.str() << "\n";
+                    //     cout << "  " << diffuse.str() << "\n";
+                    //     cout << "  " << lightEffects.str() << "\n";
+                    // }
+
                 }
             }
 
             savedColor = color;
             savedRefl = refl;
             savedKr = s.kr;
+
+            // if( g_print ) {
+            //     cout << "  " << savedColor.str() << "\n";
+            //     cout << "  " << savedRefl.str() << "\n";
+            //     cout << "  " << savedKr << "\n";
+            //     // cout << "  " << lightRefl.str() << "\n";
+            // }
 
             // std::cout << s.kr << ",";
             savedIntersect = intersect;
@@ -653,15 +728,35 @@ void RayEngine::trace(
     }
 
 
+
     if( minHit != 999999 ) {
         Ray reflRay;
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;
         trace( reflRay, depthIn+1, effect, newColor, false, bSphere, objectNum, false );
         color = savedColor + newColor * savedKr;
+
+        if( g_print ) {
+            cout << "something\n";
+        }
+
+        if( g_print ) {
+            g_buf.push_back(savedColor[2]);
+            g_buf.push_back(newColor[2]);
+        }
+
+
+
     } else {
         //we hit nothing
         color = Vec3( 0, 0, 0 );
+        // if( g_print ) {
+        //     cout << "nothing\n";
+        // }
+        // if( g_print ) {
+        //     g_buf.push_back(color[2]);
+        //     // cout << "c " << color[3] << "\n";
+        // }
     }
 }
 
