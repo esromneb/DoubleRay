@@ -283,7 +283,7 @@ void officialCopyBuffer(void) {
 
             // buffer[x][px-y] = (rb<<16) | (gb<<8) | bb;
 
-            *((Uint32*)screen->pixels + y * px + x) = SDL_MapRGBA(screen->format, rb, gb, bb, 255);
+            *((Uint32*)screen->pixels + ((px-1-y) * px) + x) = SDL_MapRGBA(screen->format, rb, gb, bb, 255);
 
 
             // buffer[x][y] = rb;
