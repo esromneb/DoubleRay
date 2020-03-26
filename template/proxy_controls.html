@@ -144,41 +144,42 @@
 
       }
 
+      function nextRainbowClick() {
+        postCustomMessage({type:'call',fn:'renderNextRainbow',rt:'void'});
+      }
+
+      function proxyCall() {
+
+      }
+
     </script>
     <table>
-      <tr><td>
-    <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;"></canvas>
-  </td><td valign="top">
-    
-
-
+<td valign="top">
 <input type="button" value="Render" onclick="renderClick()"/><br>
 <input type="button" value="RenderDebug" onclick="renderDebugClick()"/><br>
 <input type="button" value="SetScale" onclick="setScaleClick()"/>
 <input type="text" value="0.006" id="scaleText"/>
 <br>
 <br>
-<input type="button" value="debug2()" onclick="debug2Click()"/>
-
-
-
-  </td></tr></table>
+<input type="button" value="debug2()" onclick="debug2Click()"/><br>
+<input type="button" value="Next Rainbow" onclick="nextRainbowClick()"/>
+</td></tr></table>
 
 
 
 
 <script type="text/javascript">
 
-var mycanv = document.getElementById("myCanvas");
-var ctx = mycanv.getContext("2d");
+// var mycanv = document.getElementById("myCanvas");
+// var ctx = mycanv.getContext("2d");
 
 
-var id = ctx.createImageData(1,1); // only do this once per page
-var cdat  = id.data;                        // only do this once per page
-cdat[0]   = 0; // r
-cdat[1]   = 0; // g
-cdat[2]   = 0; // b
-cdat[3]   = 255;
+// var id = ctx.createImageData(1,1); // only do this once per page
+// var cdat  = id.data;                        // only do this once per page
+// cdat[0]   = 0; // r
+// cdat[1]   = 0; // g
+// cdat[2]   = 0; // b
+// cdat[3]   = 255;
 
 
 
@@ -215,7 +216,7 @@ function bufferToCanv() {
 
 setTimeout(()=>{
 
-  bufferToCanv();
+  // bufferToCanv();
   // console.log('hii');
   // console.log(get4());
   // console.log(getNext());

@@ -209,7 +209,7 @@ unsigned frames_p = 0;
 unsigned frame_sleep = 0;
 
 
-void officialRender(bool boolA, bool boolB) {
+void officialRenderRainbow(bool boolA, bool boolB) {
     if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
       for (int i = 0; i < 256; i++) {
         for (int j = 0; j < 256; j++) {
@@ -269,13 +269,13 @@ int main(int argc, char ** argv) {
     frames_then = std::chrono::steady_clock::now();
 
 
-    officialRender(false, false);
+    officialRenderRainbow(false, false);
 
     // while(1) {
-    //     officialRender(false, false);
-    //     officialRender(false, true);
-    //     officialRender(true, false);
-    //     officialRender(true, true);
+    //     officialRenderRainbow(false, false);
+    //     officialRenderRainbow(false, true);
+    //     officialRenderRainbow(true, false);
+    //     officialRenderRainbow(true, true);
     // }
 
       // printf("you should see a smoothly-colored square - no sharp lines but the square borders!\n");
@@ -345,13 +345,36 @@ void debug2(void) {
     // usleep(2E6);
     // cout << "exit debug2" << "\n";
 
-    // officialRender(true, true);
+    // officialRenderRainbow(true, true);
 
     while(1) {
-        officialRender(false, false);
-        officialRender(false, true);
-        officialRender(true, false);
-        officialRender(true, true);
+        officialRenderRainbow(false, false);
+        officialRenderRainbow(false, true);
+        officialRenderRainbow(true, false);
+        officialRenderRainbow(true, true);
+    }
+}
+
+void renderNextRainbow(void) {
+    static int v = 1;
+    switch(v) {
+        default:
+        case 0:
+            officialRenderRainbow(false, false);
+            v = 1;
+            break;
+        case 1:
+            officialRenderRainbow(false, true);
+            v = 2;
+            break;
+        case 2:
+            officialRenderRainbow(true, false);
+            v = 3;
+            break;
+        case 3:
+            officialRenderRainbow(true, true);
+            v = 0;
+            break;
     }
 }
 

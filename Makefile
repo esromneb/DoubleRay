@@ -29,15 +29,17 @@ EXPORT_STRING = \
 "_setFrameSleep", \
 "_onRuntimeInitialized", \
 "_onCustomMessage", \
+"_renderNextRainbow", \
 "_setScale",
 
-TEMPLATE_FILE = template/controls.html
+TEMPLATE_FILE = template/proxy_controls.html
 JS_TEMPLATE_FILE = template/pre.ray.js
 
 
 
 out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
+	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
 	--pre-jses $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
