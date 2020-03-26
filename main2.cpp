@@ -38,7 +38,7 @@ void t1(void) {
 }
 
 extern "C" {
-    
+
 void setupEngine(void) {
     engine = new RayEngine();
     engine->resize(400);
@@ -264,6 +264,7 @@ void officialCopyBuffer(void) {
 
     // float rmax = 0;
 
+    if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
 
     // glBegin(GL_POINTS);
     for( int y = 0; y < px; y++ ) {
@@ -280,7 +281,11 @@ void officialCopyBuffer(void) {
             uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
 
 
-            buffer[x][px-y] = (rb<<16) | (gb<<8) | bb;
+            // buffer[x][px-y] = (rb<<16) | (gb<<8) | bb;
+
+            *((Uint32*)screen->pixels + y * px + x) = SDL_MapRGBA(screen->format, rb, gb, bb, 255);
+
+
             // buffer[x][y] = rb;
             // cout << r << "\n";
             // if( r > rmax ) {
@@ -290,6 +295,9 @@ void officialCopyBuffer(void) {
             // glVertex2i( x, y );
         }
     }
+
+    if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
+    SDL_Flip(screen);
 
     // cout << rmax << "\n";   
     // glEnd();
