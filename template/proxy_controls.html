@@ -367,8 +367,65 @@
     </style>
 
 <script type="text/javascript">
+
+  function parseAndRender() {
+    // jsPrint('parseAndRender called ' + new Date());
+
+    const scene = $('#jsonscene').val();
+
+    doJsonParse(scene);
+  }
+
+  // will call doJsonRender if correct
+  function doJsonParse(scene) {
+    let obj;
+    try {
+      obj = JSON.parse(scene);
+    } catch(e) {
+      jsPrint("ERROR: illegal json");
+      jsPrint(e.toString());
+      return;
+    }
+
+    doJsonCalls(obj);
+  }
+
+  function doJsonCalls(obj) {
+    if(obj.camera) {
+      const camera = obj.camera;
+      if( camera.loc && camera.dir && camera.rot && camera.depth ) {
+        setCamera(camera.loc, camera.dir, camera.rot);
+        setDepth(camera.depth);
+      } else {
+        console.log("Camera tree missing required keys");
+        return;
+      }
+    }
+
+    doRenderOfficialClick();
+  }
+
+
+  let changeTimer = null;
+
+  // how many ms after final keypress do we render scene?
+  const jsonChangeTimeout = 333;
+
   $(document).ready(()=>{
 
+
+    ///
+    /// Any time a key is pressed run this
+    /// This will fire a timer after N ms to parse and update the
+    /// scene, however we eat any repeat keypresses that happen
+    /// faster than the timeout
+    $('#jsonscene').bind('input propertychange', ()=>{
+      // jsPrint('text changed');
+      if( changeTimer !== null ) {
+        clearTimeout(changeTimer);
+      }
+      changeTimer = setTimeout(parseAndRender, jsonChangeTimeout);
+    });
   });
 </script>
 
@@ -572,6 +629,31 @@
           if (text) Module.printErr('[post-exception status] ' + text);
         };
       };
+
+      /// copied from print above
+      /// NOTE: we stripped the caching of getElementById() from above
+      /// making this function much slower
+      function jsPrint(x) {
+          var element = document.getElementById('output');
+          // if (element) element.value = ''; // clear browser cache
+
+          const inner = (text) => {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            // These replacements are necessary if you render to raw HTML
+            //text = text.replace(/&/g, "&amp;");
+            //text = text.replace(/</g, "&lt;");
+            //text = text.replace(/>/g, "&gt;");
+            //text = text.replace('\n', '<br>', 'g');
+            console.log(text);
+            if (element) {
+              element.value += text + "\n";
+              element.scrollTop = element.scrollHeight; // focus on bottom
+            }
+          }
+
+          inner('JS: ' + x);
+        }
+
     </script>
     {{{ SCRIPT }}}
   </body>
