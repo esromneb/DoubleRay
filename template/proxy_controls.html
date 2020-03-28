@@ -101,6 +101,26 @@
       }
     </style>
 
+  <script src="jquery-3.4.1.min.js"></script>
+
+
+  <script type="text/javascript">
+    
+    /// Fucking emscripten is blocking us again
+    /// we want text boxes we can edit on this page
+    /// because emscripten calls addEventListener() with a lambda, there is no way for us to remove this
+    /// so we are forced to attach a listner first, and then use stopImmediatePropagation to stop the emscripten
+    /// lisnter from firing
+
+    ['keydown', 'keyup', 'keypress', 'blur', 'visibilitychange'].forEach(function(event) {
+      document.addEventListener(event, function(event) {
+        // console.log('addeventlis2 ' + event.type);
+        event.stopImmediatePropagation();
+      });
+    });
+
+  </script>
+
   </head>
   <body>
     <script type="text/javascript">
@@ -232,7 +252,13 @@
 <img src="https://en.js.cx/clipart/ball.svg" id="ball">
 
 
-</td></tr></table>
+</td><td>
+<textarea id="jsonscene" rows="4" cols="50">
+</textarea>
+<input type="text" id="dtext">
+</td>
+
+</tr></table>
 
 
     <style>
