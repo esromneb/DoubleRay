@@ -38,6 +38,8 @@ EXPORT_STRING = \
 "_coutIntDual", \
 "_doRenderOfficial", \
 "_setCamera", \
+"_setDepth", \
+"_setAmbientColor", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

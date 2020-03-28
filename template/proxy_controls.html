@@ -185,6 +185,23 @@
         postCustomMessage({type:'call',fn:'setCamera',rt:'void',at:sig,av:args});
       }
 
+      function setDepth(d) {
+        postCustomMessage({type:'call',fn:'setDepth',rt:'void',at:['number'],av:[d]});
+      }
+
+      function setAmbientColor(color) {
+        if( !Array.isArray(color) || color.length != 3 ) {
+          console.log("Illegal argument passed to setAmbientColor()");
+          return;
+        }
+
+        const sig = addVec3Signature([],1);
+
+        const args = [color].flat();
+
+        postCustomMessage({type:'call',fn:'setAmbientColor',rt:'void',at:sig,av:args});
+      }
+
 
     </script>
     <table>
