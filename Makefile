@@ -49,7 +49,7 @@ out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Mak
 	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
-	--pre-jses $(JS_TEMPLATE_FILE) \
+	--pre-js $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a'
@@ -61,6 +61,22 @@ out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Mak
 # not working due to chrome not liking these options
 #-s USE_PTHREADS=1 -s RESERVED_FUNCTION_POINTERS=1
 #-s PTHREAD_POOL_SIZE=4
+
+.PHONY: copy_files_target copy
+
+copy: copy_files_target
+
+
+
+# I forget how to copy file and do the sensativity list thing correctly
+# so for now this needs to be manual
+
+COPY_LIST = \
+template/jquery-3.4.1.min.js \
+template/pre.ray.js
+
+copy_files_target:
+	cp $(COPY_LIST) out/
 
 
 clean:
