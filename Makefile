@@ -88,7 +88,7 @@ copy: copy_files_target
 
 COPY_LIST = \
 template/jquery-3.4.1.min.js \
-template/pre.ray.js
+template/LoadSave.js
 
 copy_files_target:
 	cp $(COPY_LIST) out/

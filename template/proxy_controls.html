@@ -102,6 +102,7 @@
     </style>
 
   <script src="jquery-3.4.1.min.js"></script>
+  <script src="LoadSave.js"></script>
 
 
   <script type="text/javascript">
@@ -211,10 +212,22 @@
 
 
 </td><td>
-<textarea id="jsonscene" rows="4" cols="50">
+<textarea id="jsonscene" rows="13" cols="50">
+{
+  "camera": {
+    "loc": [0, 1, 0],
+    "dir": [0, -2, 1],
+    "rot": [0, 1, 0]
+  }
+}
 </textarea><br>
-<input type="text" id="dtext">
+</td><td>
+<input type="button" value="Save Scene" onclick="globalSave('default')"/><br>
+<input type="button" value="Load Scene" onclick="globalLoad('default')"/><br>
 </td>
+<!-- <td>
+<input type="text" id="dtext">
+</td> -->
 
 </tr></table>
 
