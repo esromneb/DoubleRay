@@ -215,21 +215,36 @@
 <textarea id="jsonscene" rows="13" cols="50">
 {
   "camera": {
-    "loc": [0, 1, 0],
-    "dir": [0, -2, 1],
-    "rot": [0, 1, 0]
+    "loc": [0, 1, -2],
+    "dir": [0, -0.2, 1],
+    "rot": [0, 1, 0],
+    "depth": 3
+  },
+  "global": {
+    "color": [0.4, 0.4, 0.4],
+    "c": 7
   },
   "spheres": [{
-    "rad": 1,
-    "loc": [0, 1, 0],
-    "color": [1, 0, 3],
-    "ambient": 0,
-    "specular": 0,
-    "reflected": 0,
-    "transmitted": 0,
-    "diffuse": [0, 0, 0],
-    "n": 0
-  }],
+      "rad": 1,
+      "loc": [1, 0, 3],
+      "ambient": 0.4,
+      "specular": 0.2,
+      "reflected": 0,
+      "transmitted": 0.7,
+      "diffuse": [0, 1, 0],
+      "n": 8
+    },
+    {
+      "rad": 0.7,
+      "loc": [-1, 0, 3],
+      "ambient": 0.0,
+      "specular": 0.0,
+      "reflected": 1,
+      "transmitted": 0.0,
+      "diffuse": [1, 0.8, 0],
+      "n": 7
+    }
+  ],
   "lights": [{
     "color": [1, 1, 1],
     "dir": [0, -2, 1]

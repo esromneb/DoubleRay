@@ -65,8 +65,10 @@ public:
     Ray camera;
     Vec3 up;
     int x, y; //pixels
-    double alpha;
+    // double alpha; // what is this for?
+
     //void setxy( int xin, int yin ); //resize output image
+
     void resize( const int _x );
     float *r, *g, *b;
     int px;
