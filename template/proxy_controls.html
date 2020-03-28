@@ -124,56 +124,14 @@
   </head>
   <body>
     <script type="text/javascript">
-      function renderClick() {
-        const doRender = Module.cwrap('doRender', 'void');
-        doRender();
-        setTimeout(bufferToCanv,1000);
-      }
+
 
       function doRenderOfficialClick() {
-        // const doRender = Module.cwrap('doRender', 'void');
-        // doRender();
-        // setTimeout(bufferToCanv,1000);
         postCustomMessage({type:'call',fn:'doRenderOfficial',rt:'void'});
       }
 
       function setupEngineClick() {
         postCustomMessage({type:'call',fn:'setupEngine',rt:'void'});
-      }
-
-      function renderDebugClick() {
-        const doDebugRender = Module.cwrap('doDebugRender', 'void');
-        doDebugRender();
-        setTimeout(bufferToCanv,1000);
-      }
-
-      function setScaleClick() {
-        // var val = 'hi';
-
-        var el = document.getElementById("scaleText");
-
-        const val = parseFloat(el.value);
-
-        console.log(val);
-
-        // alert(val);
-
-        const setScale = Module.cwrap('setScale', 'void', ['number']);
-
-        setScale(val);
-
-        // const doDebugRender = Module.cwrap('doDebugRender', 'void');
-        // doDebugRender();
-        // setTimeout(bufferToCanv,1000);
-      }
-
-      function debug2Click() {
-        const fn = Module.cwrap('debug2', 'void');
-        Module.jsPrint('before');
-        setTimeout(()=>{console.log('mid')},300);
-        fn();
-        Module.jsPrint('after');
-
       }
 
       function nextRainbowClick() {
@@ -254,7 +212,7 @@
 
 </td><td>
 <textarea id="jsonscene" rows="4" cols="50">
-</textarea>
+</textarea><br>
 <input type="text" id="dtext">
 </td>
 
@@ -274,6 +232,11 @@
       }
     </style>
 
+<script type="text/javascript">
+  $(document).ready(()=>{
+
+  });
+</script>
 
 <script type="text/javascript">
   // js for UI controls
@@ -376,72 +339,6 @@
 
 </script>
 
-
-<script type="text/javascript">
-
-// var mycanv = document.getElementById("myCanvas");
-// var ctx = mycanv.getContext("2d");
-
-
-// var id = ctx.createImageData(1,1); // only do this once per page
-// var cdat  = id.data;                        // only do this once per page
-// cdat[0]   = 0; // r
-// cdat[1]   = 0; // g
-// cdat[2]   = 0; // b
-// cdat[3]   = 255;
-
-
-
-// console.log('hii');
-
-function bufferToCanv() {
-  const get4 = Module.cwrap('get4', 'number');
-  const getNext = Module.cwrap('getNext', 'number');
-  const getPixel = Module.cwrap('getPixel', 'number', ['number','number']);
-
-  let px = 400;
-
-  for(let i = 0; i < px; i++) {
-    for(let j = 0; j < px; j++) {
-      let p = getPixel(i,j);
-
-      const r = ((p>>>16)&0xff) >> 0;
-      const g = ((p>>>8)&0xff) >> 0;
-      const b = ((p>>>0)&0xff) >> 0;
-
-      // if( r != 0 ) {
-      //   console.log(r);
-      // }
-      cdat[0] = r;
-      cdat[1] = g;
-      cdat[2] = b;
-      ctx.putImageData( id, i, j );
-
-    }
-  }
-}
-
-// function 
-
-setTimeout(()=>{
-
-  // bufferToCanv();
-  // console.log('hii');
-  // console.log(get4());
-  // console.log(getNext());
-  // console.log(getNext());
-  // console.log(getNext());
-},1000);
-
-
-
-
-</script>
-
-
-
-
-    
 
     <div class="spinner" id='spinner'></div>
     <div class="emscripten" id="status">Downloading...</div>
