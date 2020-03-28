@@ -496,6 +496,53 @@ void setGlobalC(const int c) {
     engine->c = c;
 }
 
+void setSphereCount(const int count) {
+    auto &spheres = engine->spheres;
+    spheres.resize(count);
+}
+
+void setSphere(
+    const int index,
+    const float radius,
+    VEC3_ARG(location),
+    const float ambient,
+    const float specular,
+    const float reflected,
+    const float transmitted,
+    VEC3_ARG(diffuse),
+    const float n
+    ) {
+
+    if(index < 0) {
+        cout << "Sphere index cannot be less than 0\n";
+        return;
+    }
+
+    auto &spheres = engine->spheres;
+
+    // cout << "spheres Before size " << spheres.size() << "\n";
+
+// index , size
+    // 0 , 1
+    // 1 , 2
+
+    // automatically resize the vector
+    // (grow only)
+    if( (index + 1) > spheres.size() ) {
+        spheres.resize((index+1));
+    }
+    // cout << "spheres After size " << spheres.size() << "\n";
+
+    spheres[index].r = radius;
+    spheres[index].c = VEC3_ARG_CTONS(location);
+    spheres[index].ka = ambient;
+    spheres[index].ks = specular;
+    spheres[index].kr = reflected;
+    spheres[index].kd = VEC3_ARG_CTONS(diffuse);
+    spheres[index].n = n;
+    spheres[index].kt = transmitted;
+}
+
 
 } // extern C
 

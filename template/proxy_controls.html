@@ -162,6 +162,17 @@
         return vin2;
       }
 
+      function addNumberSignature(vin, n) {
+        var vin2 = typeof vin !== 'undefined' ? vin : [];
+        var n2 = typeof n !== 'undefined' ? n : 1;
+
+        for(let i = 0; i < n2; i++) {
+          vin2.push('number');
+        }
+
+        return vin2;
+      }
+
       function setCamera(location, direction, rotation) {
         if( !Array.isArray(location) || location.length != 3 ) {
           console.log("Illegal argument passed to setCamera()");
@@ -205,6 +216,65 @@
       function setGlobalC(val) {
         postCustomMessage({type:'call',fn:'setGlobalC',rt:'void',at:['number'],av:[val]});
       }
+
+      function setSphereCount(val) {
+        postCustomMessage({type:'call',fn:'setSphereCount',rt:'void',at:['number'],av:[val]});
+      }
+
+      function setSphere(
+        index,
+        radius,
+        location,
+        ambient,
+        specular,
+        reflected,
+        transmitted,
+        diffuse,
+        n
+        ) {
+
+        if( !Array.isArray(location) || location.length != 3 ) {
+          console.log("Illegal argument passed to setSphere()");
+          return;
+        }
+
+        if( !Array.isArray(diffuse) || diffuse.length != 3 ) {
+          console.log("Illegal argument passed to setSphere()");
+          return;
+        }
+
+        const argc = 
+            1   // index
+          + 1   // radius
+          + 3   // location
+          + 1   // ambient
+          + 1   // specular
+          + 1   // reflected
+          + 1   // transmitted
+          + 3   // diffuse
+          + 1;  // n
+
+        const sig = addNumberSignature([],argc);
+
+        const args = [index,radius,location,ambient,specular,reflected,transmitted,diffuse,n].flat();
+
+        postCustomMessage({type:'call',fn:'setSphere',rt:'void',at:sig,av:args});
+
+      }
+
+      function testSphere() {
+        setSphere(
+          0,
+          1.1,
+          [1, 0, 3],
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          [1, 0.8, 0],
+          8);
+      }
+
 
 
     </script>

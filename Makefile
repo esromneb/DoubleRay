@@ -41,6 +41,8 @@ EXPORT_STRING = \
 "_setDepth", \
 "_setAmbientColor", \
 "_setGlobalC", \
+"_setSphere", \
+"_setSphereCount", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
@@ -55,7 +57,7 @@ out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Mak
 	--pre-js $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
-	'-std=c++2a'
+	'-std=c++2a' '-O3'
 
 
 e: out/empty

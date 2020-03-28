@@ -122,7 +122,7 @@ void RayEngine::scene2(void) {
     camera.d = Vec3( 0, -0.2, 1 );
     camera.d.normalize();
 
-    up = Vec3( 1, 1, 0 );
+    up = Vec3( 0, 1, 0 );
     up.normalize();
 
     spheres.resize(3);
