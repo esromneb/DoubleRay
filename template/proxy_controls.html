@@ -185,8 +185,8 @@
         postCustomMessage({type:'call',fn:'setCamera',rt:'void',at:sig,av:args});
       }
 
-      function setDepth(d) {
-        postCustomMessage({type:'call',fn:'setDepth',rt:'void',at:['number'],av:[d]});
+      function setDepth(val) {
+        postCustomMessage({type:'call',fn:'setDepth',rt:'void',at:['number'],av:[val]});
       }
 
       function setAmbientColor(color) {
@@ -200,6 +200,10 @@
         const args = [color].flat();
 
         postCustomMessage({type:'call',fn:'setAmbientColor',rt:'void',at:sig,av:args});
+      }
+
+      function setGlobalC(val) {
+        postCustomMessage({type:'call',fn:'setGlobalC',rt:'void',at:['number'],av:[val]});
       }
 
 

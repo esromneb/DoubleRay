@@ -40,6 +40,7 @@ EXPORT_STRING = \
 "_setCamera", \
 "_setDepth", \
 "_setAmbientColor", \
+"_setGlobalC", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
