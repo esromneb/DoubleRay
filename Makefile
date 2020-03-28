@@ -1,5 +1,5 @@
 
-.PHONY: all clean
+.PHONY: all clean e
 
 all: out/ray.wasm
 
@@ -53,6 +53,21 @@ out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Mak
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a'
+
+
+e: out/empty
+
+out/empty:  $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
+	emcc Empty.cpp -s WASM=1 -o out/ray.html \
+	--shell-file $(TEMPLATE_FILE) \
+	--proxy-to-worker \
+	--pre-js $(JS_TEMPLATE_FILE) \
+	-s EXPORTED_FUNCTIONS='["_main"]' \
+	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
+	'-std=c++2a'
+	touch main2.cpp # force make to run again if "make all" is run next
+
+
 
 # '-Wshadow-all'
 #--proxy-to-worker \
