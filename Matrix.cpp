@@ -1,5 +1,7 @@
 #include "Matrix.hpp"
 
+#include "Vec.hpp"
+
 
 Matrix::Matrix(int xin, int yin): x(xin), y(yin)
 {
@@ -54,6 +56,29 @@ double Matrix::det( void )
 
     return 0;
 }
+
+Vec Matrix::operator *(Vec &rhs)
+{
+    if( x != rhs.y )
+    {
+        Vec bad(0);// = new Vec(0);
+        return bad;
+    }
+
+    Vec ret(y);// = new vec(y);
+    for( int i = 0; i < x; i++ )
+    {
+        ret.data[i] = 0;
+        for( int j = 0; j < y; j++ )
+        {
+            ret.data[i] += (this->data)[j][i] * (rhs.data)[j];
+        }
+    }
+
+    return ret;
+}
+
+
 
 Matrix::~Matrix( void )
 {

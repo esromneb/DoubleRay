@@ -10,15 +10,18 @@ RayEngine.hpp \
 Vec3.hpp \
 Poly.hpp \
 Matrix.hpp \
-fileio.h
+fileio.h \
+Vec.hpp
+
+WASM_MAIN = main2.cpp
 
 CPP_FILES = \
-main2.cpp \
 Vec3.cpp \
 Poly.cpp \
 Matrix.cpp \
 RayEngine.cpp \
-fileio.cpp
+fileio.cpp \
+Vec.cpp
 
 # this is a list of all C functions we want to publish to javascript
 # In the main cpp file, each of these is wrapped in extern "C" {}
@@ -53,10 +56,16 @@ EXPORT_STRING = \
 TEMPLATE_FILE = template/proxy_controls.html
 JS_TEMPLATE_FILE = template/pre.ray.js
 
+# warning and error flags
+CLANG_WARN_FLAGS = \
+-Wall -Wextra \
+-Wno-ignored-qualifiers
+# -Wshadow
 
 
-out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
-	emcc $(CPP_FILES) -s WASM=1 -o out/ray.html \
+
+out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
+	emcc $(WASM_MAIN) $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
 	--pre-js $(JS_TEMPLATE_FILE) \
@@ -118,6 +127,20 @@ models/1triB.txt
 copy_fs:
 	mkdir -p root_fs
 	cp $(FS_COPY_LIST) root_fs/
+
+
+
+test_orbit2: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	g++ test_orbit.cpp $(CPP_FILES) -o $@
+
+
+# $< name of first prerequisite
+# $@ name of target
+test_orbit: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
+
+test_vec: test_vec.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
 
 
 

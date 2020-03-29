@@ -98,6 +98,9 @@ void Poly::insertTriangle( int *edges, int num )
 
 void Poly::calcLighting( vector<double>* viewX, vector<double>* viewY, int view )
 {
+    (void)viewX;
+    (void)viewY;
+    (void)view;
 /*    extern TreDEngine *globalEngine;
     vec from(3), fp(3), r(3), tmp(3);
     double max_inten = -999999;
