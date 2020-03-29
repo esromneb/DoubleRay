@@ -376,7 +376,8 @@
     doJsonParse(scene);
   }
 
-  // will call doJsonRender if correct
+  /// will call sub functions and eventually render the scene
+  /// if there are no errors in the input
   function doJsonParse(scene) {
     let obj;
     try {
@@ -390,6 +391,9 @@
     doJsonCalls(obj);
   }
 
+  ///
+  /// Looks at the parsed object and verifies all keys are there
+  /// makes all the c calls and then renders at the end
   function doJsonCalls(obj) {
     if(obj.camera) {
       const camera = obj.camera;
@@ -397,9 +401,26 @@
         setCamera(camera.loc, camera.dir, camera.rot);
         setDepth(camera.depth);
       } else {
-        console.log("Camera tree missing required keys");
+        jsPrint("Camera tree missing required keys");
         return;
       }
+    } else {
+      jsPrint("Camera tree missing");
+      return;
+    }
+
+    if(obj.global) {
+      const gg = obj.global;
+      if( gg.color && gg.c ) {
+        setAmbientColor(gg.color);
+        setGlobalC(gg.c);
+      } else {
+        jsPrint("Global tree missing required keys");
+        return;
+      }
+    } else {
+      jsPrint("Global tree missing");
+      return;
     }
 
     doRenderOfficialClick();
