@@ -241,14 +241,14 @@ std::string Vec::str(bool vertical) const {
     std::string out = "";
 
     if( vertical ) {
-        for(unsigned i = 0; i < y; i++) {
+        for(int i = 0; i < y; i++) {
             out += std::to_string(data[i]);
             out += "\n";
             // cout << data[0] << "\n";
         }
     } else {
         out = "[";
-        for(unsigned i = 0; i < y; i++) {
+        for(int i = 0; i < y; i++) {
             out += std::to_string(data[i]);
             out += ",";
             // cout << data[0] << "\n";

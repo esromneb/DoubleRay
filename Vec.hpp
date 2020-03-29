@@ -5,7 +5,7 @@
 class Vec {
 public:
     static const int x = 1; // the x dimension, forced to 1 (and never used)
-    int y = 3; // the y dimension, must match DEFAULT_VEC
+    int y = 3; // the y dimension, must match DEFAULT_VEC // fixme change to unsigned
     double *data;
     explicit Vec(); //default will be DEFAULT_VEC
     Vec( const Vec &in );
