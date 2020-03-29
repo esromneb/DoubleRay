@@ -727,6 +727,17 @@ void dumpCamera() {
     // cout << engine->camera.d.str() << "\n";
 }
 
+void chokeOutput(int il, int ih, int jl, int jh) {
+    engine->il = il;
+    engine->ih = ih;
+    engine->jl = jl;
+    engine->jh = jh;
+}
+
+void setPrint(int p) {
+    engine->print = p?true:false;
+}
+
 
 } // extern C
 

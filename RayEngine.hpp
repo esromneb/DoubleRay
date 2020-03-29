@@ -52,7 +52,7 @@ public:
     void scene3( void );
     void paint( void );
     void render( void );
-    void trace(
+    bool trace(
         const Ray& r, 
         const int depthIn,
         const double effect,
@@ -88,6 +88,18 @@ public:
     Matrix *mat;
     vector<double> hits;
     int numHit;
+
+    // int il = 198;
+    // int ih = 200;
+    // int jl = 219;
+    // int jh = 222;
+
+    int il = 0;
+    int ih = 500;
+    int jl = 0;
+    int jh = 500;
+
+    bool print = false;
 
 };
 

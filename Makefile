@@ -54,6 +54,8 @@ EXPORT_STRING = \
 "_setupOrbit", \
 "_nextOrbitRender", \
 "_dumpCamera", \
+"_chokeOutput", \
+"_setPrint", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

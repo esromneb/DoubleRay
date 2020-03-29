@@ -1,5 +1,6 @@
 #include "RayEngine.hpp"
 #include <math.h>
+#include <iostream>
 
 Ray::Ray()
 {
@@ -349,7 +350,8 @@ void RayEngine::resize( const int _x )
     b = new float[_x*_x];
 }
 
-
+int g_i = 0;
+int g_j = 0;
 
 void RayEngine::render( void )
 {
@@ -380,7 +382,18 @@ void RayEngine::render( void )
             r.d = pixel-e;
             r.d.normalize();
             //red = green = blue = 0;
-            trace( r, 0, 0, color, false, nUsedB, nUsedI, false );
+            g_i = i;
+            g_j = j;
+
+            if( (i > il && i < ih) && (j > jl && j < jh ) ) {
+                trace( r, 0, 0, color, false, nUsedB, nUsedI, false );
+                if( print ) {
+                    cout << "\n Final: " << color[0] << "\n";
+                }
+            } else {
+                color = Vec3(0,0,0);
+            }
+
             this->r[i+j*px] = color[0];
             this->g[i+j*px] = color[1];
             this->b[i+j*px] = color[2];
@@ -388,7 +401,9 @@ void RayEngine::render( void )
         }
 }
 
-void RayEngine::trace(
+// returns true for hitting anything
+//
+bool RayEngine::trace(
     const Ray& r,
     const int depthIn,
     const double effect,
@@ -399,10 +414,16 @@ void RayEngine::trace(
     const bool shdFeeling ) {
 
     if( depthIn > this->depth ) {
-        return;
+        if( print ) {
+            cout << "Abort\n";
+        }
+        return false;
     }
 
-    double b,c,t0,t1;
+    if( print ) {
+        cout << "trace px " << g_i << ", " << g_j << " depth " << depthIn << "\n";
+    }
+
     Vec3 intersect;
     Vec3 from, fp, refl, lightRefl, tmp, norm;
     color[0] = color[1] = color[2] = 0;
@@ -418,175 +439,91 @@ void RayEngine::trace(
     Vec3 savedColor;
     Vec3 savedRefl;
     Vec3 savedIntersect;
-    Ray shadowFeeler;
-    Vec3 shadowColor;
+    
     // bool tmpBool;
     double savedKr;
-    bool hitSphere;
+    bool hitSphere = false;
     objectNum[0] = -1;
-
-    for( int iP = 0; iP < this->numPoly; iP++ )
-    {
-        const Poly &poly = polygons[iP];
-        for( int iTri = 0; iTri < poly.trianglePointCount / 3; iTri++ )
-        {
-            //continue;
-            vd = poly.abcnorm[iTri].dot( r.d );
-            if( !vd )
-                continue; //the ray lies in the plane
-            vo = -1* (poly.abcnorm[iTri].dot(r.o) + poly.d[iTri]);
-            t = vo / vd;
-            if( t < 0 )
-                continue; //plane is behind ray's origin
-
-            intersect = r.o + r.d*t;
-            //if( vd > 0 )
-            //    intersection = intersection * -1 ;
-
-            tmp[0] = poly.x[poly.triangles[iTri+0]];
-            tmp[1] = poly.y[poly.triangles[iTri+0]];
-            tmp[2] = poly.z[poly.triangles[iTri+0]];
-
-            d1 = tmp - intersect;
-
-            tmp[0] = poly.x[poly.triangles[iTri+1]];
-            tmp[1] = poly.y[poly.triangles[iTri+1]];
-            tmp[2] = poly.z[poly.triangles[iTri+1]];
-
-            d2 = tmp - intersect;
-
-            tmp[0] = poly.x[poly.triangles[iTri+2]];
-            tmp[1] = poly.y[poly.triangles[iTri+2]];
-            tmp[2] = poly.z[poly.triangles[iTri+2]];
-
-            d3 = tmp - intersect;
-
-
-            mat->data[0][0] = d1[0];
-            mat->data[0][1] = d1[1];
-            mat->data[0][2] = d1[2];
-            mat->data[1][0] = d2[0];
-            mat->data[1][1] = d2[1];
-            mat->data[1][2] = d2[2];
-            mat->data[2][0] = 1;
-            mat->data[2][1] = 1;
-            mat->data[2][2] = 1;
-
-            const float det1 = mat->det();
-
-            mat->data[0][0] = d2[0];
-            mat->data[0][1] = d2[1];
-            mat->data[0][2] = d2[2];
-            mat->data[1][0] = d3[0];
-            mat->data[1][1] = d3[1];
-            mat->data[1][2] = d3[2];
-
-            const float det2 = mat->det();
-
-            mat->data[0][0] = d3[0];
-            mat->data[0][1] = d3[1];
-            mat->data[0][2] = d3[2];
-            mat->data[1][0] = d1[0];
-            mat->data[1][1] = d1[1];
-            mat->data[1][2] = d1[2];
-
-            const float det3 = mat->det();
-
-            //at this point we know we hit the plane
-            //now we have to check if we hit inside the triangle
-            if( ( det1 < 0 && det2 < 0 && det3 < 0 )
-                || ( det1 > 0 && det2 > 0 && det3 > 0 ) )
-            {
-
-                if( shdFeeling )
-                {
-                    color[0] = 1;
-                    return;
-                }
-
-                //if we are the closest intersection so far
-                if( min( t, minHit ) == t )
-                {
-                    hitSphere = false;
-                    objectNum[0] = iP;
-                    objectNum[1] = iTri;
-                    minHit = t;
-                    
-                    savedRefl = poly.abcnorm[iTri]*2*( poly.abcnorm[iTri].dot( r.d ) ) - (r.d);
-                    savedKr = poly.kr;
-                    savedIntersect = intersect;
-
-
-
-                    savedColor = this->ia * poly.ka;
-
-                    if( !click ) {
-                        for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
-                        {
-                            shadowFeeler.o = intersect;
-                            shadowFeeler.d = lights[iLight].d * -1;
-                            shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
-                            trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                            if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
-                                continue;
-                            tmp = poly.abcnorm[iTri] - lights[iLight].d;
-                            lightRefl = tmp * 2 * poly.abcnorm[iTri].dot(lights[iLight].d);
-                            lightRefl.normalize();
-
-                            savedColor = savedColor + ( lights[iLight].color / ( fp.mag() + this->c )  )*( poly.kd * lights[iLight].d.dot( poly.abcnorm[iTri] ) + poly.ks * pow( lightRefl.dot( r.d ), poly.n) );
-                        }
-                    }
-
-
-                    //savedColor = Vec3( 1.0f, 0.0f, 0.0f );
-
-                }
-            }
-            else
-            {
-                continue;
-            }
-
-            //color = Vec3( 1.0, 0, 0 );
-        }
-
-    }
-
 
     const int nSphere = spheres.size();
     for( int i = 0; i < nSphere; i++ )
     {
         const Sphere &s = spheres[i];
 
-        b = 2*(r.d[0] * (r.o[0] - s.c[0]) + r.d[1] * (r.o[1] - s.c[1]) + r.d[2] * (r.o[2] - s.c[2]));
-        c = pow((r.o[0] - s.c[0]),2) + pow((r.o[1] - s.c[1]),2) + pow((r.o[2] - s.c[2]),2) - s.r*s.r;
-        if( b*b - 4*c < 0 )
-            continue;
-        
-        if( i == 1 )
-            i = 1;
+        Vec3 oc = r.o - s.c;
+        const double a = r.d.dot(r.d);
 
-        t0 = (-1* b - sqrt(b*b - 4*c)) / 2;
-        t1 = (-1* b + sqrt(b*b - 4*c)) / 2;
+        // const double b = 2*(r.d[0] * (r.o[0] - s.c[0]) + r.d[1] * (r.o[1] - s.c[1]) + r.d[2] * (r.o[2] - s.c[2]));
+        const double b = 2.0 * oc.dot(r.d);
 
+        // double c = pow((r.o[0] - s.c[0]),2) + pow((r.o[1] - s.c[1]),2) + pow((r.o[2] - s.c[2]),2) - s.r*s.r;
+        const double c = oc.dot(oc) - (s.r*s.r);
 
-        if( shdFeeling && t0 < 0 )
-        {
-            color[0] = 1;
+        const double discriminant = (b*b) - (4*a*c);
+
+        if(print) {
+            cout << "Discr: " << discriminant << " " << i << "\n";
+        }
+
+        /// dis < 0   no intersection
+        /// dis = 0   tangent intersection (1 point only)
+        /// dis > 0   two points of intersection
+
+        if( discriminant < 0 ) {
+            if( print ) {
+                cout << "sphere break A " << i << "\n";
+            }
             continue;
         }
+
+        double t0 = ((-1* b) - sqrt((b*b) - (4*a*c))) / (2*a);
+        double t1 = ((-1* b) + sqrt((b*b) - (4*a*c))) / (2*a);
+
+        if( print ) {
+            cout << "t0 " << t0 << " t1 " << t1 << "\n";
+        }
+
+
+
+        if( shdFeeling && (t0 < 0 || t1 < 0)  )
+        {
+            if( print ) {
+                cout << "sphere break shadow " << i << "\n";
+            }
+            color[0] = 1;    // what is the purpose of this? to signal upstream?
+            // color[1] = 0;
+            // color[2] = 0;
+            continue;
+        }
+
+        ///
+        /// 
+        /// 
 
         t0 = min( t0, t1 );
 
-        if( shdFeeling )
-        {
-            //color[0] = 1;
-            //return;
-        }
+        // if( t0 > 0 && t1 > 0 ) {
+        //     t0 = min( t0, t1 );
+        // } else if( t0 > 0 && t1 <= 0 ) {
+        //     t0 = t0;
+        // } else if ( t0 <= 0 && t1 > 0 ) {
+        //     t0 = t1;
+        // } else {
+        //     t0 = minHit;
+        //     // sphere is behind ray
+        //     continue;
+        // }
+
+
 
 
         if( min( t0, minHit ) == t0 )
         {
+
+            if( print ) {
+                cout << "hit sphere " << i << " t0 " << t0 << "\n";
+            }
+
             hitSphere = true;
             objectNum[0] = i;
             minHit = t0;
@@ -594,6 +531,10 @@ void RayEngine::trace(
                               r.o[1] + r.d[1]*t0,
                               r.o[2] + r.d[2]*t0 );
             srInverse = 1.0f/s.r;
+
+            if( print ) {
+                cout << "inv: " << srInverse << "\n";
+            }
 
             norm = Vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
             //norm = intersect - s.c;
@@ -612,13 +553,27 @@ void RayEngine::trace(
             if( !click ) {
                 for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
                 {
-                    shadowFeeler.o = intersect;
-                    shadowFeeler.d = lights[iLight].d * -1;
-                    shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
-                    shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
-                    trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                    if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 )
-                        continue;
+                    if( false ) {
+                        Ray shadowFeeler;
+                        shadowFeeler.o = intersect;
+                        shadowFeeler.d = lights[iLight].d * -1;
+                        shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
+                        Vec3 shadowColor;
+                        shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
+                        if(print) {
+                            cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
+                        }
+                        // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
+                        trace( shadowFeeler, depthIn+1, effect, shadowColor, false, bSphere, objectNum, true );
+                        if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 ) {
+                            if(print) {
+                                cout << "abandond light " << iLight << "\n";
+                            }
+                            continue;
+                        }
+                    }
+
+
                     tmp = norm - lights[iLight].d;
                     lightRefl = tmp * 2 * norm.dot(lights[iLight].d);
                     lightRefl.normalize();
@@ -645,7 +600,7 @@ void RayEngine::trace(
         }
         
 
-    }//spheres
+    } // for spheres
 
 
     //final actions after main loops--------
@@ -653,7 +608,7 @@ void RayEngine::trace(
     //if this was from a click we don't care about colors etc
     if( click ) {
         bSphere = hitSphere;
-        return;
+        return hitSphere; // FIXME PROBABLY WRONG FIXME REMOVE CLICK
     }
 
 
@@ -661,12 +616,19 @@ void RayEngine::trace(
         Ray reflRay;
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;
+
+        if(print) {
+            cout << "reenter " << intersect[0] << "\n";
+        }
+
         Vec3 newColor(0,0,0);
         trace( reflRay, depthIn+1, effect, newColor, false, bSphere, objectNum, false );
         color = savedColor + newColor * savedKr;
+        return true;
     } else {
         //we hit nothing
         color = Vec3( 0, 0, 0 );
+        return false;
     }
 }
 

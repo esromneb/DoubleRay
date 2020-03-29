@@ -335,6 +335,20 @@
         postCustomMessage({type:'call',fn:'dumpCamera',rt:'void'});
       }
 
+      function chokeOutput(a,b,c,d) {
+
+
+        const sig = addNumberSignature([],4);
+
+        const args = [a,b,c,d].flat();
+
+        postCustomMessage({type:'call',fn:'chokeOutput',rt:'void',at:sig,av:args});
+      }
+
+      function setPrint(val) {
+        postCustomMessage({type:'call',fn:'setPrint',rt:'void',at:['number'],av:[val]});
+      }
+
 
 
     </script>
@@ -415,7 +429,7 @@
 </textarea><br>
 </td><td>
 <input type="button" value="Save Scene" onclick="globalSave('default')"/><br>
-<input type="button" value="Load Scene" onclick="globalLoad('default')"/><br>
+<input type="button" value="Load Scene" onclick="globalLoad('default');parseAndRender();"/><br>
 </td>
 <!-- <td>
 <input type="text" id="dtext">
