@@ -145,16 +145,26 @@ void Vec3::normalize( void )
     data[2] = data[2] / mag;
 }
 
-std::string Vec3::str(void) const {
+std::string Vec3::str(bool vertical) const {
     std::string out;
 
-    out += "x: ";
-    out += std::to_string(data[0]);
-    out += "\ny: ";
-    out += std::to_string(data[1]);
-    out += "\nz: ";
-    out += std::to_string(data[2]);
-    out += "\n";
+    if( vertical ) {
+        out += "x: ";
+        out += std::to_string(data[0]);
+        out += "\ny: ";
+        out += std::to_string(data[1]);
+        out += "\nz: ";
+        out += std::to_string(data[2]);
+        out += "\n";
+    } else {
+        out = "[";
+        out += std::to_string(data[0]);
+        out += ",";
+        out += std::to_string(data[1]);
+        out += ",";
+        out += std::to_string(data[2]);
+        out += "]";
+    }
 
     return out;
 }

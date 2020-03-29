@@ -22,6 +22,6 @@ public:
     void rot_y( double theta );
     void rot_x( double theta );
     void normalize( void );
-    std::string str(void) const;
+    std::string str(bool vertical = true) const;
 };
 Vec3 cross( const Vec3 &left, const Vec3 &right );

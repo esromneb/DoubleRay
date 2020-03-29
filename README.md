@@ -52,6 +52,7 @@ See Also
 * https://blog.scottlogic.com/2014/03/12/native-code-emscripten-webgl-simmer-gently.html - webgl
 * https://compile.fi/canvas-filled-three-ways-js-webassembly-and-webgl/ - 3 ways to canvas
 * https://github.com/mtharrison/wasm-raytracer - a working wasm raytracer
+* http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/ - ray sphere intersection
 
 
 
