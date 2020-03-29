@@ -672,8 +672,8 @@ void setupOrbit(const int _frames) {
         }
 
         // calculate next frame
-        cameraOrigin.rot_x(bump);
-        cameraDir.rot_x(bump);
+        cameraOrigin.rot_y(bump);
+        cameraDir.rot_y(bump);
 
         // load these from the Vec
         originX = cameraOrigin.data[0];
