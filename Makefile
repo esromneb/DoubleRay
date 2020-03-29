@@ -51,6 +51,9 @@ EXPORT_STRING = \
 "_setLightCount", \
 "_setLight", \
 "_dumpPoly", \
+"_setupOrbit", \
+"_nextOrbitRender", \
+"_dumpCamera", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

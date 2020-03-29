@@ -322,6 +322,19 @@
       }
 
 
+      function setupOrbit(val) {
+        postCustomMessage({type:'call',fn:'setupOrbit',rt:'void',at:['number'],av:[val]});
+      }
+
+      function nextOrbitRender() {
+        postCustomMessage({type:'call',fn:'nextOrbitRender',rt:'void'});
+      }
+
+      function dumpCamera() {
+        postCustomMessage({type:'call',fn:'dumpCamera',rt:'void'});
+      }
+
+
 
     </script>
     <table>

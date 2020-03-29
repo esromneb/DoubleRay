@@ -1,6 +1,7 @@
 // #include <stdio.h>
 
 #include "Vec3.hpp"
+#include "Vec.hpp"
 #include "RayEngine.hpp"
 #include "fileio.h"
 
@@ -10,6 +11,8 @@
 #include <stdint.h>
 #include <chrono>
 #include <unistd.h> //usleep
+#include <functional> //usleep
+#include <cmath>
 
 
 #include <stdio.h>
@@ -598,6 +601,130 @@ void dumpPoly(const int index) {
     cout << "kt: " << poly.kt << "\n";
     cout << "n : " << poly.n  << "\n";
 
+}
+
+typedef std::function<void(void)> scene_animation_t;
+
+std::vector<scene_animation_t> cameraOrbit;
+
+unsigned nextOrbitFrame = 0;
+
+
+///
+/// First frame is camera's current position
+/// next frame is moved
+/// final frame should be adjacent and animate "seamless" into the first frame
+void setupOrbit(const int _frames) {
+    if( _frames < 0 ) {
+        cout << "Frames cannot be negative\n";
+        return;
+    }
+    if( _frames == 0 ) {
+        cout << "Frames cannot be zero\n";
+        return;
+    }
+
+    const unsigned frames = (unsigned)_frames;
+    cout << "Orbit frames: " << frames << "\n";
+
+    cameraOrbit.resize(0);
+    nextOrbitFrame = 0;
+
+    const float bump = 2*M_PI / frames;
+
+    Vec cameraOrigin(4); // make a Vec sized 4
+    Vec cameraDir(4); // make a Vec sized 4
+
+    // load the Vec3 camera into it
+    cameraOrigin.data[0] = engine->camera.o[0];
+    cameraOrigin.data[1] = engine->camera.o[1];
+    cameraOrigin.data[2] = engine->camera.o[2];
+    cameraOrigin.data[3] = 0;
+
+    // load the Vec3 camera into it
+    cameraDir.data[0] = engine->camera.d[0];
+    cameraDir.data[1] = engine->camera.d[1];
+    cameraDir.data[2] = engine->camera.d[2];
+    cameraDir.data[3] = 0;
+
+    // the new values for the camera's origin
+    // these are lambda captured by value below
+    float originX = engine->camera.o[0];
+    float originY = engine->camera.o[1];
+    float originZ = engine->camera.o[2];
+
+    float dirX = engine->camera.d[0];
+    float dirY = engine->camera.d[1];
+    float dirZ = engine->camera.d[2];
+
+    for(unsigned i = 0; i < frames; i++) {
+
+        cameraOrbit.emplace_back([=](void) {
+            cout << "executing frame i: " << i << "\n";
+            engine->camera.o = Vec3(originX, originY, originZ);
+
+            engine->camera.d = Vec3(dirX, dirY, dirZ);
+            engine->camera.d.normalize(); // should not be needed if only rotating
+        });
+
+        if( true ) {
+            cout << cameraOrigin.str() << "  " << cameraDir.str() << "\n";
+        }
+
+        // calculate next frame
+        cameraOrigin.rot_x(bump);
+        cameraDir.rot_x(bump);
+
+        // load these from the Vec
+        originX = cameraOrigin.data[0];
+        originY = cameraOrigin.data[1];
+        originZ = cameraOrigin.data[2];
+
+        // load these from the Vec
+        dirX = cameraDir.data[0];
+        dirY = cameraDir.data[1];
+        dirZ = cameraDir.data[2];
+
+    }
+
+
+}
+
+void nextOrbitRender(void) {
+    if( cameraOrbit.size() == 0 ) {
+        cout << "nextOrbitRender() cannot run without setupOrbit() first\n";
+        return;
+    }
+
+    // not sure if needed, prevent any starting glitch
+    nextOrbitFrame = nextOrbitFrame % cameraOrbit.size();
+
+    // update the scene
+    cameraOrbit[nextOrbitFrame]();
+
+    // render
+    doRenderOfficial();
+
+    nextOrbitFrame++;
+
+    nextOrbitFrame = nextOrbitFrame % cameraOrbit.size();
+}
+
+
+///
+///
+///    "loc": [0, 1, -2],
+///    "dir": [0, -0.2, 1],
+///
+void dumpCamera() {
+
+    const auto& c = engine->camera;
+
+    cout << "\"loc\": [" << c.o[0] << ", " << c.o[1] << ", " << c.o[2] << "],\n";
+    cout << "\"dir\": [" << c.d[0] << ", " << c.d[1] << ", " << c.d[2] << "],\n";
+
+    // cout << engine->camera.o.str() << "\n";
+    // cout << engine->camera.d.str() << "\n";
 }
 
 
