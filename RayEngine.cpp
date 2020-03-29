@@ -191,7 +191,13 @@ void RayEngine::scene2(void) {
 
     //objects
 
-    polygons[1].kr = 1.0f;
+    numPoly = 1;
+
+    polygons[0].kr = 1.0f;
+    // polygons[0].insert(0,0,0);
+    // polygons[0].insert(0,1,0);
+    // polygons[0].insert(0,1,1);
+    // polygons[0].insert(0,0,1);
 
     //lights
     // lights[0].color = Vec3( 0, 0, 0 );

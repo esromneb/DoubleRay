@@ -108,7 +108,8 @@ copy_files_target:
 
 FS_COPY_LIST = \
 models/scene2.txt \
-models/unit_cube.txt
+models/unit_cube.txt \
+models/scenep5.txt
 
 # copy files which will act as the root filesystem
 copy_fs:

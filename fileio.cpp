@@ -8,7 +8,8 @@
 
 // #define FILENAME "unit_cube.txt"
 // #define FILENAME "root_fs/scene2.txt"
-#define FILENAME "root_fs/unit_cube.txt"
+// #define FILENAME "root_fs/unit_cube.txt"
+#define FILENAME "root_fs/scenep5.txt"
 
 using namespace std;
 
