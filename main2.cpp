@@ -61,7 +61,7 @@ void setupEngine(void) {
 
     engine->makeObjects();
 
-    readWaveFront( *engine );
+    // readWaveFront( *engine );
 
 }
 

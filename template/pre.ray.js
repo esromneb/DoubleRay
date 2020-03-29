@@ -2,8 +2,12 @@
 // gets appended to the top of ray.js
 ////////////////////////////////////////
 
+let debugCustomDispatch = false;
+
 Module['onCustomMessage'] = (x) => {
-  console.log('worker got msg: ' + JSON.stringify(x.data));
+  if( debugCustomDispatch ) {
+    console.log('worker got msg: ' + JSON.stringify(x.data));
+  }
   if(x.data.userData && x.data.userData.type) {
     Module['dispatchCustomMessageType'](x.data.userData);
   } else {
@@ -28,7 +32,9 @@ Module['onCustomMessage'] = (x) => {
 
 
 Module['dispatchCustomMessageType'] = (x) => {
-  console.log('in dispatchCustomMessageType' + JSON.stringify(x));
+  if( debugCustomDispatch ) {
+    console.log('in dispatchCustomMessageType' + JSON.stringify(x));
+  }
 
   switch(x.type) {
     case 'call': {
