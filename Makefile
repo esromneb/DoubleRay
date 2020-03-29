@@ -43,6 +43,8 @@ EXPORT_STRING = \
 "_setGlobalC", \
 "_setSphere", \
 "_setSphereCount", \
+"_setLightCount", \
+"_setLight", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

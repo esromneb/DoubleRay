@@ -357,6 +357,15 @@ EM_JS(void, call_alert, (), {
 
 
 
+// automatically resize the vector
+// (grow only)
+template<class T>
+void growOnly(const int index, T& vec) {
+    if( (index + 1) > vec.size() ) {
+        vec.resize((index+1));
+    }
+}
+
 
 
 
@@ -501,6 +510,7 @@ void setSphereCount(const int count) {
     spheres.resize(count);
 }
 
+
 void setSphere(
     const int index,
     const float radius,
@@ -528,9 +538,10 @@ void setSphere(
 
     // automatically resize the vector
     // (grow only)
-    if( (index + 1) > spheres.size() ) {
-        spheres.resize((index+1));
-    }
+    growOnly(index, spheres);
+    // if( (index + 1) > spheres.size() ) {
+    //     spheres.resize((index+1));
+    // }
     // cout << "spheres After size " << spheres.size() << "\n";
 
     spheres[index].r = radius;
@@ -542,6 +553,34 @@ void setSphere(
     spheres[index].n = n;
     spheres[index].kt = transmitted;
 }
+
+
+void setLightCount(const int count) {
+    auto &lights = engine->lights;
+    lights.resize(count);
+}
+
+void setLight(
+    const int index,
+    VEC3_ARG(direction),
+    VEC3_ARG(color)) {
+
+    if(index < 0) {
+        cout << "Light index cannot be less than 0\n";
+        return;
+    }
+
+    auto &lights = engine->lights;
+
+    growOnly(index, lights);
+
+    lights[index].d = VEC3_ARG_CTONS(direction);
+    lights[index].d.normalize();
+    
+    lights[index].color = VEC3_ARG_CTONS(color);
+}
+
+
 
 
 } // extern C
