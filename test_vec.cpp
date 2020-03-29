@@ -16,5 +16,8 @@ int main(void) {
     a.data[1] = 0;
     a.data[2] = 0;
 
+    b.data[0] = 2;
+    b.data[1] = 0;
+    b.data[2] = 0;
 
 }

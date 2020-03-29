@@ -59,8 +59,10 @@ JS_TEMPLATE_FILE = template/pre.ray.js
 # warning and error flags
 CLANG_WARN_FLAGS = \
 -Wall -Wextra \
--Wno-ignored-qualifiers
+-Wno-ignored-qualifiers \
+-Wundef
 # -Wshadow
+#  -Wconversion
 
 
 

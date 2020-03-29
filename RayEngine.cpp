@@ -420,7 +420,7 @@ void RayEngine::trace(
     Vec3 savedIntersect;
     Ray shadowFeeler;
     Vec3 shadowColor;
-    bool tmpBool;
+    // bool tmpBool;
     double savedKr;
     bool hitSphere;
     objectNum[0] = -1;
@@ -521,7 +521,7 @@ void RayEngine::trace(
                     savedColor = this->ia * poly.ka;
 
                     if( !click ) {
-                        for( int iLight = 0; iLight < lights.size(); iLight++ )
+                        for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
                         {
                             shadowFeeler.o = intersect;
                             shadowFeeler.d = lights[iLight].d * -1;
@@ -610,7 +610,7 @@ void RayEngine::trace(
             color = this->ia * s.ka;
     
             if( !click ) {
-                for( int iLight = 0; iLight < lights.size(); iLight++ )
+                for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
                 {
                     shadowFeeler.o = intersect;
                     shadowFeeler.d = lights[iLight].d * -1;
