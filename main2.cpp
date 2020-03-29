@@ -585,7 +585,20 @@ void setLight(
     lights[index].color = VEC3_ARG_CTONS(color);
 }
 
+void dumpPoly(const int index) {
+    const auto &poly = engine->polygons[index];
 
+    cout << "Polygon " << index << ":\n";
+    cout << "edgeCount: " << poly.edgeCount << "\n";
+    cout << "tpc: " << poly.trianglePointCount << "\n";
+    cout << "ka: " << poly.ka << "\n";
+    cout << "kd: " << poly.kd.str() << "\n";
+    cout << "ks: " << poly.ks << "\n";
+    cout << "kr: " << poly.kr << "\n";
+    cout << "kt: " << poly.kt << "\n";
+    cout << "n : " << poly.n  << "\n";
+
+}
 
 
 } // extern C

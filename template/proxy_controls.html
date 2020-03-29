@@ -122,6 +122,15 @@
 
   </script>
 
+  <script type="text/javascript">
+
+    window.onload = ()=>{
+      // jsPrint('Window OnLoad');
+      setupEngineClick();
+      doRenderOfficialClick();
+    };
+  </script>
+
   </head>
   <body>
     <script type="text/javascript">
@@ -146,6 +155,10 @@
 
       function coutIntDualClick() {
         postCustomMessage({type:'call',fn:'coutIntDual',rt:'void',at:['number','number'],av:[5,6]});
+      }
+
+      function dumpPoly(n) {
+        postCustomMessage({type:'call',fn:'dumpPoly',rt:'void',at:['number'],av:[n]});
       }
 
       function addVec3Signature(vin, n) {
@@ -329,6 +342,7 @@
 <input type="button" value="Next Rainbow" onclick="nextRainbowClick()"/><br>
 <input type="button" value="Cout from C++" onclick="coutIntClick()"/><br>
 <input type="button" value="Cout from C++ dual" onclick="coutIntDualClick()"/><br>
+<input type="button" value="Dump Poly 0" onclick="dumpPoly(0)"/><br>
 </td><td>
 
 <div class="square"></div>

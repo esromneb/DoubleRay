@@ -47,6 +47,7 @@ EXPORT_STRING = \
 "_setSphereCount", \
 "_setLightCount", \
 "_setLight", \
+"_dumpPoly", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
@@ -62,7 +63,7 @@ out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Mak
 	--preload-file 'root_fs' \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
-	'-std=c++2a' '-O3'
+	'-std=c++2a' '-O2'
 
 
 e: out/empty
@@ -109,7 +110,9 @@ copy_files_target:
 FS_COPY_LIST = \
 models/scene2.txt \
 models/unit_cube.txt \
-models/scenep5.txt
+models/scenep5.txt \
+models/1tri.txt \
+models/1triB.txt
 
 # copy files which will act as the root filesystem
 copy_fs:

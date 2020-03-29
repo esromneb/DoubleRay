@@ -194,6 +194,11 @@ void RayEngine::scene2(void) {
     numPoly = 1;
 
     polygons[0].kr = 1.0f;
+    polygons[0].ka = 0.7f;
+    polygons[0].ks = 0.0f;
+    polygons[0].kd = Vec3( 0.2, 0.4, 0.2 );
+    polygons[0].n = 7;
+
     // polygons[0].insert(0,0,0);
     // polygons[0].insert(0,1,0);
     // polygons[0].insert(0,1,1);
