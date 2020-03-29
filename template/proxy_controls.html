@@ -316,14 +316,14 @@
     "c": 7
   },
   "spheres": [{
-      "rad": 1,
-      "loc": [1, 0, 3],
-      "ambient": 0.4,
-      "specular": 0.2,
-      "reflected": 0,
-      "transmitted": 0.7,
-      "diffuse": [0, 1, 0],
-      "n": 8
+      "rad": 1.1,
+      "loc": [1, 0, 4],
+      "ambient": 1.0,
+      "specular": 0.05,
+      "reflected": 0.4,
+      "transmitted": 0.0,
+      "diffuse": [0.3, 0.3, 0.3],
+      "n": 10
     },
     {
       "rad": 0.7,
@@ -397,7 +397,11 @@
   function doJsonCalls(obj) {
     if(obj.camera) {
       const camera = obj.camera;
-      if( camera.loc && camera.dir && camera.rot && camera.depth ) {
+      if( 
+        typeof(camera.loc) !== 'undefined' && 
+        typeof(camera.dir) !== 'undefined' &&
+        typeof(camera.rot) !== 'undefined' &&
+        typeof(camera.depth) !== 'undefined' ) {
         setCamera(camera.loc, camera.dir, camera.rot);
         setDepth(camera.depth);
       } else {
@@ -411,7 +415,7 @@
 
     if(obj.global) {
       const gg = obj.global;
-      if( gg.color && gg.c ) {
+      if( typeof(gg.color) !== 'undefined' && typeof(gg.c) !== 'undefined' ) {
         setAmbientColor(gg.color);
         setGlobalC(gg.c);
       } else {
@@ -421,6 +425,46 @@
     } else {
       jsPrint("Global tree missing");
       return;
+    }
+
+    if(obj.spheres) {
+      setSphereCount(0); // will delete all spheres in vector
+      
+      const spheres = obj.spheres;
+      setSphereCount(spheres.length); // prevents multiple resizes of vector in c++
+
+      for(let i = 0; i < spheres.length; i++ ) {
+        const s = spheres[i];
+        if(
+         typeof(s.rad) !== 'undefined' &&
+         typeof(s.loc) !== 'undefined' &&
+         typeof(s.ambient) !== 'undefined' &&
+         typeof(s.specular) !== 'undefined' &&
+         typeof(s.reflected) !== 'undefined' &&
+         typeof(s.transmitted) !== 'undefined' &&
+         typeof(s.diffuse) !== 'undefined' &&
+         typeof(s.n) !== 'undefined' ) {
+          setSphere(
+            i,
+            s.rad,
+            s.loc,
+            s.ambient,
+            s.specular,
+            s.reflected,
+            s.transmitted,
+            s.diffuse,
+            s.n);
+
+        } else {
+          jsPrint("Sphere #" + i + " missing required keys");
+        }
+      }
+
+        
+    } else {
+      // spheres tree missing
+      // we assume the users just doesn't want any spheres
+      setSphereCount(0); // will delete all spheres in vector
     }
 
     doRenderOfficialClick();
