@@ -237,8 +237,26 @@ void Vec::rot_x( double theta )
     data[2] = transformed[2];
 }
 
-std::string Vec::str(void) const {
-    return std::string("");
+std::string Vec::str(bool vertical) const {
+    std::string out = "";
+
+    if( vertical ) {
+        for(unsigned i = 0; i < y; i++) {
+            out += std::to_string(data[i]);
+            out += "\n";
+            // cout << data[0] << "\n";
+        }
+    } else {
+        out = "[";
+        for(unsigned i = 0; i < y; i++) {
+            out += std::to_string(data[i]);
+            out += ",";
+            // cout << data[0] << "\n";
+        }
+        out.resize(out.size()-1);
+        out += "]";
+    }
+    return out;
 }
 
 Vec::~Vec( void )

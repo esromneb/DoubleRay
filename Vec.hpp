@@ -23,7 +23,7 @@ public:
     void rot_y( double theta );
     void rot_x( double theta );
     static const unsigned DEFAULT_VEC = 3;
-    std::string str(void) const;
+    std::string str(bool vertical = false) const;
 };
 
 Vec cross( Vec &left, Vec &right ); // fixme move to static
