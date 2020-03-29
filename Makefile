@@ -9,14 +9,16 @@ HPP_FILES = \
 RayEngine.hpp \
 Vec3.hpp \
 Poly.hpp \
-Matrix.hpp
+Matrix.hpp \
+fileio.h
 
 CPP_FILES = \
 main2.cpp \
 Vec3.cpp \
 Poly.cpp \
 Matrix.cpp \
-RayEngine.cpp 
+RayEngine.cpp \
+fileio.cpp
 
 # this is a list of all C functions we want to publish to javascript
 # In the main cpp file, each of these is wrapped in extern "C" {}
@@ -57,6 +59,7 @@ out/ray.wasm: $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Mak
 	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
 	--pre-js $(JS_TEMPLATE_FILE) \
+	--preload-file 'root_fs' \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a' '-O3'
@@ -84,9 +87,9 @@ out/empty:  $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 #-s USE_PTHREADS=1 -s RESERVED_FUNCTION_POINTERS=1
 #-s PTHREAD_POOL_SIZE=4
 
-.PHONY: copy_files_target copy
+.PHONY: copy_files_target copy copy_fs
 
-copy: copy_files_target
+copy: copy_files_target copy_fs
 
 
 
@@ -97,9 +100,24 @@ COPY_LIST = \
 template/jquery-3.4.1.min.js \
 template/LoadSave.js
 
+# copy files required to compile the project (js etc)
 copy_files_target:
 	cp $(COPY_LIST) out/
 
 
+
+FS_COPY_LIST = \
+models/scene2.txt \
+models/unit_cube.txt
+
+# copy files which will act as the root filesystem
+copy_fs:
+	mkdir -p root_fs
+	cp $(FS_COPY_LIST) root_fs/
+
+
+
+
+
 clean:
-	rm -rf out/ray.wasm out/ray.js out/ray.html
+	rm -rf out/ray.wasm out/ray.js out/ray.html out/ray.data

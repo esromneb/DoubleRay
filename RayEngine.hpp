@@ -82,7 +82,7 @@ public:
     // int nLight = 2;
     int depth;
 
-    int numPoly;
+    int numPoly = 0;
     vector<Poly> polygons;
 
     Matrix *mat;

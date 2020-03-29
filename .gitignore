@@ -1,8 +1,25 @@
 # Project
 
-out/ray.html
-out/ray.wasm
-out/ray.js
+out/*
+root_fs/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Compiled Object files
 *.slo

@@ -1,9 +1,7 @@
-#ifndef _FILEIO_H_
-#define _FILEIO_H_
+#pragma once
 
 
-#include "raytrace.h"
+#include "RayEngine.hpp"
 
-void read( rayEngine &engine );
+void readWaveFront( RayEngine &engine );
 //void save( void );
-#endif

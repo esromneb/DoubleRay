@@ -5,8 +5,10 @@
 #include <fstream>
 #include <string>
 #include "fileio.h"
-#include "raytrace.h"
-#define FILENAME "scene.obj"
+
+// #define FILENAME "unit_cube.txt"
+// #define FILENAME "root_fs/scene2.txt"
+#define FILENAME "root_fs/unit_cube.txt"
 
 using namespace std;
 
@@ -35,7 +37,7 @@ void save( void )
 }*/
 
 
-void read( rayEngine &engine )
+void readWaveFront( RayEngine &engine )
 {
 	char c;
 	float x, y, z;
@@ -49,10 +51,14 @@ void read( rayEngine &engine )
 
 //	int iNxt; //used in accordance with i from a for loop and it loops around
 
+    cout << "About to open " << FILENAME << "\n";
+
 	file.open( FILENAME , ios::in );
 
 	if( !file.is_open() )
 		return;
+
+    cout << "Open was successful: " << FILENAME << "\n";
 
 	engine.numPoly = 0;
 

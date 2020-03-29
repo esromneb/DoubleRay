@@ -2,6 +2,8 @@
 
 #include "Vec3.hpp"
 #include "RayEngine.hpp"
+#include "fileio.h"
+
 
 #include <iostream>
 #include <vector>
@@ -55,6 +57,9 @@ void setupEngine(void) {
     }
 
     engine->makeObjects();
+
+    readWaveFront( *engine );
+
 }
 
 
