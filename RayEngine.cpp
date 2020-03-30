@@ -394,7 +394,7 @@ void RayEngine::render( void )
                     g_print = true;
                 }
 
-                trace( r, 0, 0, color, false, nUsedB, nUsedI, false );
+                trace( r, 0, color, nUsedB, nUsedI, false );
                 if( print ) {
                     cout << "\n Final: " << color[0] << "\n";
                 }
@@ -414,9 +414,7 @@ void RayEngine::render( void )
 bool RayEngine::trace(
     const Ray& r,
     const int depthIn,
-    const double effect,
     Vec3 &color,
-    const bool click,
     bool &bSphere, // fixme should be const, needs to be copied below
     Vec3 &objectNum,
     const bool shdFeeling ) {
@@ -558,7 +556,7 @@ bool RayEngine::trace(
             //we aleways have ambient light
             color = this->ia * s.ka;
     
-            if( !click ) {
+            if( true ) {
                 for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
                 {
                     if( false ) {
@@ -572,7 +570,7 @@ bool RayEngine::trace(
                             cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
                         }
                         // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                        trace( shadowFeeler, depthIn+1, effect, shadowColor, false, bSphere, objectNum, true );
+                        trace( shadowFeeler, depthIn+1, shadowColor, bSphere, objectNum, true );
                         if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 ) {
                             if(print) {
                                 cout << "abandond light " << iLight << "\n";
@@ -598,7 +596,7 @@ bool RayEngine::trace(
                         * (diffuse + specular);
                     
                     color = color + lightEffects;
-                        
+
                 }
             }
 
@@ -614,11 +612,6 @@ bool RayEngine::trace(
 
     //final actions after main loops--------
 
-    //if this was from a click we don't care about colors etc
-    if( click ) {
-        bSphere = hitSphere;
-        return hitSphere; // FIXME PROBABLY WRONG FIXME REMOVE CLICK
-    }
 
 
     if( minHit != 999999 ) {
@@ -631,7 +624,7 @@ bool RayEngine::trace(
         }
 
         Vec3 newColor(0,0,0);
-        trace( reflRay, depthIn+1, effect, newColor, false, bSphere, objectNum, false );
+        trace( reflRay, depthIn+1, newColor, bSphere, objectNum, false );
         color = savedColor + newColor * savedKr;
         return true;
     } else {

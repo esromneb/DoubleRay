@@ -55,9 +55,7 @@ public:
     bool trace(
         const Ray& r, 
         const int depthIn,
-        const double effect,
         Vec3 &color,
-        const bool click,
         bool &bSphere,
         Vec3 &objectNum,
         const bool shdFeeling );
