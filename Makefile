@@ -120,7 +120,11 @@ copy: copy_files_target copy_fs
 
 COPY_LIST = \
 template/jquery-3.4.1.min.js \
-template/LoadSave.js
+template/LoadSave.js \
+template/GIFEncoder.js \
+template/LZWEncoder.js \
+template/NeuQuant.js \
+template/b64.js
 
 # copy files required to compile the project (js etc)
 copy_files_target:

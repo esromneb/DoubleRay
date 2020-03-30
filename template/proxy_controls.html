@@ -103,6 +103,40 @@
 
   <script src="jquery-3.4.1.min.js"></script>
   <script src="LoadSave.js"></script>
+  <script type="text/javascript" src="LZWEncoder.js"></script>
+  <script type="text/javascript" src="NeuQuant.js"></script>
+  <script type="text/javascript" src="GIFEncoder.js"></script>
+  <script type="text/javascript" src="b64.js"></script>
+
+  <script type="text/javascript">
+    var encoder;
+    var context;
+    function onLoadSetupGif() {
+
+      var cv = document.getElementById('canvas');
+
+
+      context = cv.getContext('2d');
+
+      encoder = new GIFEncoder();
+
+      encoder.setRepeat(0); //0  -> loop forever
+      encoder.setDelay(900); //go to next frame every n milliseconds
+
+      encoder.start();
+
+    }
+
+    function saveGifFrame() {
+      encoder.addFrame(context);
+    }
+
+    function downloadGif() {
+      encoder.finish();
+      encoder.download("download.gif");
+    }
+
+  </script>
 
 
   <script type="text/javascript">
@@ -124,11 +158,18 @@
 
   <script type="text/javascript">
 
-    window.onload = ()=>{
+    function onLoadRender() {
       // jsPrint('Window OnLoad');
       setupEngineClick();
       parseAndRender();
       // doRenderOfficialClick();
+    }
+
+    // there can only be one of these
+    // if we want to add more just add to the list of functions
+    window.onload = ()=>{
+      onLoadSetupGif();
+      onLoadRender();
     };
   </script>
 
@@ -371,6 +412,8 @@
 <input type="button" value="Cout from C++" onclick="coutIntClick()"/><br>
 <input type="button" value="Cout from C++ dual" onclick="coutIntDualClick()"/><br>
 <input type="button" value="Dump Poly 0" onclick="dumpPoly(0)"/><br>
+<input type="button" value="Safe Gif Frame" onclick="saveGifFrame()"/><br>
+<input type="button" value="Download Gif" onclick="downloadGif()"/><br>
 </td><td>
 
 <div class="square"></div>
