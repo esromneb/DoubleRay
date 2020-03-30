@@ -605,8 +605,8 @@ bool RayEngine::trace(
 
                     Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
 
-                    // const float specular = s.ks * pow( std::max((double)0, lightRefl.dot( negRayDirection )), s.n);
-                    const float specular = s.ks * pow( idealR.dot( r.d ), s.n);
+                    const float specular = s.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), s.n);
+                    // const float specular = s.ks * pow( idealR.dot( negRayDirection ), s.n);
 
                     const Vec3 lightEffects =
                           ( lights[iLight].color / ( fp.mag() + this->c ) ) 
