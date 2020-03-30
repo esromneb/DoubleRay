@@ -169,6 +169,15 @@ std::string Vec3::str(bool vertical) const {
     return out;
 }
 
+void Vec3::saturateMin( const double min )
+{
+    for( int i = 0; i < 3; i++ ) {
+        if( data[i] < min ) {
+            data[i] = min;
+        }
+    }
+}
+
 Vec3 Vec3::reflect(const Vec3 ray, const Vec3 normal) {
     Vec3 rhs = normal * ray.dot(normal) * 2;
     Vec3 ret = ray - rhs;

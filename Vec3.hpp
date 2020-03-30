@@ -23,6 +23,7 @@ public:
     void rot_x( double theta );
     void normalize( void );
     std::string str(bool vertical = true) const;
+    void saturateMin( const double min );
     static Vec3 reflect(const Vec3 ray, const Vec3 normal);
     static Vec3 cross( const Vec3 &left, const Vec3 &right );
 };

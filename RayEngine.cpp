@@ -305,15 +305,18 @@ bool RayEngine::trace(
             const Vec3 diffuse = (material.kd * norm.dot( negLightDirection ) );
 
 
-            const Vec3 negRayDirection = r.d*-1; // opposite
+            const Vec3 negRayDirection = r.d*-1;
             Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
 
             const float specular = material.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), material.n);
 
-            const Vec3 lightEffects =
+            Vec3 lightEffects =
                   ( lights[iLight].color / ( fp.mag() + this->c ) ) 
                 * (diffuse + specular);
-            
+
+            // Lights cannot have negative effect
+            lightEffects.saturateMin(0.0);
+
             color = color + lightEffects;
         }
 
