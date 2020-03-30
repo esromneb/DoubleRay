@@ -127,7 +127,8 @@ std::tuple<Vec3, Vec3, Vec3, Vec3> intersectSphere(const Ray& r, const Sphere &s
     norm.normalize();
 
     //refl = r.d - norm * 2 * (camera.d.dot(norm));
-    refl = norm*2* norm.dot( r.d ) - r.d;
+    // refl = norm*2* norm.dot( r.d ) - r.d;
+    refl = Vec3::reflect(r.d, norm);
 
     //lighting
     fp = r.o - intersect;
@@ -247,14 +248,17 @@ bool RayEngine::trace(
         double sphereBestT;
 
         // has hit detection issues
-        if( true ) {
+        if( false ) {
             sphereBestT = min( t0, t1 );
         }
 
-        // has shadow issues
-        if( false ) {
+        
+        // the tolerance here can be changed to 0 if we "advance"
+        // the reflected ray just a bit.  whichever is more efficient
+        if( true ) {
 
-            const double sphereLift = 0.00;
+            // this fixes shadow issues
+            const double sphereLift = 1E-12;
 
             if( t0 > sphereLift && t1 > sphereLift ) {
                 sphereBestT = min( t0, t1 );
@@ -263,7 +267,6 @@ bool RayEngine::trace(
             } else if ( t0 <= sphereLift && t1 > sphereLift ) {
                 sphereBestT = t1;
             } else {
-                // t0 = minHit;
                 // sphere is behind ray
                 continue;
             }
