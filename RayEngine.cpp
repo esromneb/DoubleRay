@@ -353,6 +353,8 @@ void RayEngine::resize( const int _x )
 int g_i = 0;
 int g_j = 0;
 
+bool g_print = false;
+
 void RayEngine::render( void )
 {
     bool nUsedB = false;
@@ -386,6 +388,12 @@ void RayEngine::render( void )
             g_j = j;
 
             if( (i > il && i < ih) && (j > jl && j < jh ) ) {
+
+                g_print = false;
+                if( (i >= 198 && i < 200) && (j > 198 && j < 200)) {
+                    g_print = true;
+                }
+
                 trace( r, 0, 0, color, false, nUsedB, nUsedI, false );
                 if( print ) {
                     cout << "\n Final: " << color[0] << "\n";
@@ -425,7 +433,7 @@ bool RayEngine::trace(
     }
 
     Vec3 intersect;
-    Vec3 from, fp, refl, lightRefl, tmp, norm;
+    Vec3 fp;
     color[0] = color[1] = color[2] = 0;
     double srInverse;
 
@@ -536,12 +544,12 @@ bool RayEngine::trace(
                 cout << "inv: " << srInverse << "\n";
             }
 
-            norm = Vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
+            Vec3 norm = Vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
             //norm = intersect - s.c;
             norm.normalize();
 
             //refl = r.d - norm * 2 * (camera.d.dot(norm));
-            refl = norm*2* norm.dot( r.d ) - r.d;
+            Vec3 refl = norm*2* norm.dot( r.d ) - r.d;
 
             //lighting
             fp = r.o - intersect;
@@ -574,15 +582,25 @@ bool RayEngine::trace(
                     }
 
 
-                    tmp = norm - lights[iLight].d;
-                    lightRefl = tmp * 2 * norm.dot(lights[iLight].d);
+
+                    const Vec3 negLightDirection = lights[iLight].d*-1;
+
+                    const Vec3 tmp = norm - lights[iLight].d;
+                    Vec3 lightRefl = tmp * 2 * norm.dot(negLightDirection);
                     lightRefl.normalize();
 
-                    const Vec3 diffuse = (s.kd * lights[iLight].d.dot( norm ) );
+                    // const Vec3 diffuse = (s.kd * negLightDirection.dot( norm ) );
+                    const Vec3 diffuse = (s.kd * norm.dot( negLightDirection ) );
+                    // const Vec3 diffuse = (s.kd * norm.dot( lights[iLight].d ) );
 
-                    const Vec3 lightPlusOrigin = r.d + lights[iLight].d;
+                    const Vec3 lightPlusOrigin = r.d + negLightDirection;//lights[iLight].d;
+                    // const Vec3 negRayDirection = r.d;
+                    const Vec3 negRayDirection = r.d*-1; // opposite
+                    // const Vec3 negRayDirection = fp*-1;
+                    // const Vec3 negRayDirection = lightPlusOrigin;
 
-                    const float specular = s.ks * pow( lightRefl.dot( lightPlusOrigin ), s.n);
+                    // const float specular = s.ks * pow( std::max((double)0, lightRefl.dot( negRayDirection )), s.n);
+                    const float specular = s.ks * pow( lightRefl.dot( negRayDirection ), s.n);
 
                     const Vec3 lightEffects =
                           ( lights[iLight].color / ( fp.mag() + this->c ) ) 
