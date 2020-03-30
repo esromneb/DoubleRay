@@ -528,12 +528,17 @@ void setSphere(
     const float reflected,
     const float transmitted,
     VEC3_ARG(diffuse),
-    const float n
+    float n
     ) {
 
     if(index < 0) {
         cout << "Sphere index cannot be less than 0\n";
         return;
+    }
+
+    if( n < 1 ) {
+        cout << "Specular index cannot be less than 1\n";
+        n = 1;
     }
 
     auto &spheres = engine->spheres;
