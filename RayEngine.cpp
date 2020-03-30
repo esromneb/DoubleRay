@@ -409,6 +409,8 @@ void RayEngine::render( void )
         }
 }
 
+#define NO_HIT ((double)9999999)
+
 // returns true for hitting anything
 //
 bool RayEngine::trace(
@@ -439,7 +441,7 @@ bool RayEngine::trace(
 
     // distance of closest hit
     // this value is a magic number signifying "no hit"
-    double minHit = 999999;
+    double minHit = NO_HIT;
     Vec3 savedColor(0,0,0);
     Vec3 savedRefl(0,0,0);
     Vec3 savedIntersect(0,0,0);
@@ -448,8 +450,8 @@ bool RayEngine::trace(
     double savedKr = 0;
     // bool hitSphere = false;
 
-    const int nSphere = spheres.size();
-    for( int i = 0; i < nSphere; i++ )
+    // const int nSphere = spheres.size();
+    for( unsigned i = 0; i < spheres.size(); i++ )
     {
         const Sphere &s = spheres[i];
 
@@ -479,8 +481,8 @@ bool RayEngine::trace(
             continue;
         }
 
-        double t0 = ((-1* b) - sqrt((b*b) - (4*a*c))) / (2*a);
-        double t1 = ((-1* b) + sqrt((b*b) - (4*a*c))) / (2*a);
+        double t0 = ((-b) - sqrt(discriminant)) / (2*a);
+        double t1 = ((-b) + sqrt(discriminant)) / (2*a);
 
         if( print ) {
             cout << "t0 " << t0 << " t1 " << t1 << "\n";
@@ -503,18 +505,27 @@ bool RayEngine::trace(
         /// 
         /// 
 
-        t0 = min( t0, t1 );
+        // has hit detection issues
+        if( true ) {
+            t0 = min( t0, t1 );
+        }
 
-        // if( t0 > 0 && t1 > 0 ) {
-        //     t0 = min( t0, t1 );
-        // } else if( t0 > 0 && t1 <= 0 ) {
-        //     t0 = t0;
-        // } else if ( t0 <= 0 && t1 > 0 ) {
-        //     t0 = t1;
-        // } else {
-        //     t0 = minHit;
-        //     // sphere is behind ray
-        //     continue;
+        // has shadow issues
+        // if( false ) {
+
+        //     const double sphereLift = 0.1;
+
+        //     if( t0 > sphereLift && t1 > sphereLift ) {
+        //         t0 = min( t0, t1 );
+        //     } else if( t0 > sphereLift && t1 <= sphereLift ) {
+        //         t0 = t0;
+        //     } else if ( t0 <= sphereLift && t1 > sphereLift ) {
+        //         t0 = t1;
+        //     } else {
+        //         t0 = minHit;
+        //         // sphere is behind ray
+        //         continue;
+        //     }
         // }
 
 
@@ -612,7 +623,7 @@ bool RayEngine::trace(
 
 
 
-    if( minHit != 999999 ) {
+    if( minHit != NO_HIT ) {
         Ray reflRay;
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;
