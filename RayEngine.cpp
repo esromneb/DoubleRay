@@ -11,7 +11,7 @@ RayEngine::RayEngine( void )
 {
     numPoly = 0;
     this->polygons.resize(POLYGONS);
-    this->hits.resize(POLYGONS+30);
+    // this->hits.resize(POLYGONS+30);
 
     r = g = b = 0;
     px = 0;
@@ -440,15 +440,18 @@ bool RayEngine::trace(
     
     Vec3 d1,d2,d3;
     //double normDotDir;
-    numHit = 0;
+    // numHit = 0;
+
+    // distance of closest hit
+    // this value is a magic number signifying "no hit"
     double minHit = 999999;
-    Vec3 savedColor;
-    Vec3 savedRefl;
-    Vec3 savedIntersect;
+    Vec3 savedColor(0,0,0);
+    Vec3 savedRefl(0,0,0);
+    Vec3 savedIntersect(0,0,0);
     
     // bool tmpBool;
-    double savedKr;
-    bool hitSphere = false;
+    double savedKr = 0;
+    // bool hitSphere = false;
     objectNum[0] = -1;
 
     const int nSphere = spheres.size();
@@ -530,7 +533,7 @@ bool RayEngine::trace(
                 cout << "hit sphere " << i << " t0 " << t0 << "\n";
             }
 
-            hitSphere = true;
+            // hitSphere = true;
             objectNum[0] = i;
             minHit = t0;
             intersect = Vec3( r.o[0] + r.d[0]*t0,

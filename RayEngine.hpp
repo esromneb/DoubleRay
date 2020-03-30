@@ -84,8 +84,8 @@ public:
     vector<Poly> polygons;
 
     Matrix *mat;
-    vector<double> hits;
-    int numHit;
+    // vector<double> hits;
+    // int numHit;
 
     // int il = 198;
     // int ih = 200;
