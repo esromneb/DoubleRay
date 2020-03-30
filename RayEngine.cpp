@@ -585,28 +585,13 @@ bool RayEngine::trace(
 
                     const Vec3 negLightDirection = lights[iLight].d*-1;
 
-                    // const Vec3 diffuse = (s.kd * negLightDirection.dot( norm ) );
                     const Vec3 diffuse = (s.kd * norm.dot( negLightDirection ) );
-                    // const Vec3 diffuse = (s.kd * norm.dot( lights[iLight].d ) );
 
 
-
-
-                    const Vec3 tmp = norm - lights[iLight].d;
-                    Vec3 lightRefl = tmp * 2 * norm.dot(negLightDirection);
-                    lightRefl.normalize();
-
-
-                    const Vec3 lightPlusOrigin = r.d + negLightDirection;//lights[iLight].d;
-                    // const Vec3 negRayDirection = r.d;
                     const Vec3 negRayDirection = r.d*-1; // opposite
-                    // const Vec3 negRayDirection = fp*-1;
-                    // const Vec3 negRayDirection = lightPlusOrigin;
-
                     Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
 
                     const float specular = s.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), s.n);
-                    // const float specular = s.ks * pow( idealR.dot( negRayDirection ), s.n);
 
                     const Vec3 lightEffects =
                           ( lights[iLight].color / ( fp.mag() + this->c ) ) 
