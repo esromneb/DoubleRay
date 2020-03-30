@@ -17,11 +17,13 @@ public:
     const Vec3 operator+ ( const double rhs ) const;
     const double operator[] ( const int index ) const;
     double& operator[] ( const int index );
-    double mag( void );
+    double mag( void ) const;
     double dot( const Vec3 &rhs ) const;
     void rot_y( double theta );
     void rot_x( double theta );
     void normalize( void );
     std::string str(bool vertical = true) const;
+    static Vec3 reflect(const Vec3 ray, const Vec3 normal);
+    static Vec3 cross( const Vec3 &left, const Vec3 &right );
 };
-Vec3 cross( const Vec3 &left, const Vec3 &right );
+

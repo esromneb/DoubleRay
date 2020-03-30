@@ -11,6 +11,8 @@ Vec3.hpp \
 Poly.hpp \
 Matrix.hpp \
 fileio.h \
+Material.hpp \
+Ray.hpp \
 Vec.hpp
 
 WASM_MAIN = main2.cpp
@@ -21,6 +23,8 @@ Poly.cpp \
 Matrix.cpp \
 RayEngine.cpp \
 fileio.cpp \
+Material.cpp \
+Ray.cpp \
 Vec.cpp
 
 # this is a list of all C functions we want to publish to javascript
@@ -54,6 +58,8 @@ EXPORT_STRING = \
 "_setupOrbit", \
 "_nextOrbitRender", \
 "_dumpCamera", \
+"_chokeOutput", \
+"_setPrint", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
@@ -148,6 +154,9 @@ test_orbit: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 test_vec: test_vec.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
 
+
+test_refl: test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
 
 
 

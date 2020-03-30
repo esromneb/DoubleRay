@@ -53,7 +53,13 @@ See Also
 * https://compile.fi/canvas-filled-three-ways-js-webassembly-and-webgl/ - 3 ways to canvas
 * https://github.com/mtharrison/wasm-raytracer - a working wasm raytracer
 * http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/ - ray sphere intersection
+* https://blog.demofox.org/2017/01/09/raytracing-reflection-refraction-fresnel-total-internal-reflection-and-beers-law/
+* https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF - phong
+* http://paulbourke.net/geometry/reflected/ - reflect ray from normal
 
+See Also Offtopic
+===
+* https://github.com/antimatter15/jsgif
 
 
 Notes

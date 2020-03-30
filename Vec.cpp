@@ -158,7 +158,7 @@ Vec cross( Vec &left, Vec &right )
 
 }
 
-void Vec::rot_y( double theta )
+void Vec::rot_y( const double theta )
 {
     Vec orig(4), transformed(4);
     Matrix rotM( 4, 4 );
@@ -176,7 +176,7 @@ void Vec::rot_y( double theta )
     rotM.data[2][1] = 0;
     rotM.data[3][1] = 0;
 
-    rotM.data[0][2] = -1*sin( theta );;
+    rotM.data[0][2] = -1*sin( theta );
     rotM.data[1][2] = 0;
     rotM.data[2][2] = cos(theta);
     rotM.data[3][2] = 0;
@@ -198,7 +198,7 @@ void Vec::rot_y( double theta )
 }
 
 
-void Vec::rot_x( double theta )
+void Vec::rot_x( const double theta )
 {
     Vec orig(4), transformed(4);
     Matrix rotM( 4, 4 );
@@ -217,8 +217,49 @@ void Vec::rot_x( double theta )
     rotM.data[3][1] = 0;
 
     rotM.data[0][2] = 0;
-    rotM.data[1][2] = sin(theta);;
+    rotM.data[1][2] = sin(theta);
     rotM.data[2][2] = cos( theta );
+    rotM.data[3][2] = 0;
+
+    rotM.data[0][3] = 0;
+    rotM.data[1][3] = 0;
+    rotM.data[2][3] = 0;
+    rotM.data[3][3] = 1;
+
+    orig.data[0] = data[0];
+    orig.data[1] = data[1];
+    orig.data[2] = data[2];
+
+    transformed = rotM*orig;
+
+    data[0] = transformed[0];
+    data[1] = transformed[1];
+    data[2] = transformed[2];
+}
+
+// https://math.stackexchange.com/questions/651413/given-the-degrees-to-rotate-around-axis-how-do-you-come-up-with-rotation-matrix
+// each new line here goes left-right across the matrix
+void Vec::rot_z( const double theta )
+{
+    Vec orig(4), transformed(4);
+    Matrix rotM( 4, 4 );
+
+    orig.data[3] = 1;
+
+    rotM.data[0][0] = cos(theta);
+    rotM.data[1][0] = -1*sin(theta);
+    rotM.data[2][0] = 0;
+    rotM.data[3][0] = 0;
+
+
+    rotM.data[0][1] = sin(theta);
+    rotM.data[1][1] = cos(theta);
+    rotM.data[2][1] = 0;
+    rotM.data[3][1] = 0;
+
+    rotM.data[0][2] = 0;
+    rotM.data[1][2] = 0;
+    rotM.data[2][2] = 1;
     rotM.data[3][2] = 0;
 
     rotM.data[0][3] = 0;

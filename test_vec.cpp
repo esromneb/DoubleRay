@@ -1,6 +1,8 @@
 #include "Vec.hpp"
+#include "Material.hpp"
 
 #include <iostream>
+#include <tuple>
 
 using namespace std;
 
@@ -33,6 +35,7 @@ int test_fail(void) {
     return 0;
 }
 
+typedef std::tuple<uint8_t, size_t> hit_t;
 int test_print(void) {
 
     Vec a(3);
@@ -49,7 +52,19 @@ int test_print(void) {
 
     cout << "A: " << a.str(false) << "\n";
     cout << "B:\n" << b.str(true) << "\n";
-    cout << "B: " << b.str() << "\n";
+    cout << "B: " << b.str() << "\n\n\n\n";
+
+    Material m0;
+
+    cout << "kd " << m0.kd[1] << "\n";
+
+    // hit_t bestHit;
+
+    // bestHit = std::make_tuple((uint8_t)4, 44);
+
+    // auto [ hitWhat, index ] = bestHit;
+
+    // cout << "hit what " << (int)hitWhat << " at index " << index << "\n";
 
     return 0;
 }

@@ -50,7 +50,7 @@ double& Vec3::operator[] (const int index)
 {
     return data[index];
 }
-double Vec3::mag( void )
+double Vec3::mag( void ) const
 {
     double ret = 0;
     for( int i = 0; i < 3; i++ )
@@ -128,7 +128,7 @@ const Vec3 Vec3::operator+ ( const double rhs ) const
     }
     return ret;
 }
-Vec3 cross( const Vec3 &left, const Vec3 &right )
+Vec3 Vec3::cross( const Vec3 &left, const Vec3 &right )
 {
     Vec3 ret;
     ret.data[0] = left[1] * right[2] - left[2]*right[1];
@@ -167,4 +167,10 @@ std::string Vec3::str(bool vertical) const {
     }
 
     return out;
+}
+
+Vec3 Vec3::reflect(const Vec3 ray, const Vec3 normal) {
+    Vec3 rhs = normal * ray.dot(normal) * 2;
+    Vec3 ret = ray - rhs;
+    return ret;
 }

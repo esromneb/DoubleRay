@@ -554,12 +554,12 @@ void setSphere(
 
     spheres[index].r = radius;
     spheres[index].c = VEC3_ARG_CTONS(location);
-    spheres[index].ka = ambient;
-    spheres[index].ks = specular;
-    spheres[index].kr = reflected;
-    spheres[index].kd = VEC3_ARG_CTONS(diffuse);
-    spheres[index].n = n;
-    spheres[index].kt = transmitted;
+    spheres[index].m.ka = ambient;
+    spheres[index].m.ks = specular;
+    spheres[index].m.kr = reflected;
+    spheres[index].m.kd = VEC3_ARG_CTONS(diffuse);
+    spheres[index].m.n = n;
+    spheres[index].m.kt = transmitted;
 }
 
 
@@ -672,8 +672,8 @@ void setupOrbit(const int _frames) {
         }
 
         // calculate next frame
-        cameraOrigin.rot_y(bump);
-        cameraDir.rot_y(bump);
+        cameraOrigin.rot_z(bump);
+        cameraDir.rot_z(bump);
 
         // load these from the Vec
         originX = cameraOrigin.data[0];
@@ -725,6 +725,17 @@ void dumpCamera() {
 
     // cout << engine->camera.o.str() << "\n";
     // cout << engine->camera.d.str() << "\n";
+}
+
+void chokeOutput(int il, int ih, int jl, int jh) {
+    engine->il = il;
+    engine->ih = ih;
+    engine->jl = jl;
+    engine->jh = jh;
+}
+
+void setPrint(int p) {
+    engine->print = p?true:false;
 }
 
 

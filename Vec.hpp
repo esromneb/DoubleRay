@@ -20,8 +20,9 @@ public:
     double operator[] (int index);
     double mag( void );
     double dot( Vec &rhs );
-    void rot_y( double theta );
-    void rot_x( double theta );
+    void rot_y( const double theta );
+    void rot_x( const double theta );
+    void rot_z( const double theta );
     static const unsigned DEFAULT_VEC = 3;
     std::string str(bool vertical = false) const;
 };

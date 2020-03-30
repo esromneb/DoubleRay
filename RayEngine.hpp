@@ -4,6 +4,8 @@
 #include "Vec3.hpp"
 #include "Poly.hpp"
 #include "Matrix.hpp"
+#include "Material.hpp"
+#include "Ray.hpp"
 
 #include <vector>
 
@@ -19,24 +21,13 @@ public:
     Vec3 d;
 };
 
-class Ray
-{
-public:
-    explicit Ray();
-    Vec3 o;
-    Vec3 d;
-};
 
 class Sphere
 {
 public:
     double r; //radius
     Vec3 c; //center
-    // %ambient, %specular, %reflected, %transmitted
-    float ka, ks, kr, kt;
-    // %diffuse (also specifies color of this object)
-    Vec3 kd;
-    int n;
+    Material m;
 };
 
 
@@ -47,19 +38,15 @@ class RayEngine
 public:
     RayEngine( void );
     void makeObjects( void );
-    void scene1( void );
-    void scene2( void );
-    void scene3( void );
+    // void scene1( void );
+    // void scene2( void );
+    // void scene3( void );
     void paint( void );
     void render( void );
-    void trace(
+    bool trace(
         const Ray& r, 
         const int depthIn,
-        const double effect,
         Vec3 &color,
-        const bool click,
-        bool &bSphere,
-        Vec3 &objectNum,
         const bool shdFeeling );
 
     Ray camera;
@@ -86,8 +73,20 @@ public:
     vector<Poly> polygons;
 
     Matrix *mat;
-    vector<double> hits;
-    int numHit;
+    // vector<double> hits;
+    // int numHit;
+
+    // int il = 198;
+    // int ih = 200;
+    // int jl = 219;
+    // int jh = 222;
+
+    int il = 0;
+    int ih = 500;
+    int jl = 0;
+    int jh = 500;
+
+    bool print = false;
 
 };
 
