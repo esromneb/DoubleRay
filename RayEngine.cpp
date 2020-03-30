@@ -354,67 +354,6 @@ bool RayEngine::trace(
     }
 
 
-#ifdef BABYTIMEFROL
-    if( min( t0, minHit ) == t0 ) {
-
-
-        
-        //we aleways have ambient light
-        color = this->ia * s.ka;
-
-        if( true ) {
-            for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
-            {
-                if( false ) {
-                    Ray shadowFeeler;
-                    shadowFeeler.o = intersect;
-                    shadowFeeler.d = lights[iLight].d * -1;
-                    shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
-                    Vec3 shadowColor;
-                    shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
-                    if(print) {
-                        cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
-                    }
-                    // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                    trace( shadowFeeler, depthIn+1, shadowColor, true );
-                    if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 ) {
-                        if(print) {
-                            cout << "abandond light " << iLight << "\n";
-                        }
-                        continue;
-                    }
-                }
-
-
-
-                const Vec3 negLightDirection = lights[iLight].d*-1;
-
-                const Vec3 diffuse = (s.kd * norm.dot( negLightDirection ) );
-
-
-                const Vec3 negRayDirection = r.d*-1; // opposite
-                Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
-
-                const float specular = s.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), s.n);
-
-                const Vec3 lightEffects =
-                      ( lights[iLight].color / ( fp.mag() + this->c ) ) 
-                    * (diffuse + specular);
-                
-                color = color + lightEffects;
-
-            }
-        }
-
-        savedColor = color;
-        savedRefl = refl;
-        savedKr = s.kr;
-        savedIntersect = intersect;
-    }
-#endif
-
-
-
 
 
     //final actions after main loops--------
