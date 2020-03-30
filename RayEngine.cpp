@@ -228,19 +228,6 @@ bool RayEngine::trace(
             cout << "t0 " << t0 << " t1 " << t1 << "\n";
         }
 
-
-
-        if( shdFeeling && (t0 < 0 || t1 < 0)  )
-        {
-            if( print ) {
-                cout << "sphere break shadow " << i << "\n";
-            }
-            color[0] = 1;    // what is the purpose of this? to signal upstream?
-            // color[1] = 0;
-            // color[2] = 0;
-            continue;
-        }
-
         ///
         /// 
         /// 
@@ -272,6 +259,21 @@ bool RayEngine::trace(
             }
         }
 
+        // if we are doing a shadow feeler
+        // we are sending one single ray back to the light source
+        // any hit, no matter the distance, means the light is blocked
+
+        if( shdFeeling ) {
+            if( print ) {
+                cout << "sphere break shadow " << i << "\n";
+            }
+
+            return true;
+        }
+
+
+        // if this hit is closer then the last
+        // save it
         if( sphereBestT < hitDistance ) {
             if( print ) {
                 cout << "Update best hit to " << sphereBestT << "\n";
@@ -300,13 +302,35 @@ bool RayEngine::trace(
         // this gives the best look I feel however I guessed for this
         color = (this->ia+material.kd) * material.ka;
 
+        // a bad guess, don't want multiply
+        // color = (this->ia+material.kd) * material.ka * material.kd;
+
         for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
         {
+            // decide if we can see this light
 
+            Ray shadowFeeler;
+            shadowFeeler.o = intersect;
+            shadowFeeler.d = lights[iLight].d * -1;
+            // shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
+            Vec3 shadowColor; // unused
+            if(print) {
+                cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
+            }
+            // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
+            // set depth to maximum to prevent further bounces
+            const bool lightBlocked = trace( shadowFeeler, this->depth, shadowColor, true );
+
+            if( lightBlocked ) {
+                continue;
+            }
+
+
+
+            // now that we know we can see the light
             const Vec3 negLightDirection = lights[iLight].d*-1;
 
             const Vec3 diffuse = (material.kd * norm.dot( negLightDirection ) );
-
 
             const Vec3 negRayDirection = r.d*-1;
             Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
