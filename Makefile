@@ -11,6 +11,7 @@ Vec3.hpp \
 Poly.hpp \
 Matrix.hpp \
 fileio.h \
+Material.hpp \
 Vec.hpp
 
 WASM_MAIN = main2.cpp
@@ -21,6 +22,7 @@ Poly.cpp \
 Matrix.cpp \
 RayEngine.cpp \
 fileio.cpp \
+Material.cpp \
 Vec.cpp
 
 # this is a list of all C functions we want to publish to javascript

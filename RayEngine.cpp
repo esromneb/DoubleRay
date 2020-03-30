@@ -1,6 +1,7 @@
 #include "RayEngine.hpp"
 #include <math.h>
 #include <iostream>
+#include <tuple>
 
 Ray::Ray()
 {
@@ -24,314 +25,15 @@ RayEngine::RayEngine( void )
     
 }
 
-/*
-
-// original scene submitted for homework
-void RayEngine::scene1(void) {
-    //camera
-    camera.o = Vec3( 0, 1, -2 );
-    camera.d = Vec3( 0, -0.2, 1 );
-    camera.d.normalize();
-    up = Vec3( 0, 1, 0 );
-
-
-    //spheres
-    spheres[0].c = Vec3( 1, 0, 3.0f );
-    spheres[0].r = 1.0f;
-    spheres[0].ka = 0.4f;
-    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
-    spheres[0].ks = 0.7f;
-    spheres[0].n = 8;
-    spheres[0].kr = 0.7f;
-    spheres[0].kt = 0.0f;
-
-    // spheres[1].c = Vec3( -1, 0.5f, 4.0f );
-    // spheres[1].r = 1.0f;
-    // spheres[1].ka = 0.4f;
-    // spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
-    // spheres[1].ks = 0.7f;
-    // spheres[1].n = 3;
-    // spheres[1].kr = 0.7f;
-    // spheres[1].kt = 0.0f;
-
-
-    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
-    spheres[1].r = 0.7f;
-    spheres[1].ka = 1.0f;
-    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
-    spheres[1].ks = 0.7f;
-    spheres[1].n = 7;
-    spheres[1].kr = 0.5f;
-    spheres[1].kt = 0.0f;
-
-    spheres[2].c = Vec3( .4, 1.5, 3.0 );
-    spheres[2].r = 0.2f;
-    spheres[2].ka = 1.0f;
-    spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
-    spheres[2].ks = 0.7f;
-    spheres[2].n = 10;
-    spheres[2].kr = 0.5f;
-    spheres[2].kt = 0.0f;
-
-    spheres[3].c = Vec3( -.7, 1.7, 3.0 );
-    spheres[3].r = 0.3f;
-    spheres[3].ka = 1.0f;
-    spheres[3].kd = Vec3( 1.0f, 1, 1 );
-    spheres[3].ks = 0.7f;
-    spheres[3].n = 11;
-    spheres[3].kr = 0.5f;
-    spheres[3].kt = 0.0f;
-
-
-    spheres[4].c = Vec3( 0, -11, 0 );
-    spheres[4].r = 10;
-    spheres[4].ka = 1.0f;
-    spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
-    spheres[4].ks = 0.7f;
-    spheres[4].n = 11;
-    spheres[4].kr = 0.3f;
-    spheres[4].kt = 0.0f;
-
-
-    //objects
-
-    polygons[1].kr = 1.0f;
-
-    //lights
-    lights[0].color = Vec3( 5, 10, 8 );
-    lights[0].d = Vec3( 1, 1, -0.7f );
-    lights[0].d.normalize();
-
-    lights[1].color = Vec3( 7, 2, 2 );
-    lights[1].d = Vec3( 0, -1, -0.5 );
-    lights[1].d.normalize();
-
-    //global
-    ia = Vec3( 0.2f, 0.2f, 0.2f );
-    c = 7;
-    depth = 3;
-
-    nSphere = 5;
-}
-
-*/
-
-// trying to debug whats wrong
-void RayEngine::scene2(void) {
-    //camera
-    camera.o = Vec3( 0, 1, -2 );
-    camera.d = Vec3( 0, -0.2, 1 );
-    camera.d.normalize();
-
-    up = Vec3( 0, 1, 0 );
-    up.normalize();
-
-    spheres.resize(3);
-
-
-    //spheres
-    spheres[0].r = 1.0f;
-    spheres[0].c = Vec3( 1, 0, 3.0f ); // center
-    spheres[0].ka = 0.4f;
-    spheres[0].ks = 0.2f;
-    spheres[0].kr = 0.0f;
-    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
-    spheres[0].n = 8;
-    spheres[0].kt = 0.7f;
-/*
-    spheres[1].c = Vec3( -1, 0.5f, 4.0f );
-    spheres[1].r = 1.0f;
-    spheres[1].ka = 0.4f;
-    spheres[1].kd = Vec3( 1.0f, 0.0f, 0.0f );
-    spheres[1].ks = 0.7f;
-    spheres[1].n = 3;
-    spheres[1].kr = 0.7f;
-    spheres[1].kt = 0.0f;
-*/
-
-    spheres[1].r = 0.7f;
-    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
-    spheres[1].ka = 0.0f;
-    spheres[1].ks = 0.0f;
-    spheres[1].kr = 1.0f;
-    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
-    spheres[1].n = 7;
-    spheres[1].kt = 0.0f; //*/
-
-    // spheres[2].c = Vec3( .4, 1.5, 3.0 );
-    // spheres[2].r = 0.2f;
-    // spheres[2].ka = 1.0f;
-    // spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
-    // spheres[2].ks = 0.7f;
-    // spheres[2].n = 10;
-    // spheres[2].kr = 0.5f;
-    // spheres[2].kt = 0.0f;
-
-    // spheres[3].c = Vec3( -.7, 1.7, 3.0 );
-    // spheres[3].r = 0.3f;
-    // spheres[3].ka = 1.0f;
-    // spheres[3].kd = Vec3( 1.0f, 1, 1 );
-    // spheres[3].ks = 0.7f;
-    // spheres[3].n = 11;
-    // spheres[3].kr = 0.5f;
-    // spheres[3].kt = 0.0f;
-
-
-    spheres[2].r = 10;
-    spheres[2].c = Vec3( 0, -11, 0 );
-    spheres[2].ka = 0.4f;
-    spheres[2].ks = 0.0f;
-    spheres[2].kr = 1.0f;
-    spheres[2].kt = 0.0f;
-    spheres[2].kd = Vec3( 0.0, 0.0, 0.0 );
-    spheres[2].n = 11;
-
-    // spheres.resize(2); // delete last one
-
-    // nSphere = 2;
-
-    //objects
-
-    numPoly = 1;
-
-    polygons[0].kr = 1.0f;
-    polygons[0].ka = 0.7f;
-    polygons[0].ks = 0.0f;
-    polygons[0].kd = Vec3( 0.2, 0.4, 0.2 );
-    polygons[0].n = 7;
-
-    // polygons[0].insert(0,0,0);
-    // polygons[0].insert(0,1,0);
-    // polygons[0].insert(0,1,1);
-    // polygons[0].insert(0,0,1);
-
-    //lights
-    // lights[0].color = Vec3( 0, 0, 0 );
-    // lights[0].d = Vec3( 1, 1, -0.7f );
-    // lights[0].d.normalize();
-
-    lights.resize(1);
-
-    lights[0].color = Vec3( 10, 10, 10 );
-    lights[0].d = Vec3( 0, -1, -0.5 );
-    lights[0].d.normalize();
-
-    // nLight = 1;
-
-    // global
-    ia = Vec3( 0.4f, 0.4f, 0.4f ); // Global Ambient color
-    c = 7;
-    depth = 3;
-
-}
-
-/*
-
-// original scene submitted for homework
-void RayEngine::scene3(void) {
-    //camera
-    camera.o = Vec3( 0, 1, -2 );
-    camera.d = Vec3( 0, -0.2, 1 );
-    camera.d.normalize();
-    up = Vec3( 0, 1, 0 );
-
-
-    //spheres
-    spheres[0].c = Vec3( 1, 0, 3.0f );
-    spheres[0].r = 1.0f;
-    spheres[0].ka = 0.4f;
-    spheres[0].kd = Vec3( 0.0f, 1.0f, 0.0f );
-    spheres[0].ks = 0.2f;
-    spheres[0].n = 8;
-    spheres[0].kr = 0.7f;
-    spheres[0].kt = 0.0f;
-
-    spheres[1].c = Vec3( -1.0f, 0, 3.0 );
-    spheres[1].r = 0.7f;
-    spheres[1].ka = 1.0f;
-    spheres[1].kd = Vec3( 1.0f, 0.8f, 0.0f );
-    spheres[1].ks = 0.2f;
-    spheres[1].n = 7;
-    spheres[1].kr = 0.5f;
-    spheres[1].kt = 0.0f;
-
-    spheres[2].c = Vec3( .4, 1.5, 3.0 );
-    spheres[2].r = 0.2f;
-    spheres[2].ka = 1.0f;
-    spheres[2].kd = Vec3( 0.4f, 0.8f, 0.0f );
-    spheres[2].ks = 0.1f;
-    spheres[2].n = 10;
-    spheres[2].kr = 0.5f;
-    spheres[2].kt = 0.0f;
-
-    spheres[3].c = Vec3( -.7, 1.7, 3.0 );
-    spheres[3].r = 0.3f;
-    spheres[3].ka = 1.0f;
-    spheres[3].kd = Vec3( 1.0f, 1, 1 );
-    spheres[3].ks = 0.2f;
-    spheres[3].n = 11;
-    spheres[3].kr = 0.5f;
-    spheres[3].kt = 0.0f;
-
-
-    spheres[4].c = Vec3( 0, -11, 0 );
-    spheres[4].r = 10;
-    spheres[4].ka = 1.0f;
-    spheres[4].kd = Vec3( 0.5, 0.5, 0.5 );
-    spheres[4].ks = 0.1f;
-    spheres[4].n = 11;
-    spheres[4].kr = 0.3f;
-    spheres[4].kt = 0.0f;
-
-
-    //objects
-
-    polygons[1].kr = 1.0f;
-
-    //lights
-    lights[0].color = Vec3( 5, 10, 8 );
-    lights[0].d = Vec3( 1, 1, -0.7f );
-    lights[0].d.normalize();
-
-    lights[1].color = Vec3( 7, 2, 2 );
-    lights[1].d = Vec3( 0, -1, -0.5 );
-    lights[1].d.normalize();
-
-    //global
-    ia = Vec3( 0.2f, 0.2f, 0.2f );
-    c = 7;
-    depth = 3;
-
-    nSphere = 5;
-}
-
-*/
-
-
 void RayEngine::makeObjects( void )
 {
     // scene1();
-    scene2();
+    // scene2();
     // scene3();
 }
 
 void RayEngine::paint( void )
 {
-/*    for( int asf=343; asf<4555; asf++)
-    {
-        r[asf] = 1.0f;
-    }*/
-
-    /*
-    glBegin(GL_POINTS);
-    for( int j = 0; j < px; j++ )
-        for( int i = 0; i < px; i++ )
-        {
-            glColor3f( r[i+j*px], g[i+j*px], b[i+j*px] );
-            glVertex2i( i, j );
-        }
-    glEnd();
-    */
 
 }
 
@@ -365,8 +67,8 @@ void RayEngine::render( void )
     //float red, green, blue;
     Vec3 color;
 
-    Vec3 e = camera.o;//( -0.1, 0, 0 );
-    Vec3 a = e + camera.d;//( 0.4f, 0, 0 );
+    Vec3 e = camera.o;
+    Vec3 a = e + camera.d;
     Vec3 w = e-a;
     w.normalize();
 
@@ -409,7 +111,46 @@ void RayEngine::render( void )
         }
 }
 
+// Vec3 intersect;
+// Vec3 norm;
+// Vec3 refl;
+// Vec3 fp;
+
+std::tuple<Vec3, Vec3, Vec3, Vec3> intersectSphere(const Ray& r, const Sphere &s, const double t0) {
+    Vec3 intersect;
+    Vec3 norm;
+    Vec3 refl;
+    Vec3 fp;
+
+
+    intersect = Vec3( r.o[0] + r.d[0]*t0,
+                      r.o[1] + r.d[1]*t0,
+                      r.o[2] + r.d[2]*t0 );
+    const double srInverse = 1.0f/s.r;
+
+
+    norm = Vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
+    //norm = intersect - s.c;
+    norm.normalize();
+
+    //refl = r.d - norm * 2 * (camera.d.dot(norm));
+    refl = norm*2* norm.dot( r.d ) - r.d;
+
+    //lighting
+    fp = r.o - intersect;
+
+    return {intersect, norm, refl, fp};
+}
+
 #define NO_HIT ((double)9999999)
+
+#define HIT_SPHERE ((uint8_t)0)
+#define HIT_POLY   ((uint8_t)1)
+
+
+// intersecetion
+// norm
+typedef std::tuple<uint8_t, size_t> hit_t;
 
 // returns true for hitting anything
 //
@@ -430,32 +171,37 @@ bool RayEngine::trace(
         cout << "trace px " << g_i << ", " << g_j << " depth " << depthIn << "\n";
     }
 
-    Vec3 fp;
+    // Vec3 fp;
     color[0] = color[1] = color[2] = 0;
 
-    Vec3 pn;
-    double vd, vo, t;
-    
+    // double vd, vo, t; // tri stuff
     // Vec3 d1,d2,d3; // tri stuff
     
 
-    // distance of closest hit
-    // this value is a magic number signifying "no hit"
-    double minHit = NO_HIT;
+
+    // double minHit = NO_HIT;
+
+    // when we reflect a ray, we recurse
+    // after the recursion is done, we add these to the results
+    // these are set by lighting
     Vec3 savedColor(0,0,0);
     Vec3 savedRefl(0,0,0);
     Vec3 savedIntersect(0,0,0);
-    
-    // bool tmpBool;
     double savedKr = 0;
-    // bool hitSphere = false;
+
+
+    // distance of closest hit
+    // this value is a magic number signifying "no hit"
+    double hitDistance = NO_HIT;
+    hit_t bestHit;
+
 
     // const int nSphere = spheres.size();
     for( unsigned i = 0; i < spheres.size(); i++ )
     {
         const Sphere &s = spheres[i];
 
-        Vec3 oc = r.o - s.c;
+        const Vec3 oc = r.o - s.c;
         const double a = r.d.dot(r.d);
 
         // const double b = 2*(r.d[0] * (r.o[0] - s.c[0]) + r.d[1] * (r.o[1] - s.c[1]) + r.d[2] * (r.o[2] - s.c[2]));
@@ -505,125 +251,148 @@ bool RayEngine::trace(
         /// 
         /// 
 
+        double sphereBestT;
+
         // has hit detection issues
         if( true ) {
-            t0 = min( t0, t1 );
+            sphereBestT = min( t0, t1 );
         }
 
         // has shadow issues
-        // if( false ) {
+        if( false ) {
 
-        //     const double sphereLift = 0.1;
+            const double sphereLift = 0.00;
 
-        //     if( t0 > sphereLift && t1 > sphereLift ) {
-        //         t0 = min( t0, t1 );
-        //     } else if( t0 > sphereLift && t1 <= sphereLift ) {
-        //         t0 = t0;
-        //     } else if ( t0 <= sphereLift && t1 > sphereLift ) {
-        //         t0 = t1;
-        //     } else {
-        //         t0 = minHit;
-        //         // sphere is behind ray
-        //         continue;
-        //     }
-        // }
+            if( t0 > sphereLift && t1 > sphereLift ) {
+                sphereBestT = min( t0, t1 );
+            } else if( t0 > sphereLift && t1 <= sphereLift ) {
+                sphereBestT = t0;
+            } else if ( t0 <= sphereLift && t1 > sphereLift ) {
+                sphereBestT = t1;
+            } else {
+                // t0 = minHit;
+                // sphere is behind ray
+                continue;
+            }
+        }
 
+        if( sphereBestT < hitDistance ) {
+            hitDistance = sphereBestT;
+            bestHit = std::make_tuple(HIT_SPHERE, i);
+        }
+    } // for spheres
 
+    if( hitDistance != NO_HIT ) {
+        Vec3 intersect;
+        Vec3 norm;
+        Vec3 refl;
+        Vec3 fp;
+        Material material;
+        const auto [ hitWhat, index ] = bestHit;
 
+        if( hitWhat == HIT_SPHERE ) {
+            std::tie(intersect, norm, refl, fp) = intersectSphere(r, spheres[index], hitDistance);
+            material = spheres[index].m;
+        }
 
-        if( min( t0, minHit ) == t0 )
+        // we start with ambient light
+        color = this->ia * material.ka;
+
+        for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
         {
 
-            if( print ) {
-                cout << "hit sphere " << i << " t0 " << t0 << "\n";
-            }
+            const Vec3 negLightDirection = lights[iLight].d*-1;
 
-            // hitSphere = true;
-            minHit = t0;
+            const Vec3 diffuse = (material.kd * norm.dot( negLightDirection ) );
 
-            Vec3 intersect;
-            intersect = Vec3( r.o[0] + r.d[0]*t0,
-                              r.o[1] + r.d[1]*t0,
-                              r.o[2] + r.d[2]*t0 );
-            const double srInverse = 1.0f/s.r;
 
-            if( print ) {
-                cout << "inv: " << srInverse << "\n";
-            }
+            const Vec3 negRayDirection = r.d*-1; // opposite
+            Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
 
-            Vec3 norm = Vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
-            //norm = intersect - s.c;
-            norm.normalize();
+            const float specular = material.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), material.n);
 
-            //refl = r.d - norm * 2 * (camera.d.dot(norm));
-            Vec3 refl = norm*2* norm.dot( r.d ) - r.d;
-
-            //lighting
-            const Vec3 fp = r.o - intersect;
+            const Vec3 lightEffects =
+                  ( lights[iLight].color / ( fp.mag() + this->c ) ) 
+                * (diffuse + specular);
             
-            
-            //we aleways have ambient light
-            color = this->ia * s.ka;
-    
-            if( true ) {
-                for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
-                {
-                    if( false ) {
-                        Ray shadowFeeler;
-                        shadowFeeler.o = intersect;
-                        shadowFeeler.d = lights[iLight].d * -1;
-                        shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
-                        Vec3 shadowColor;
-                        shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
-                        if(print) {
-                            cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
-                        }
-                        // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                        trace( shadowFeeler, depthIn+1, shadowColor, true );
-                        if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 ) {
-                            if(print) {
-                                cout << "abandond light " << iLight << "\n";
-                            }
-                            continue;
-                        }
-                    }
-
-
-
-                    const Vec3 negLightDirection = lights[iLight].d*-1;
-
-                    const Vec3 diffuse = (s.kd * norm.dot( negLightDirection ) );
-
-
-                    const Vec3 negRayDirection = r.d*-1; // opposite
-                    Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
-
-                    const float specular = s.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), s.n);
-
-                    const Vec3 lightEffects =
-                          ( lights[iLight].color / ( fp.mag() + this->c ) ) 
-                        * (diffuse + specular);
-                    
-                    color = color + lightEffects;
-
-                }
-            }
-
-            savedColor = color;
-            savedRefl = refl;
-            savedKr = s.kr;
-            savedIntersect = intersect;
+            color = color + lightEffects;
         }
-        
 
-    } // for spheres
+        savedColor = color;
+        savedRefl = refl;
+        savedKr = material.kr;
+        savedIntersect = intersect;
+    }
+
+
+#ifdef BABYTIMEFROL
+    if( min( t0, minHit ) == t0 ) {
+
+
+        
+        //we aleways have ambient light
+        color = this->ia * s.ka;
+
+        if( true ) {
+            for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
+            {
+                if( false ) {
+                    Ray shadowFeeler;
+                    shadowFeeler.o = intersect;
+                    shadowFeeler.d = lights[iLight].d * -1;
+                    shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
+                    Vec3 shadowColor;
+                    shadowColor[0] = shadowColor[1] = shadowColor[2] = 0;
+                    if(print) {
+                        cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
+                    }
+                    // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
+                    trace( shadowFeeler, depthIn+1, shadowColor, true );
+                    if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 ) {
+                        if(print) {
+                            cout << "abandond light " << iLight << "\n";
+                        }
+                        continue;
+                    }
+                }
+
+
+
+                const Vec3 negLightDirection = lights[iLight].d*-1;
+
+                const Vec3 diffuse = (s.kd * norm.dot( negLightDirection ) );
+
+
+                const Vec3 negRayDirection = r.d*-1; // opposite
+                Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
+
+                const float specular = s.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), s.n);
+
+                const Vec3 lightEffects =
+                      ( lights[iLight].color / ( fp.mag() + this->c ) ) 
+                    * (diffuse + specular);
+                
+                color = color + lightEffects;
+
+            }
+        }
+
+        savedColor = color;
+        savedRefl = refl;
+        savedKr = s.kr;
+        savedIntersect = intersect;
+    }
+#endif
+
+
+
 
 
     //final actions after main loops--------
 
 
 
-    if( minHit != NO_HIT ) {
+    if( hitDistance != NO_HIT ) {
         Ray reflRay;
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;

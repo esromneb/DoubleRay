@@ -554,12 +554,12 @@ void setSphere(
 
     spheres[index].r = radius;
     spheres[index].c = VEC3_ARG_CTONS(location);
-    spheres[index].ka = ambient;
-    spheres[index].ks = specular;
-    spheres[index].kr = reflected;
-    spheres[index].kd = VEC3_ARG_CTONS(diffuse);
-    spheres[index].n = n;
-    spheres[index].kt = transmitted;
+    spheres[index].m.ka = ambient;
+    spheres[index].m.ks = specular;
+    spheres[index].m.kr = reflected;
+    spheres[index].m.kd = VEC3_ARG_CTONS(diffuse);
+    spheres[index].m.n = n;
+    spheres[index].m.kt = transmitted;
 }
 
 

@@ -4,6 +4,7 @@
 #include "Vec3.hpp"
 #include "Poly.hpp"
 #include "Matrix.hpp"
+#include "Material.hpp"
 
 #include <vector>
 
@@ -32,11 +33,7 @@ class Sphere
 public:
     double r; //radius
     Vec3 c; //center
-    // %ambient, %specular, %reflected, %transmitted
-    float ka, ks, kr, kt;
-    // %diffuse (also specifies color of this object)
-    Vec3 kd;
-    int n;
+    Material m;
 };
 
 
@@ -47,9 +44,9 @@ class RayEngine
 public:
     RayEngine( void );
     void makeObjects( void );
-    void scene1( void );
-    void scene2( void );
-    void scene3( void );
+    // void scene1( void );
+    // void scene2( void );
+    // void scene3( void );
     void paint( void );
     void render( void );
     bool trace(
