@@ -80,7 +80,7 @@ void Poly::insertTriangle( int *edges, int num )
          ac[2] = z[ triangles[offset+2] ] - z[ triangles[offset+0] ];
          ab.normalize();
          ac.normalize();
-         abcnorm[ offset ] = cross( ab, ac );
+         abcnorm[ offset ] = Vec3::cross( ab, ac );
          /*a[offset] = n[0];
          b[offset] = n[1];
          c[offset] = n[2];*/

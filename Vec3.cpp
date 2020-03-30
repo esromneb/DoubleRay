@@ -128,7 +128,7 @@ const Vec3 Vec3::operator+ ( const double rhs ) const
     }
     return ret;
 }
-Vec3 cross( const Vec3 &left, const Vec3 &right )
+Vec3 Vec3::cross( const Vec3 &left, const Vec3 &right )
 {
     Vec3 ret;
     ret.data[0] = left[1] * right[2] - left[2]*right[1];

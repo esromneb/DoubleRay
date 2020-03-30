@@ -370,9 +370,9 @@ void RayEngine::render( void )
     Vec3 w = e-a;
     w.normalize();
 
-    Vec3 u = cross( up, e-a );
+    Vec3 u = Vec3::cross( up, e-a );
     u.normalize();
-    Vec3 v = cross( w, u );
+    Vec3 v = Vec3::cross( w, u );
 
     for( int j = 0; j < px; j++ )
         for( int i = 0; i < px; i++ )
