@@ -357,8 +357,8 @@ bool g_print = false;
 
 void RayEngine::render( void )
 {
-    bool nUsedB = false;
-    Vec3 nUsedI;
+    // bool nUsedB = false;
+    // Vec3 nUsedI;
     Ray r;
     Vec3 pixel;
     double cu,cv;
@@ -394,7 +394,7 @@ void RayEngine::render( void )
                     g_print = true;
                 }
 
-                trace( r, 0, color, nUsedB, nUsedI, false );
+                trace( r, 0, color, false );
                 if( print ) {
                     cout << "\n Final: " << color[0] << "\n";
                 }
@@ -415,8 +415,6 @@ bool RayEngine::trace(
     const Ray& r,
     const int depthIn,
     Vec3 &color,
-    bool &bSphere, // fixme should be const, needs to be copied below
-    Vec3 &objectNum,
     const bool shdFeeling ) {
 
     if( depthIn > this->depth ) {
@@ -433,14 +431,12 @@ bool RayEngine::trace(
     Vec3 intersect;
     Vec3 fp;
     color[0] = color[1] = color[2] = 0;
-    double srInverse;
 
     Vec3 pn;
     double vd, vo, t;
     
-    Vec3 d1,d2,d3;
-    //double normDotDir;
-    // numHit = 0;
+    // Vec3 d1,d2,d3; // tri stuff
+    
 
     // distance of closest hit
     // this value is a magic number signifying "no hit"
@@ -452,7 +448,6 @@ bool RayEngine::trace(
     // bool tmpBool;
     double savedKr = 0;
     // bool hitSphere = false;
-    objectNum[0] = -1;
 
     const int nSphere = spheres.size();
     for( int i = 0; i < nSphere; i++ )
@@ -534,12 +529,11 @@ bool RayEngine::trace(
             }
 
             // hitSphere = true;
-            objectNum[0] = i;
             minHit = t0;
             intersect = Vec3( r.o[0] + r.d[0]*t0,
                               r.o[1] + r.d[1]*t0,
                               r.o[2] + r.d[2]*t0 );
-            srInverse = 1.0f/s.r;
+            const double srInverse = 1.0f/s.r;
 
             if( print ) {
                 cout << "inv: " << srInverse << "\n";
@@ -573,7 +567,7 @@ bool RayEngine::trace(
                             cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
                         }
                         // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-                        trace( shadowFeeler, depthIn+1, shadowColor, bSphere, objectNum, true );
+                        trace( shadowFeeler, depthIn+1, shadowColor, true );
                         if( shadowColor[0] != 0 || shadowColor[1] != 0 || shadowColor[2] != 0 ) {
                             if(print) {
                                 cout << "abandond light " << iLight << "\n";
@@ -627,7 +621,7 @@ bool RayEngine::trace(
         }
 
         Vec3 newColor(0,0,0);
-        trace( reflRay, depthIn+1, newColor, bSphere, objectNum, false );
+        trace( reflRay, depthIn+1, newColor, false );
         color = savedColor + newColor * savedKr;
         return true;
     } else {

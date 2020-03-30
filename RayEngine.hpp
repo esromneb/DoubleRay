@@ -56,8 +56,6 @@ public:
         const Ray& r, 
         const int depthIn,
         Vec3 &color,
-        bool &bSphere,
-        Vec3 &objectNum,
         const bool shdFeeling );
 
     Ray camera;
