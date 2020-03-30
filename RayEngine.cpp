@@ -295,7 +295,10 @@ bool RayEngine::trace(
         }
 
         // we start with ambient light
-        color = this->ia * material.ka;
+        // we add the diffuse color of the object to the ambient light
+        // and then multiply by the objecs ambient coeffient
+        // this gives the best look I feel however I guessed for this
+        color = (this->ia+material.kd) * material.ka;
 
         for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
         {
