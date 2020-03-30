@@ -168,3 +168,9 @@ std::string Vec3::str(bool vertical) const {
 
     return out;
 }
+
+Vec3 Vec3::reflect(const Vec3 ray, const Vec3 normal) {
+    Vec3 rhs = normal * ray.dot(normal) * 2;
+    Vec3 ret = ray - rhs;
+    return ret;
+}

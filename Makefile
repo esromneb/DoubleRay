@@ -151,6 +151,9 @@ test_vec: test_vec.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
 
 
+test_refl: test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
+
 
 
 

@@ -55,6 +55,7 @@ See Also
 * http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/ - ray sphere intersection
 * https://blog.demofox.org/2017/01/09/raytracing-reflection-refraction-fresnel-total-internal-reflection-and-beers-law/
 * https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF - phong
+* http://paulbourke.net/geometry/reflected/ - reflect ray from normal
 
 
 Notes
