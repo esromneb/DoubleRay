@@ -5,6 +5,7 @@
 #include "Poly.hpp"
 #include "Matrix.hpp"
 #include "Material.hpp"
+#include "Ray.hpp"
 
 #include <vector>
 
@@ -20,13 +21,6 @@ public:
     Vec3 d;
 };
 
-class Ray
-{
-public:
-    explicit Ray();
-    Vec3 o;
-    Vec3 d;
-};
 
 class Sphere
 {

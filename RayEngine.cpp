@@ -3,11 +3,6 @@
 #include <iostream>
 #include <tuple>
 
-Ray::Ray()
-{
-
-}
-
 RayEngine::RayEngine( void )
 {
     numPoly = 0;
@@ -122,10 +117,8 @@ std::tuple<Vec3, Vec3, Vec3, Vec3> intersectSphere(const Ray& r, const Sphere &s
     Vec3 refl;
     Vec3 fp;
 
+    intersect = r.pointAt(t0);
 
-    intersect = Vec3( r.o[0] + r.d[0]*t0,
-                      r.o[1] + r.d[1]*t0,
-                      r.o[2] + r.d[2]*t0 );
     const double srInverse = 1.0f/s.r;
 
 
@@ -277,6 +270,9 @@ bool RayEngine::trace(
         }
 
         if( sphereBestT < hitDistance ) {
+            if( print ) {
+                cout << "Update best hit to " << sphereBestT << "\n";
+            }
             hitDistance = sphereBestT;
             bestHit = std::make_tuple(HIT_SPHERE, i);
         }
@@ -397,9 +393,21 @@ bool RayEngine::trace(
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;
 
-        Vec3 newColor(0,0,0);
-        trace( reflRay, depthIn+1, newColor, false );
-        color = savedColor + newColor * savedKr;
+
+        if( savedKr > 0 ) {
+
+            if( print ) {
+                cout << "refl using " << reflRay.d.str(false) << "\n";
+            }
+
+            Vec3 newColor(0,0,0);
+            trace( reflRay, depthIn+1, newColor, false );
+            color = savedColor + (newColor * savedKr);
+        } else {
+            color = savedColor;
+        }
+
+        
         return true;
     } else {
         //we hit nothing
