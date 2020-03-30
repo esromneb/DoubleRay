@@ -428,7 +428,6 @@ bool RayEngine::trace(
         cout << "trace px " << g_i << ", " << g_j << " depth " << depthIn << "\n";
     }
 
-    Vec3 intersect;
     Vec3 fp;
     color[0] = color[1] = color[2] = 0;
 
@@ -530,6 +529,8 @@ bool RayEngine::trace(
 
             // hitSphere = true;
             minHit = t0;
+
+            Vec3 intersect;
             intersect = Vec3( r.o[0] + r.d[0]*t0,
                               r.o[1] + r.d[1]*t0,
                               r.o[2] + r.d[2]*t0 );
@@ -547,7 +548,7 @@ bool RayEngine::trace(
             Vec3 refl = norm*2* norm.dot( r.d ) - r.d;
 
             //lighting
-            fp = r.o - intersect;
+            const Vec3 fp = r.o - intersect;
             
             
             //we aleways have ambient light
@@ -615,10 +616,6 @@ bool RayEngine::trace(
         Ray reflRay;
         reflRay.o = savedIntersect;
         reflRay.d = savedRefl;
-
-        if(print) {
-            cout << "reenter " << intersect[0] << "\n";
-        }
 
         Vec3 newColor(0,0,0);
         trace( reflRay, depthIn+1, newColor, false );

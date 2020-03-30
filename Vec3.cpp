@@ -50,7 +50,7 @@ double& Vec3::operator[] (const int index)
 {
     return data[index];
 }
-double Vec3::mag( void )
+double Vec3::mag( void ) const
 {
     double ret = 0;
     for( int i = 0; i < 3; i++ )
