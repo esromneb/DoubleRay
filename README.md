@@ -57,6 +57,10 @@ See Also
 * https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF - phong
 * http://paulbourke.net/geometry/reflected/ - reflect ray from normal
 
+See Also Offtopic
+===
+* https://github.com/antimatter15/jsgif
+
 
 Notes
 ===
