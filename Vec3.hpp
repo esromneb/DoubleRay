@@ -19,6 +19,7 @@ public:
     double& operator[] ( const int index );
     double mag( void ) const;
     double dot( const Vec3 &rhs ) const;
+    static double dot( const Vec3 &lhs, const Vec3 &rhs );
     void rot_y( double theta );
     void rot_x( double theta );
     void normalize( void );

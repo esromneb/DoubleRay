@@ -75,6 +75,22 @@ double Vec3::dot( const Vec3 &rhs ) const
     return ret;
 }
 
+double Vec3::dot( const Vec3 &lhs, const Vec3 &rhs )
+{
+
+    Vec3 tmp = lhs*rhs;
+    double ret = 0;
+
+    for( int i = 0; i < 3; i++ ) {
+        ret += tmp[i];
+    }
+
+    return ret;
+}
+
+
+
+
 Vec3 Vec3::operator *( const Vec3 &rhs) const
 {
     Vec3 ret;
