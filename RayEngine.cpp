@@ -494,20 +494,30 @@ bool RayEngine::trace(
             Vec3 newColor(0,0,0);
             trace( reflRay, depthIn+1, newColor, false );
 
+
+            double noTransmissonFactor = savedKr;
+            double fullTransmissionFactor = savedKr * reflect_prob;
+
+            double blendFactor = (fullTransmissionFactor*savedKt) + noTransmissonFactor*(1-savedKt);
+            color = savedColor + (newColor * blendFactor);
+
+#ifdef foasdf
             // trying to understand how we can blend
             // both an index of reflection, transmission, and the result from schlick()
             if( savedKt == 0 ) {
                 // old style
                 color = savedColor + (newColor * savedKr);
+                // color = savedColor + (newColor * (savedKr * reflect_prob) );
             } else {
 
-                if( savedKr == 0 ) {
-                    color = savedColor + (newColor * (reflect_prob) );
-                } else {
+                // if( savedKr == 0 ) {
+                //     color = savedColor + (newColor * (reflect_prob) );
+                // } else {
                     color = savedColor + (newColor * (savedKr * reflect_prob) );
-                }
+                // }
 
             }
+#endif
 
         } else {
             color = savedColor;
