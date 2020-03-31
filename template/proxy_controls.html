@@ -438,6 +438,10 @@
         postCustomMessage({type:'call',fn:'setPrint',rt:'void',at:['number'],av:[val]});
       }
 
+      function setHighlightPixel(x,y) {
+        postCustomMessage({type:'call',fn:'setHighlightPixel',rt:'void',at:['number','number'],av:[x,y]});
+      }
+
 
 
 

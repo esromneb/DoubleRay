@@ -87,6 +87,9 @@ public:
     int jl = 0;
     int jh = 500;
 
+    int highlightX = -1;
+    int highlightY = -1;
+
     bool print = false;
 
 };

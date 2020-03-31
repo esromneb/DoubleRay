@@ -612,8 +612,15 @@ void dumpPoly(const int index) {
     cout << "kr: " << poly.kr << "\n";
     cout << "kt: " << poly.kt << "\n";
     cout << "n : " << poly.n  << "\n";
-
 }
+
+
+void setHighlightPixel(const int x, const int y) {
+    engine->highlightX = x;
+    engine->highlightY = y;
+}
+
+
 
 typedef std::function<void(void)> scene_animation_t;
 

@@ -99,6 +99,10 @@ void RayEngine::render( void )
                 color = Vec3(0,0,0);
             }
 
+            if( (highlightX >= 0 && highlightY >= 0) && (i == highlightX && j == highlightY) ) {
+                color = Vec3(2,0,0);
+            }
+
             this->r[i+j*px] = color[0];
             this->g[i+j*px] = color[1];
             this->b[i+j*px] = color[2];
@@ -305,7 +309,7 @@ bool RayEngine::trace(
         // save it
         if( sphereBestT < hitDistance ) {
             if( print ) {
-                cout << "Update best hit to " << sphereBestT << "\n";
+                cout << "Update best hit to " << sphereBestT << " (sphere " << i << ")\n";
             }
             hitDistance = sphereBestT;
             bestHit = std::make_tuple(HIT_SPHERE, i);
@@ -350,8 +354,19 @@ bool RayEngine::trace(
             // set depth to maximum to prevent further bounces
             const bool lightBlocked = trace( shadowFeeler, this->depth, shadowColor, true );
 
+            if(print) {
+                cout << "Light " << iLight;
+            }
+
             if( lightBlocked ) {
+                if(print) {
+                    cout << " Blocked\n";
+                }
                 continue;
+            }
+
+            if(print) {
+                cout << " Visible\n";
             }
 
 

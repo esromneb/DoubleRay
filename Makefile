@@ -61,6 +61,7 @@ EXPORT_STRING = \
 "_chokeOutput", \
 "_setPrint", \
 "_setNoHitColor", \
+"_setHighlightPixel", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
