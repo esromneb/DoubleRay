@@ -161,6 +161,18 @@ void Vec3::normalize( void )
     data[2] = data[2] / mag;
 }
 
+Vec3 Vec3::normalize(const Vec3 &rhs) {
+    const double mag = rhs.mag();
+
+    Vec3 ret (
+        rhs.data[0] / mag,
+        rhs.data[1] / mag,
+        rhs.data[2] / mag
+        );
+
+    return ret;
+}
+
 std::string Vec3::str(bool vertical) const {
     std::string out;
 
