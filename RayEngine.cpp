@@ -478,8 +478,8 @@ bool RayEngine::trace(
         
         return true;
     } else {
-        //we hit nothing
-        color = Vec3( 0.4, 0.4, 0.54 );
+        // we hit nothing
+        color = noHitColor;
         return false;
     }
 }

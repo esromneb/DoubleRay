@@ -60,6 +60,7 @@ EXPORT_STRING = \
 "_dumpCamera", \
 "_chokeOutput", \
 "_setPrint", \
+"_setNoHitColor", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

@@ -268,6 +268,22 @@
         postCustomMessage({type:'call',fn:'setAmbientColor',rt:'void',at:sig,av:args});
       }
 
+      function setNoHitColor(color) {
+        if( !Array.isArray(color) || color.length != 3 ) {
+          console.log("Illegal argument passed to setNoHitColor()");
+          return;
+        }
+
+        const sig = addVec3Signature([],1);
+
+        const args = [color].flat();
+
+        postCustomMessage({type:'call',fn:'setNoHitColor',rt:'void',at:sig,av:args});
+      }
+
+
+
+
       function setGlobalC(val) {
         postCustomMessage({type:'call',fn:'setGlobalC',rt:'void',at:['number'],av:[val]});
       }
@@ -391,6 +407,7 @@
       function setPrint(val) {
         postCustomMessage({type:'call',fn:'setPrint',rt:'void',at:['number'],av:[val]});
       }
+
 
 
 
@@ -547,13 +564,27 @@
 
     if(obj.global) {
       const gg = obj.global;
-      if( typeof(gg.color) !== 'undefined' && typeof(gg.c) !== 'undefined' ) {
-        setAmbientColor(gg.color);
+      if( (typeof(gg.color) !== 'undefined' || typeof(gg.ambient_color) !== 'undefined') && typeof(gg.c) !== 'undefined' ) {
+
+        const ambient = (typeof(gg.color) !== 'undefined') ? gg.color : gg.ambient_color;
+
+        setAmbientColor(ambient);
         setGlobalC(gg.c);
       } else {
         jsPrint("Global tree missing required keys");
         return;
       }
+
+      if( typeof(gg.nohit_color) !== 'undefined' ) {
+        setNoHitColor(gg.nohit_color);
+      } else {
+        /// default is black
+        /// js is responsible for this because if a scene doesn't have a nohit key
+        /// we will never set this and the nohit_color from the previous scene will be used
+        /// is there a way to make C responsible for this?
+        setNoHitColor([0,0,0]);
+      }
+
     } else {
       jsPrint("Global tree missing");
       return;

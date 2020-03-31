@@ -509,6 +509,11 @@ void setAmbientColor(VEC3_ARG(color)) {
     engine->ia = VEC3_ARG_CTONS(color);
 }
 
+void setNoHitColor(VEC3_ARG(color)) {
+    engine->noHitColor = VEC3_ARG_CTONS(color);
+}
+
+
 void setGlobalC(const int c) {
     engine->c = c;
 }

@@ -60,6 +60,7 @@ public:
     float *r, *g, *b;
     int px;
     Vec3 ia; // Ambient color
+    Vec3 noHitColor = {0,0,0}; // What color if don't hit anything?
     double c;
     std::vector<Sphere> spheres;
     // int nSphere = 5;
@@ -67,12 +68,12 @@ public:
     std::vector<Light> lights;
     // Light lights[2];
     // int nLight = 2;
-    int depth;
+    int depth = 0;
 
     int numPoly = 0;
     vector<Poly> polygons;
 
-    Matrix *mat;
+    Matrix *mat = 0;
     // vector<double> hits;
     // int numHit;
 
