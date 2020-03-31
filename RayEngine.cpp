@@ -115,13 +115,17 @@ void RayEngine::render( void )
 // n is the surface normal
 // ni_over_nt is n1/n2
 // refracted (output) is the refracted ray direaction
-bool refract(const Vec3& v, const Vec3& n, const double ni_over_nt, Vec3& refracted) {
-    Vec3 uv = v;
-    uv.normalize();
+bool refract(const Vec3& v, const Vec3& n, const double ni_over_nt, Vec3& refracted, const bool print = false) {
+    const Vec3 uv = Vec3::normalize(v);
     const double dt = uv.dot(n);
-    const double discriminat = 1.0 - ni_over_nt * ni_over_nt * (1-dt*dt);
-    if(discriminat > 0){
-        refracted = ((uv-n*dt)*ni_over_nt) - n*sqrt(discriminat);
+    
+    const double discriminant = 1.0 - ni_over_nt * ni_over_nt * (1-dt*dt);
+    if( print ) {
+        cout << "refr discr: " << discriminant << "\n";
+    }
+
+    if(discriminant > 0){
+        refracted = ((uv-n*dt)*ni_over_nt) - n*sqrt(discriminant);
         return true;
     } else {
         return false; // no refracted ray
@@ -213,8 +217,9 @@ bool RayEngine::trace(
     Vec3 savedRefl(0,0,0);
     Vec3 savedIntersect(0,0,0);
     Vec3 savedNormal(0,0,0);
-    double savedKr = 0;
-    double savedRefraction = 1;
+    double savedKr = 0;      // reflection coefficient
+    double savedRefractionIndex = 1;
+    double savedKt = 0;      // transmission (refraction) coefficient
 
 
     // distance of closest hit
@@ -396,7 +401,8 @@ bool RayEngine::trace(
         savedKr = material.kr;
         savedIntersect = intersect;
         savedNormal = norm;
-        savedRefraction = material.refraction;
+        savedRefractionIndex = material.refraction;
+        savedKt = material.kt;
     }
 
 
@@ -411,10 +417,10 @@ bool RayEngine::trace(
         Vec3 outward_normal;
         Vec3 refracted;
 
-        float ref_idx = savedRefraction;
+        float ref_idx = savedRefractionIndex;
 
         float ni_over_nt;
-        float reflect_prob;
+        float reflect_prob = 0;
         float cosine;
 
 
@@ -423,21 +429,27 @@ bool RayEngine::trace(
         if ( Vec3::dot(r.d, savedNormal) > 0){
             outward_normal = savedNormal * -1.0;
             ni_over_nt = ref_idx;
-            cosine = Vec3::dot(r.d, savedNormal);
+            cosine = Vec3::dot(Vec3::normalize(r.d), savedNormal);
+            if( print ) {
+                cout << "Ray exiting, cos:" << cosine << "\n";
+            }
         }
         // when ray shoots into object,
         // ni_over_nt = 1 / ref_idx.
         else{
             outward_normal = savedNormal;
             ni_over_nt = 1.0 / ref_idx;
-            cosine = -Vec3::dot(r.d, savedNormal);
+            cosine = -Vec3::dot(Vec3::normalize(r.d), savedNormal);
+            if( print ) {
+                cout << "Ray entering, cos:" << cosine << "\n";
+            }
         }
 
 
 
 
         // refracted ray exists
-        if(refract(r.d, outward_normal, ni_over_nt, refracted)){
+        if(refract(r.d, outward_normal, ni_over_nt, refracted, print)){
             reflect_prob = schlick(cosine, ref_idx);
         }
         // refracted ray does not exist
@@ -446,37 +458,34 @@ bool RayEngine::trace(
             reflect_prob = 1.0;
         }
 
-        // cout << "reflect_prob " << reflect_prob << "\n";
-
-#ifdef ASDFAS
-        if(drand48() < reflect_prob) {
-            scattered = ray(rec.p, reflected);
+        if(print) {
+            cout << "reflect prob: " << reflect_prob << "\n";
         }
-        else {
-            scattered = ray(rec.p, refracted);
-        }
-#endif
 
-        if( savedRefraction != 1 ) {
 
+        // Refraction (transmission)
+        if( savedKt != 0 ) {
             Vec3 refractedColor(0,0,0);
             Ray refractedRay(savedIntersect,refracted);
             trace(refractedRay, depthIn+1, refractedColor, false);
-            color = savedColor + (refractedColor);
+
+            // the color we get back from refraction is damped by kt
+
+            // color = savedColor + (refractedColor*savedKt); // orig
+            color = savedColor + (refractedColor*savedKt * (1-reflect_prob) );
+
+            savedColor = color; // HACK, REWORK
         } else {
+            reflect_prob = 0;
             color = savedColor;
         }
 
 
 
 
-
-
-
-#ifdef DISAB_REFLL
         Ray reflRay(savedIntersect,savedRefl);
 
-        if( savedKr > 0 ) {
+        if( savedKr > 0 || (reflect_prob > 0) ) {
 
             if( print ) {
                 cout << "refl using " << reflRay.d.str(false) << "\n";
@@ -484,11 +493,26 @@ bool RayEngine::trace(
 
             Vec3 newColor(0,0,0);
             trace( reflRay, depthIn+1, newColor, false );
-            color = savedColor + (newColor * savedKr);
+
+            // trying to understand how we can blend
+            // both an index of reflection, transmission, and the result from schlick()
+            if( savedKt == 0 ) {
+                // old style
+                color = savedColor + (newColor * savedKr);
+            } else {
+
+                if( savedKr == 0 ) {
+                    color = savedColor + (newColor * (reflect_prob) );
+                } else {
+                    color = savedColor + (newColor * (savedKr * reflect_prob) );
+                }
+
+            }
+
         } else {
             color = savedColor;
         }
-#endif
+
 
         
         return true;
