@@ -43,7 +43,7 @@ public:
     // void scene3( void );
     void paint( void );
     void render( void );
-    bool trace(
+    std::tuple<bool,double> trace(
         const Ray& r, 
         const int depthIn,
         Vec3 &color,

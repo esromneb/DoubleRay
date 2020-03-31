@@ -182,8 +182,8 @@ std::tuple<Vec3, Vec3, Vec3, Vec3> intersectSphere(const Ray& r, const Sphere& s
 typedef std::tuple<uint8_t, size_t> hit_t;
 
 // returns true for hitting anything
-//
-bool RayEngine::trace(
+// returns a double "visible amount" to do with shadow tracing, 0 is blocked 1 is visible
+std::tuple<bool,double> RayEngine::trace(
     const Ray& r,
     const int depthIn,
     Vec3 &color,
@@ -193,7 +193,7 @@ bool RayEngine::trace(
         if( print ) {
             cout << "Abort\n";
         }
-        return false;
+        return std::make_tuple(false,1.0);
     }
 
     if( print ) {
@@ -301,12 +301,12 @@ bool RayEngine::trace(
         // we are sending one single ray back to the light source
         // any hit, no matter the distance, means the light is blocked
 
-        if( shdFeeling ) {
+        if( shdFeeling && s.m.kt == 0 ) {
             if( print ) {
                 cout << "sphere break shadow " << i << "\n";
             }
 
-            return true;
+            return std::make_tuple(true, 0.0);
         }
 
 
@@ -343,7 +343,7 @@ bool RayEngine::trace(
         // a bad guess, don't want multiply
         // color = (this->ia+material.kd) * material.ka * material.kd;
 
-        for( unsigned iLight = 0; iLight < lights.size(); iLight++ )
+        for( unsigned iLight = 0; (iLight < lights.size()) && !shdFeeling ; iLight++ )
         {
             // decide if we can see this light
 
@@ -357,18 +357,18 @@ bool RayEngine::trace(
             }
             // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
             // set depth to maximum to prevent further bounces
-            const bool lightBlocked = trace( shadowFeeler, this->depth, shadowColor, true );
+            const auto [lightBlocked,visibilityLevel] = trace( shadowFeeler, depthIn+1, shadowColor, true );
 
             if(print) {
                 cout << "Light " << iLight;
             }
 
-            if( lightBlocked ) {
-                if(print) {
-                    cout << " Blocked\n";
-                }
-                continue;
-            }
+            // if( lightBlocked ) {
+            //     if(print) {
+            //         cout << " Blocked\n";
+            //     }
+            //     continue;
+            // }
 
             if(print) {
                 cout << " Visible\n";
@@ -388,7 +388,7 @@ bool RayEngine::trace(
 
             Vec3 lightEffects =
                   ( lights[iLight].color / ( fp.mag() + this->c ) ) 
-                * (diffuse + specular);
+                * (diffuse + specular) * (visibilityLevel);
 
             // Lights cannot have negative effect
             lightEffects.saturateMin(0.0);
@@ -422,6 +422,11 @@ bool RayEngine::trace(
         float ni_over_nt;
         float reflect_prob = 0;
         float cosine;
+
+        // when shadow feeling we will calculate these
+        bool refractedHit = false;
+        double childRefractedVisibility = 0;
+        double thisRefractedVisibility = 0;
 
 
         // when ray shoot through object back into vacuum,
@@ -467,12 +472,19 @@ bool RayEngine::trace(
         if( savedKt != 0 ) {
             Vec3 refractedColor(0,0,0);
             Ray refractedRay(savedIntersect,refracted);
-            trace(refractedRay, depthIn+1, refractedColor, false);
+            
+            auto [refractedHit, childRefractedVisibility] =
+                trace(refractedRay, depthIn+1, refractedColor, shdFeeling);
 
             // the color we get back from refraction is damped by kt
 
             // color = savedColor + (refractedColor*savedKt); // orig
-            color = savedColor + (refractedColor*savedKt * (1-reflect_prob) );
+
+            const double refractionDamp = savedKt * (1-reflect_prob);
+
+            thisRefractedVisibility = refractionDamp; // save up to outer scope
+
+            color = savedColor + (refractedColor * refractionDamp );
 
             savedColor = color; // HACK, REWORK
         } else {
@@ -492,7 +504,7 @@ bool RayEngine::trace(
             }
 
             Vec3 newColor(0,0,0);
-            trace( reflRay, depthIn+1, newColor, false );
+            trace( reflRay, depthIn+1, newColor, shdFeeling );
 
             // frenel adds the schlick function
             // which reduces the reflection on the sphere greatly as you move in from the edge
@@ -513,11 +525,11 @@ bool RayEngine::trace(
 
 
         
-        return true;
+        return std::make_tuple(true, (childRefractedVisibility + thisRefractedVisibility));
     } else {
         // we hit nothing
         color = noHitColor;
-        return false;
+        return std::make_tuple(false, 1.0);
     }
 }
 
