@@ -19,7 +19,7 @@
       "transmitted": 1.0,
       "diffuse": [0.1, 0.1, 0.2],
       "n": 32,
-"refraction":1.0
+"refraction":1.00
     },
 
 {
@@ -29,7 +29,6 @@
       "specular": 1.46,
       "reflected": 1.0,
       "transmitted": 0.3,
-      "comment:": "change transmitted to 0.0 or 0.3 and see issue",
       "diffuse": [0.1, 0.1, 0.2],
       "n": 32,
 "refraction":1.0

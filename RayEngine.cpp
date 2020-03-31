@@ -208,8 +208,6 @@ std::tuple<bool,double> RayEngine::trace(
     
 
 
-    // double minHit = NO_HIT;
-
     // when we reflect a ray, we recurse
     // after the recursion is done, we add these to the results
     // these are set by lighting
@@ -353,7 +351,7 @@ std::tuple<bool,double> RayEngine::trace(
             // shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
             Vec3 shadowColor; // unused
             if(print) {
-                cout << "looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
+                cout << "\n" << std::string(depthIn, ' ') << "Looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
             }
             // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
             // set depth to maximum to prevent further bounces
@@ -363,12 +361,18 @@ std::tuple<bool,double> RayEngine::trace(
                 cout << "Light " << iLight;
             }
 
-            // if( lightBlocked ) {
-            //     if(print) {
-            //         cout << " Blocked\n";
-            //     }
-            //     continue;
-            // }
+
+            // just because the light was blocked doesn't mean it was 100% blocked
+            // in order to ignore this light, we need a true and 0.0
+            // if it's a value larger than 0 we need to do the full color
+            // calculation in order to get the shadow right with transparent (kt) spheres
+
+            if( lightBlocked && visibilityLevel <= 0.0) {
+                if(print) {
+                    cout << " Blocked\n";
+                }
+                continue;
+            }
 
             if(print) {
                 cout << " Visible\n";
@@ -428,6 +432,7 @@ std::tuple<bool,double> RayEngine::trace(
         double childRefractedVisibility = 0;
         double thisRefractedVisibility = 0;
 
+        bool rayEntering = false;
 
         // when ray shoot through object back into vacuum,
         // ni_over_nt = ref_idx, surface normal has to be inverted.
@@ -438,6 +443,7 @@ std::tuple<bool,double> RayEngine::trace(
             if( print ) {
                 cout << "Ray exiting, cos:" << cosine << "\n";
             }
+            rayEntering = false;
         }
         // when ray shoots into object,
         // ni_over_nt = 1 / ref_idx.
@@ -448,6 +454,7 @@ std::tuple<bool,double> RayEngine::trace(
             if( print ) {
                 cout << "Ray entering, cos:" << cosine << "\n";
             }
+            rayEntering = true;
         }
 
 
@@ -473,7 +480,10 @@ std::tuple<bool,double> RayEngine::trace(
             Vec3 refractedColor(0,0,0);
             Ray refractedRay(savedIntersect,refracted);
             
-            auto [refractedHit, childRefractedVisibility] =
+            if( print ) {
+                cout << "\n" << std::string(depthIn, ' ') << "Tracing Refraction:\n";
+            }
+            auto [refractedHit, _childRefractedVisibility] =
                 trace(refractedRay, depthIn+1, refractedColor, shdFeeling);
 
             // the color we get back from refraction is damped by kt
@@ -482,7 +492,21 @@ std::tuple<bool,double> RayEngine::trace(
 
             const double refractionDamp = savedKt * (1-reflect_prob);
 
-            thisRefractedVisibility = refractionDamp; // save up to outer scope
+            if( print ) {
+                cout << "\n" << std::string(depthIn, ' ') << "Refraction Damp: " << refractionDamp << " \n";
+            }
+
+            // for whatever reason, our shadow feeler takes a double hit on visiblity
+            // when refracting.  to fight this, we only calculate diminished visibility when
+            // we enter a sphere.  when we exit, we just pass 1
+
+            if( rayEntering ) {
+                thisRefractedVisibility = refractionDamp;             // save up to outer scope
+            } else {
+                thisRefractedVisibility = 1;
+            }
+            childRefractedVisibility = _childRefractedVisibility; // save up to outer scope
+
 
             color = savedColor + (refractedColor * refractionDamp );
 
@@ -497,11 +521,12 @@ std::tuple<bool,double> RayEngine::trace(
 
         Ray reflRay(savedIntersect,savedRefl);
 
-        if( savedKr > 0 || (reflect_prob > 0) ) {
+        if( ((savedKr > 0) || (reflect_prob > 0)) && !shdFeeling ) {
 
             if( print ) {
-                cout << "refl using " << reflRay.d.str(false) << "\n";
+                cout << "\n" << std::string(depthIn, ' ') << "Tracing Reflection using " << reflRay.d.str(false) << "\n";
             }
+
 
             Vec3 newColor(0,0,0);
             trace( reflRay, depthIn+1, newColor, shdFeeling );
@@ -523,9 +548,13 @@ std::tuple<bool,double> RayEngine::trace(
             color = savedColor;
         }
 
+        const double returnVisibility = (thisRefractedVisibility * childRefractedVisibility);
 
+        if( print ) {
+            cout << "\n" << std::string(depthIn, ' ') << "Return Vis: " << returnVisibility << " \n";
+        }
         
-        return std::make_tuple(true, (childRefractedVisibility + thisRefractedVisibility));
+        return std::make_tuple(true, returnVisibility);
     } else {
         // we hit nothing
         color = noHitColor;
