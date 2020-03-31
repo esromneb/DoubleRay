@@ -154,6 +154,35 @@
       });
     });
 
+
+    ///
+    /// Emscripten also binds to all of the mouse events
+    /// In this case we don't care, we just want an additional action which is to know
+    /// Where we clicked
+    ///
+    function onLoadHookClick() {
+
+      ['mousedown'].forEach(function(event) {
+        Module.canvas.addEventListener(event, function(event) {
+          // console.log(event);
+          let loc = getEventLocation(this,event);
+
+          const browserY = loc.y;
+          const browserX = loc.x;
+
+          const canvasYPixels = 400; // FIXME change this
+
+          const canvasY = canvasYPixels - browserY;
+
+          // console.log(loc);
+          jsPrint("x: " + browserX + " y: " + canvasY);
+        }, true);
+      });
+    } 
+
+
+
+
   </script>
 
   <script type="text/javascript">
@@ -170,6 +199,7 @@
     window.onload = ()=>{
       onLoadSetupGif();
       onLoadRender();
+      onLoadHookClick();
     };
   </script>
 
@@ -797,6 +827,30 @@
 
 
 
+</script>
+
+<script type="text/javascript">
+  function getElementPosition(obj) {
+    var curleft = 0, curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curleft += obj.offsetLeft;
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+        return { x: curleft, y: curtop };
+    }
+    return undefined;
+}
+
+function getEventLocation(element,event){
+    // Relies on the getElementPosition function.
+    var pos = getElementPosition(element);
+    
+    return {
+      x: (event.pageX - pos.x),
+        y: (event.pageY - pos.y)
+    };
+}
 </script>
 
 

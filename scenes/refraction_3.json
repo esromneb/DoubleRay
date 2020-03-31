@@ -6,7 +6,7 @@
     "depth": 6
   },
   "global": {
-    "color": [0.2, 0.2, 0.2],
+    "color": [0.9, 0.2, 0.2],
     "c": 10
   },
   "spheres": [{
@@ -23,7 +23,7 @@
 {
       "rad": 1.0,
       "loc": [-4, -1.1, 0],
-      "ambient": 0.1,
+      "ambient": 0.8,
       "specular": 1.46,
       "reflected": 0,
       "transmitted": 0.0,

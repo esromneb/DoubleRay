@@ -387,15 +387,15 @@ void doRender(void) {
     // return 4;
     render();
     copyBuffer();
-    cout << "Render finished\n";
+    // cout << "Render finished\n";
 }
 
 void doRenderOfficial(void) {
     // return 4;
     render();
-    cout << "Render finished\n";
+    // cout << "Render finished\n";
     officialCopyBuffer();
-    cout << "Copy finished\n";
+    // cout << "Copy finished\n";
 }
 
 
