@@ -528,7 +528,8 @@ void setSphere(
     const float reflected,
     const float transmitted,
     VEC3_ARG(diffuse),
-    float n
+    float n,
+    const float refraction
     ) {
 
     if(index < 0) {
@@ -565,6 +566,7 @@ void setSphere(
     spheres[index].m.kd = VEC3_ARG_CTONS(diffuse);
     spheres[index].m.n = n;
     spheres[index].m.kt = transmitted;
+    spheres[index].m.refraction = refraction;
 }
 
 

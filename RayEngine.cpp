@@ -106,12 +106,39 @@ void RayEngine::render( void )
         }
 }
 
+
+// v is ray direction
+// n is the surface normal
+// ni_over_nt is n1/n2
+// refracted (output) is the refracted ray direaction
+bool refract(const Vec3& v, const Vec3& n, const double ni_over_nt, Vec3& refracted) {
+    Vec3 uv = v;
+    uv.normalize();
+    const double dt = uv.dot(n);
+    const double discriminat = 1.0 - ni_over_nt * ni_over_nt * (1-dt*dt);
+    if(discriminat > 0){
+        refracted = ((uv-n*dt)*ni_over_nt) - n*sqrt(discriminat);
+        return true;
+    } else {
+        return false; // no refracted ray
+    }
+}
+
+float schlick(const float cosine, const float ref_idx) {
+    float r0 = (1 - ref_idx) / (1 + ref_idx); // ref_idx = n2/n1
+    r0 = r0 * r0;
+    return r0 + (1 - r0) * pow((1 - cosine), 5);
+}
+
+
+
+
 // Vec3 intersect;
 // Vec3 norm;
 // Vec3 refl;
 // Vec3 fp;
 
-std::tuple<Vec3, Vec3, Vec3, Vec3> intersectSphere(const Ray& r, const Sphere &s, const double t0) {
+std::tuple<Vec3, Vec3, Vec3, Vec3> intersectSphere(const Ray& r, const Sphere& s, const double t0) {
     Vec3 intersect;
     Vec3 norm;
     Vec3 refl;
@@ -181,7 +208,9 @@ bool RayEngine::trace(
     Vec3 savedColor(0,0,0);
     Vec3 savedRefl(0,0,0);
     Vec3 savedIntersect(0,0,0);
+    Vec3 savedNormal(0,0,0);
     double savedKr = 0;
+    double savedRefraction = 1;
 
 
     // distance of closest hit
@@ -351,6 +380,8 @@ bool RayEngine::trace(
         savedRefl = refl;
         savedKr = material.kr;
         savedIntersect = intersect;
+        savedNormal = norm;
+        savedRefraction = material.refraction;
     }
 
 
@@ -361,10 +392,74 @@ bool RayEngine::trace(
 
 
     if( hitDistance != NO_HIT ) {
-        Ray reflRay;
-        reflRay.o = savedIntersect;
-        reflRay.d = savedRefl;
 
+        Vec3 outward_normal;
+        Vec3 refracted;
+
+        float ref_idx = savedRefraction;
+
+        float ni_over_nt;
+        float reflect_prob;
+        float cosine;
+
+
+        // when ray shoot through object back into vacuum,
+        // ni_over_nt = ref_idx, surface normal has to be inverted.
+        if ( Vec3::dot(r.d, savedNormal) > 0){
+            outward_normal = savedNormal * -1.0;
+            ni_over_nt = ref_idx;
+            cosine = Vec3::dot(r.d, savedNormal);
+        }
+        // when ray shoots into object,
+        // ni_over_nt = 1 / ref_idx.
+        else{
+            outward_normal = savedNormal;
+            ni_over_nt = 1.0 / ref_idx;
+            cosine = -Vec3::dot(r.d, savedNormal);
+        }
+
+
+
+
+        // refracted ray exists
+        if(refract(r.d, outward_normal, ni_over_nt, refracted)){
+            reflect_prob = schlick(cosine, ref_idx);
+        }
+        // refracted ray does not exist
+        else{
+            // total reflection
+            reflect_prob = 1.0;
+        }
+
+        // cout << "reflect_prob " << reflect_prob << "\n";
+
+#ifdef ASDFAS
+        if(drand48() < reflect_prob) {
+            scattered = ray(rec.p, reflected);
+        }
+        else {
+            scattered = ray(rec.p, refracted);
+        }
+#endif
+
+        if( savedRefraction != 1 ) {
+
+            Vec3 refractedColor(0,0,0);
+            Ray refractedRay(savedIntersect,refracted);
+            trace(refractedRay, depthIn+1, refractedColor, false);
+            color = savedColor + (refractedColor);
+        } else {
+            color = savedColor;
+        }
+
+
+
+
+
+
+
+#ifdef DISAB_REFLL
+        Ray reflRay(savedIntersect,savedRefl);
 
         if( savedKr > 0 ) {
 
@@ -378,6 +473,7 @@ bool RayEngine::trace(
         } else {
             color = savedColor;
         }
+#endif
 
         
         return true;

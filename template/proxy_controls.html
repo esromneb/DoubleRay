@@ -285,7 +285,8 @@
         reflected,
         transmitted,
         diffuse,
-        n
+        n,
+        refraction
         ) {
 
         if( !Array.isArray(location) || location.length != 3 ) {
@@ -307,11 +308,12 @@
           + 1   // reflected
           + 1   // transmitted
           + 3   // diffuse
-          + 1;  // n
+          + 1   // n
+          + 1;  // refraction
 
         const sig = addNumberSignature([],argc);
 
-        const args = [index,radius,location,ambient,specular,reflected,transmitted,diffuse,n].flat();
+        const args = [index,radius,location,ambient,specular,reflected,transmitted,diffuse,n,refraction].flat();
 
         postCustomMessage({type:'call',fn:'setSphere',rt:'void',at:sig,av:args});
 
@@ -522,6 +524,8 @@
   ///
   /// Looks at the parsed object and verifies all keys are there
   /// makes all the c calls and then renders at the end
+  /// NOTE we may modify obj as we parse through due to default values
+  /// etc. (obj remains modified after the call to this function)
   function doJsonCalls(obj) {
     if(obj.camera) {
       const camera = obj.camera;
@@ -572,16 +576,22 @@
          typeof(s.transmitted) !== 'undefined' &&
          typeof(s.diffuse) !== 'undefined' &&
          typeof(s.n) !== 'undefined' ) {
-          setSphere(
-            i,
-            s.rad,
-            s.loc,
-            s.ambient,
-            s.specular,
-            s.reflected,
-            s.transmitted,
-            s.diffuse,
-            s.n);
+
+         if(typeof(s.refraction) === 'undefined') {
+          s.refraction = 1.0;
+         }
+
+         setSphere(
+           i,
+           s.rad,
+           s.loc,
+           s.ambient,
+           s.specular,
+           s.reflected,
+           s.transmitted,
+           s.diffuse,
+           s.n,
+           s.refraction);
 
         } else {
           jsPrint("Sphere #" + i + " missing required keys");
