@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <chrono>
+
+
 
 using namespace std;
 
@@ -57,58 +61,10 @@ void setGlobalC(const int c) {
     engine->c = c;
 }
 
-
-// void doRender(void) {
-//     // return 4;
-//     render();
-//     copyBuffer();
-//     // cout << "Render finished\n";
-// }
-
-
-
-// void doDebugRender(void) {
-//     // return 4;
-//     fakeBuffer();
-// }
-
-// uint32_t get4(void) {
-//     return 4;
-// }
-
-// uint32_t getNext(void) {
-//     return nextVal++;
-// }
-
-// uint32_t getPixel(const uint32_t x, const uint32_t y) {
-//     return buffer[x][y];
-// }
-
 void setScale(const float s) {
     cout << "setScale() does nothing for now FIXME\n";
     // scale = s;
 }
-
-// void debug2(void) {
-//     // cout << "start debug2" << "\n";
-//     // usleep(2E6);
-//     // cout << "exit debug2" << "\n";
-
-//     // officialRenderRainbow(true, true);
-
-//     while(1) {
-//         officialRenderRainbow(false, false);
-//         officialRenderRainbow(false, true);
-//         officialRenderRainbow(true, false);
-//         officialRenderRainbow(true, true);
-//     }
-// }
-
-
-
-// void setFrameSleep(const int s) {
-//     frame_sleep = s;
-// }
 
 void onRuntimeInitialized(void) {
     cout << "onRuntimeInitialized()" << "\n";

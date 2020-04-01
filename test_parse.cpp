@@ -8,6 +8,13 @@
 using namespace std;
 
 
+// Annoying but required for now in the tests until we fix the RayApi
+extern "C" {
+void doRenderOfficial() {
+}
+}
+
+
 const std::string t0 = "{\"global\":{\"ambient_color\":[1,0,0]}}";
 const std::string t1 = "{\"global\":{\"ambient_color\":[1,0,0]}";
 const std::string t2 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0]}}";

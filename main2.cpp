@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include <chrono>
 #include <unistd.h> //usleep
-#include <functional> //usleep
+#include <functional>
 #include <cmath>
 
 
@@ -71,6 +71,7 @@ void setupEngine(void) {
 
 } // extern C
 
+#ifdef NOTUSEDFORNOW
 void copyBuffer(void) {
     uint32_t px = 400;
 
@@ -143,14 +144,6 @@ void printBuffer(void) {
 
 
 
-
-// ^
-// |
-// |
-// y
-// x---->
-//
-
 void fakeBuffer(void) {
     uint32_t px = 400;
 
@@ -193,6 +186,7 @@ int main3(int argc, char ** argv) {
     // cout << "Hello Precilla\n";
     return 0;
 }
+#endif
 
 SDL_Surface *screen = 0;
 
@@ -322,19 +316,9 @@ int main(int argc, char ** argv) {
 
     officialRenderRainbow(false, false);
 
-    // while(1) {
-    //     officialRenderRainbow(false, false);
-    //     officialRenderRainbow(false, true);
-    //     officialRenderRainbow(true, false);
-    //     officialRenderRainbow(true, true);
-    // }
+    // SDL_Quit();
 
-      // printf("you should see a smoothly-colored square - no sharp lines but the square borders!\n");
-      // printf("and here is some text that should be HTML-friendly: amp: |&| double-quote: |\"| quote: |'| less-than, greater-than, html-like tags: |<cheez></cheez>|\nanother line.\n");
-
-      // SDL_Quit();
-
-      return 0;
+    return 0;
 }
 
 static uint32_t nextVal = 0;

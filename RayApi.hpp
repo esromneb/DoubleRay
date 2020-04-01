@@ -6,6 +6,8 @@
 #include "Macros.hpp"
 #include "Parser.hpp"
 
+#include <functional>
+
 // A bunch of naked functions
 
 void setRayApiTarget(RayEngine* e);
@@ -30,7 +32,7 @@ void setDepth(const int d);
 void setAmbientColor(VEC3_ARG(color));
 void setNoHitColor(VEC3_ARG(color));
 void setSphereCount(const int count);
-void setSphere(    const int index,
+void setSphere(const int index,
     const float radius,
     VEC3_ARG(location),
     const float ambient,
@@ -41,7 +43,7 @@ void setSphere(    const int index,
     float n,
     const float refraction);
 void setLightCount(const int count);
-void setLight(    const int index,
+void setLight(const int index,
     VEC3_ARG(direction),
     VEC3_ARG(color));
 void dumpPoly(const int index);
