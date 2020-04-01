@@ -11,6 +11,11 @@ using namespace std;
 
 static RayEngine* engine = 0;
 
+// this is required due to the way I originally wrote the files in this function:
+// as naked functions with a global engine
+// now that I've moved these to their own file we have an ugly hack
+// where we still have to call this before calling any functions
+// this also makes it thread unsafe (not that anything else is threadsafe)
 void setRayApiTarget(RayEngine* e) {
     engine = e;
 }

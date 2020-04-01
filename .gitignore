@@ -8,6 +8,7 @@ test_orbit2
 test_vec
 test_refl
 test_parse
+test_parse2
 
 
 

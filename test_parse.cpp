@@ -18,6 +18,7 @@ void doRenderOfficial() {
 const std::string t0 = "{\"global\":{\"ambient_color\":[1,0,0]}}";
 const std::string t1 = "{\"global\":{\"ambient_color\":[1,0,0]}";
 const std::string t2 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0]}}";
+const std::string t3 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1],\"depth\": 6}}";
 
 
 int test0(RayEngine *engine) {
@@ -42,8 +43,14 @@ int test0(RayEngine *engine) {
     }
 
 
+    return 0;
+}
+
+int test1(RayEngine* engine) {
+
+
     {
-        auto [ret,error] = Parser::parse(t2.c_str(), engine);
+        auto [ret,error] = Parser::parse(t3.c_str(), engine);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
         if( ret == 0 ) {
@@ -53,11 +60,6 @@ int test0(RayEngine *engine) {
 
 
 
-
-    return 0;
-}
-
-int test1(RayEngine* engine) {
     return 0;
 }
 
@@ -74,9 +76,9 @@ int main(void) {
 
     std::vector<int> results;
 
-    results.emplace_back(test0(engine));
+    // results.emplace_back(test0(engine));
     results.emplace_back(test1(engine));
-    results.emplace_back(test2(engine));
+    // results.emplace_back(test2(engine));
 
     unsigned failCount = 0;
     unsigned i = 0;

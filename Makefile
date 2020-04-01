@@ -151,22 +151,25 @@ copy_fs:
 test_orbit2: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	g++ test_orbit.cpp $(CPP_FILES) -o $@
 
+test_parse2: test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	g++ $< $(CPP_FILES) -std=c++17  -g -o $@
+
 
 # $< name of first prerequisite
 # $@ name of target
 test_orbit: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
-	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
 test_vec: test_vec.cpp $(CPP_FILES) $(HPP_FILES) Makefile
-	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
 
 test_refl: test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
-	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
 
 test_parse: test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
-	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
 
 
