@@ -99,6 +99,15 @@ int test1(RayEngine* engine) {
         }
     }
 
+    {
+        auto [ret,error] = Parser::parse(t0.c_str(), engine);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 2 ) {
+            return 3;
+        }
+    }
+
 
 
     return 0;

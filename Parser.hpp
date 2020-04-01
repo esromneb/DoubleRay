@@ -2,9 +2,16 @@
 
 #include "RayEngine.hpp"
 
+#include "json.hpp"
+
 #include <tuple>
+
+
 
 class Parser {
 public:
-    static std::tuple<int,std::string> parse(const char* const str, RayEngine* e);
+    static std::tuple<unsigned,std::string> parse(const char* const str, RayEngine* e, const unsigned restrictParse = 0);
+private:
+    static std::tuple<unsigned,std::string> parseCamera(const nlohmann::json& obj, RayEngine* e);
+    static std::tuple<unsigned,std::string> parseGlobal(const nlohmann::json& obj, RayEngine* e);
 };

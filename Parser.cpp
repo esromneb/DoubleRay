@@ -2,7 +2,6 @@
 #include "RayApi.hpp"
 #include "Macros.hpp"
 
-#include "json.hpp"
 
 #include <string>
 #include <iostream>
@@ -21,12 +20,16 @@ static bool valid_number(const nlohmann::json& obj, const std::string& key) {
     return obj.contains(key) && obj[key].is_number();
 }
 
+static bool valid_object(const nlohmann::json& obj, const std::string& key) {
+    return obj.contains(key) && obj[key].is_object();
+}
+
 
 // 0 is ok
 // 1 is bad json
 // 2 is missing required keys
 
-std::tuple<int,std::string> Parser::parse(const char* const str, RayEngine* e) {
+std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine* e, const unsigned restrictParse) {
 
     cout << "Parsed called with:\n\n" << str << "\n\n";
 
@@ -41,6 +44,17 @@ std::tuple<int,std::string> Parser::parse(const char* const str, RayEngine* e) {
 
     setRayApiTarget(e);
 
+    unsigned subCode = 0;
+    std::string subMessage;
+
+    if( !restrictParse || restrictParse == 1 ) {
+        std::tie(subCode, subMessage) = parseCamera(obj, e);
+
+        if( subCode ) {
+            return std::make_tuple(subCode, subMessage);
+        }
+    }
+
 
     // auto 
 
@@ -49,6 +63,11 @@ std::tuple<int,std::string> Parser::parse(const char* const str, RayEngine* e) {
         cout << obj["global"]["ambient_color"][1] << "\n";
     }
 
+    return std::make_tuple(0,"");
+
+}
+
+std::tuple<unsigned,std::string> Parser::parseCamera(const nlohmann::json& obj, RayEngine* e) {
     if( obj.contains("camera") && obj["camera"].is_object() ) {
 
         cout << "Have Camera\n";
@@ -76,6 +95,12 @@ std::tuple<int,std::string> Parser::parse(const char* const str, RayEngine* e) {
         return std::make_tuple(2,"Camera tree missing");
     }
 
+
+    return std::make_tuple(0,"");
+}
+
+
+std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj, RayEngine* e) {
 
     return std::make_tuple(0,"");
 }
