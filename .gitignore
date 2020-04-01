@@ -6,7 +6,7 @@ root_fs/*
 test_orbit
 test_vec
 test_refl
-
+test_parse
 
 
 

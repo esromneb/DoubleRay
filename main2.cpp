@@ -4,6 +4,7 @@
 #include "Vec.hpp"
 #include "RayEngine.hpp"
 #include "fileio.h"
+#include "Parser.hpp"
 
 
 #include <iostream>
@@ -755,6 +756,18 @@ void chokeOutput(int il, int ih, int jl, int jh) {
 
 void setPrint(int p) {
     engine->print = p?true:false;
+}
+
+void parseJsonScene(const char* scene, const bool andRender ) {
+    cout << "Got: " << scene << "\n";
+    cout << "bool: " << andRender << "\n";
+
+    Parser::parse("", engine);
+}
+
+void parseJsonSceneFragment(const std::string scene, const bool andRender ) {
+    // cout << "Got: " << scene << "\n";
+    // cout << "bool: " << andRender << "\n";
 }
 
 

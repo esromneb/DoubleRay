@@ -442,6 +442,10 @@
         postCustomMessage({type:'call',fn:'setHighlightPixel',rt:'void',at:['number','number'],av:[x,y]});
       }
 
+      function parseJsonScene(str,andRender) {
+        postCustomMessage({type:'call',fn:'parseJsonScene',rt:'void',at:['string','boolean'],av:[str,andRender]});
+      }
+
 
 
 

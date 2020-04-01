@@ -428,7 +428,7 @@ std::tuple<bool,double> RayEngine::trace(
         float cosine;
 
         // when shadow feeling we will calculate these
-        bool refractedHit = false;
+        // bool refractedHit = false;
         double childRefractedVisibility = 0;
         double thisRefractedVisibility = 0;
 

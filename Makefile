@@ -13,6 +13,8 @@ Matrix.hpp \
 fileio.h \
 Material.hpp \
 Ray.hpp \
+Parser.hpp \
+json.hpp \
 Vec.hpp
 
 WASM_MAIN = main2.cpp
@@ -25,6 +27,7 @@ RayEngine.cpp \
 fileio.cpp \
 Material.cpp \
 Ray.cpp \
+Parser.cpp \
 Vec.cpp
 
 # this is a list of all C functions we want to publish to javascript
@@ -62,6 +65,8 @@ EXPORT_STRING = \
 "_setPrint", \
 "_setNoHitColor", \
 "_setHighlightPixel", \
+"_parseJsonScene", \
+"_parseJsonSceneFragment", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
@@ -162,6 +167,10 @@ test_vec: test_vec.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 
 
 test_refl: test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
+
+
+test_parse: test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -o $@
 
 
