@@ -12,7 +12,7 @@
   "spheres": [{
       "rad": 0.5,
       "loc": [0, -0.55, 0],
-      "ambient": 1.4,
+      "ambient": 0.4,
       "specular": 1.46,
       "reflected": 0.3,
       "transmitted": 0.0,
@@ -22,7 +22,7 @@
     {
       "rad": 0.2,
       "loc": [0, 1.15, 0],
-      "ambient": 1.4,
+      "ambient": 0.4,
       "specular": 1.46,
       "reflected": 0.0,
       "transmitted": 0.0,
@@ -32,7 +32,7 @@
     {
       "rad": 0.4 ,
       "loc": [0, 0.55, 0],
-      "ambient": 1.4,
+      "ambient": 0.4,
       "specular": 1.46,
       "reflected": 0.0,
       "transmitted": 0.0,
