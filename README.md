@@ -57,6 +57,10 @@ See Also
 * https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF - phong
 * http://paulbourke.net/geometry/reflected/ - reflect ray from normal
 * http://viclw17.github.io/2018/08/05/raytracing-dielectric-materials/ - dielectric
+* https://www.cs.utah.edu/~lediaev/courses/cs6620/prj14.html - goals
+* https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
+* https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/light-transport-ray-tracing-whitted
+* http://www.cs.unc.edu/~rademach/xroads-RT/RTarticle.html - texture mapping
 
 See Also Offtopic
 ===
