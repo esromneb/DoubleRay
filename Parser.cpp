@@ -55,22 +55,39 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
         }
     }
 
+    switch(restrictParse) {
+        default:
+        case 0: 
+            std::tie(subCode, subMessage) = parseCamera(obj, e);
 
-    // auto 
+            if( subCode ) {
+                return std::make_tuple(subCode, subMessage);
+            }
 
-    if( false ) {
-        cout << obj["global"]["ambient_color"][0] << "\n";
-        cout << obj["global"]["ambient_color"][1] << "\n";
+            std::tie(subCode, subMessage) = parseGlobal(obj, e);
+
+            if( subCode ) {
+                return std::make_tuple(subCode, subMessage);
+            }
+
+            break;
+        case 1:
+            return parseCamera(obj, e);
+            break;
+        case 2:
+            return parseGlobal(obj, e);
+            break;
     }
+
 
     return std::make_tuple(0,"");
 
 }
 
 std::tuple<unsigned,std::string> Parser::parseCamera(const nlohmann::json& obj, RayEngine* e) {
-    if( obj.contains("camera") && obj["camera"].is_object() ) {
+    if( valid_object(obj, "camera") ) {
 
-        cout << "Have Camera\n";
+        // cout << "Have Camera\n";
         const auto camera = obj["camera"];
 
         if( 
@@ -101,6 +118,27 @@ std::tuple<unsigned,std::string> Parser::parseCamera(const nlohmann::json& obj, 
 
 
 std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj, RayEngine* e) {
+    if( valid_object(obj, "global") ) {
 
+        const auto gg = obj["global"];
+
+        if(
+            (valid_vec3(gg, "color") || valid_vec3(gg, "ambient_color")) &&
+            valid_number(gg, "c")
+            ) {
+            const std::string ambientKey = valid_vec3(gg, "color") ? "color" : "ambient_color";
+
+            cout << "Ambient using key: " << ambientKey << "\n";
+
+            setAmbientColor(VEC3_SPREAD(gg[ambientKey]));
+            setGlobalC(gg["c"]);
+
+        } else {
+            return std::make_tuple(2,"Global tree missing required keys");
+        }
+
+    } else {
+        return std::make_tuple(2,"Global tree missing");
+    }
     return std::make_tuple(0,"");
 }

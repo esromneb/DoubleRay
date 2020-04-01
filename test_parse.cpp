@@ -25,6 +25,9 @@ const std::string t6 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"lo
 const std::string t7 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1],\"depth\": [6]}}";       // bad
 const std::string t8 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": \"a\",\"rot\": [0, 0, 1],\"depth\": 6}}";              // bad
 
+const std::string t9 = "{\"global\":{\"ambient_color\":[1,0,0],\"c\":10}}";
+const std::string t10 = "{\"global\":{\"color\":[1,0,0],\"c\":10}}";
+
 
 int test0(RayEngine *engine) {
 
@@ -53,9 +56,11 @@ int test0(RayEngine *engine) {
 
 int test1(RayEngine* engine) {
 
+    const unsigned restrictParse = 1;
+
 
     {
-        auto [ret,error] = Parser::parse(t4.c_str(), engine);
+        auto [ret,error] = Parser::parse(t4.c_str(), engine, restrictParse);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
         if( ret != 0 ) {
@@ -64,7 +69,7 @@ int test1(RayEngine* engine) {
     }
 
     {
-        auto [ret,error] = Parser::parse(t5.c_str(), engine);
+        auto [ret,error] = Parser::parse(t5.c_str(), engine, restrictParse);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
         if( ret != 2 ) {
@@ -73,7 +78,7 @@ int test1(RayEngine* engine) {
     }
 
     {
-        auto [ret,error] = Parser::parse(t6.c_str(), engine);
+        auto [ret,error] = Parser::parse(t6.c_str(), engine, restrictParse);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
         if( ret != 2 ) {
@@ -82,7 +87,7 @@ int test1(RayEngine* engine) {
     }
 
     {
-        auto [ret,error] = Parser::parse(t7.c_str(), engine);
+        auto [ret,error] = Parser::parse(t7.c_str(), engine, restrictParse);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
         if( ret != 2 ) {
@@ -91,7 +96,7 @@ int test1(RayEngine* engine) {
     }
 
     {
-        auto [ret,error] = Parser::parse(t8.c_str(), engine);
+        auto [ret,error] = Parser::parse(t8.c_str(), engine, restrictParse);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
         if( ret != 2 ) {
@@ -100,7 +105,7 @@ int test1(RayEngine* engine) {
     }
 
     {
-        auto [ret,error] = Parser::parse(t0.c_str(), engine);
+        auto [ret,error] = Parser::parse(t0.c_str(), engine, restrictParse);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
         if( ret != 2 ) {
@@ -114,6 +119,28 @@ int test1(RayEngine* engine) {
 }
 
 int test2(RayEngine* engine) {
+    const unsigned restrictParse = 2;
+
+
+    {
+        auto [ret,error] = Parser::parse(t9.c_str(), engine, restrictParse);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 0 ) {
+            return 3;
+        }
+    }
+
+    {
+        auto [ret,error] = Parser::parse(t10.c_str(), engine, restrictParse);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 0 ) {
+            return 3;
+        }
+    }
+
+
     return 0;
 }
 
@@ -127,8 +154,8 @@ int main(void) {
     std::vector<int> results;
 
     // results.emplace_back(test0(engine));
-    results.emplace_back(test1(engine));
-    // results.emplace_back(test2(engine));
+    // results.emplace_back(test1(engine));
+    results.emplace_back(test2(engine));
 
     unsigned failCount = 0;
     unsigned i = 0;
