@@ -61,16 +61,19 @@ std::tuple<int,std::string> Parser::parse(const char* const str, RayEngine* e) {
             valid_number(camera, "depth")
             ) {
             cout << "Valid Camera Block\n";
-            cout << "loc size " << camera["loc"].size() << "\n";
+            // cout << "loc size " << camera["loc"].size() << "\n";
+
+            // cout << "Grab Camera Rot: " << camera["rot"][2] << "\n";
 
             setCamera(VEC3_SPREAD(camera["loc"]), VEC3_SPREAD(camera["dir"]), VEC3_SPREAD(camera["rot"]));
+            setDepth(camera["depth"]);
 
         } else {
-            cout << "Camera tree missing required keys\n";
+            return std::make_tuple(2,"Camera tree missing required keys");
         }
 
     } else {
-        cout << "No Camera\n";
+        return std::make_tuple(2,"Camera tree missing");
     }
 
 

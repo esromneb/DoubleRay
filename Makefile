@@ -16,6 +16,7 @@ Ray.hpp \
 Parser.hpp \
 RayApi.hpp \
 json.hpp \
+Macros.hpp \
 Vec.hpp
 
 WASM_MAIN = main2.cpp

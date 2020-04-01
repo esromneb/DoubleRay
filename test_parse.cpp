@@ -18,7 +18,12 @@ void doRenderOfficial() {
 const std::string t0 = "{\"global\":{\"ambient_color\":[1,0,0]}}";
 const std::string t1 = "{\"global\":{\"ambient_color\":[1,0,0]}";
 const std::string t2 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0]}}";
-const std::string t3 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1],\"depth\": 6}}";
+const std::string t3 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1],\"depth\": 6}}";         // good
+const std::string t4 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1.00001],\"depth\": 6}}";   // good
+const std::string t5 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0],\"depth\": 6}}";            // bad
+const std::string t6 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1],\"depeth\": 6}}";        // bad
+const std::string t7 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1],\"depth\": [6]}}";       // bad
+const std::string t8 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": \"a\",\"rot\": [0, 0, 1],\"depth\": 6}}";              // bad
 
 
 int test0(RayEngine *engine) {
@@ -50,10 +55,46 @@ int test1(RayEngine* engine) {
 
 
     {
-        auto [ret,error] = Parser::parse(t3.c_str(), engine);
+        auto [ret,error] = Parser::parse(t4.c_str(), engine);
 
         cout << "Got code " << ret << " with message [" << error << "]\n";
-        if( ret == 0 ) {
+        if( ret != 0 ) {
+            return 3;
+        }
+    }
+
+    {
+        auto [ret,error] = Parser::parse(t5.c_str(), engine);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 2 ) {
+            return 3;
+        }
+    }
+
+    {
+        auto [ret,error] = Parser::parse(t6.c_str(), engine);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 2 ) {
+            return 3;
+        }
+    }
+
+    {
+        auto [ret,error] = Parser::parse(t7.c_str(), engine);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 2 ) {
+            return 3;
+        }
+    }
+
+    {
+        auto [ret,error] = Parser::parse(t8.c_str(), engine);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 2 ) {
             return 3;
         }
     }
