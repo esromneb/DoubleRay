@@ -92,5 +92,6 @@ public:
 
     bool print = false;
 
+    static constexpr float scale = 0.006;
 };
 

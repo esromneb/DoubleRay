@@ -14,6 +14,7 @@ fileio.h \
 Material.hpp \
 Ray.hpp \
 Parser.hpp \
+RayApi.hpp \
 json.hpp \
 Vec.hpp
 
@@ -28,6 +29,7 @@ fileio.cpp \
 Material.cpp \
 Ray.cpp \
 Parser.cpp \
+RayApi.cpp \
 Vec.cpp
 
 # this is a list of all C functions we want to publish to javascript
@@ -35,14 +37,7 @@ Vec.cpp
 # the version here has a prepended underscore
 # all lines must have trailing comma
 EXPORT_STRING = \
-"_get4", \
-"_getNext", \
-"_getPixel", \
-"_doRender", \
-"_doDebugRender", \
 "_setupEngine", \
-"_debug2", \
-"_setFrameSleep", \
 "_onRuntimeInitialized", \
 "_onCustomMessage", \
 "_renderNextRainbow", \
