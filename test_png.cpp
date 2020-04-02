@@ -4,12 +4,14 @@
 #include "HandlePng.hpp"
 
 #include "lodepng.h"
+#include "CLI11.hpp"
 
 #include <iostream>
 #include <cmath>
 #include <string>
 #include <cstdint>
 #include <chrono>
+#include <functional>
 
 using namespace std;
 
@@ -18,6 +20,23 @@ using namespace std;
 extern "C" {
 void doRenderOfficial() {
 }
+}
+
+
+// returns a list of paths to scenes that are under test
+std::vector<std::string> getAllScenes(void) {
+    std::vector<std::string> out;
+
+    const std::string folder = "scenes/";
+
+    out.emplace_back(folder + "test_shadow_2.json");
+    out.emplace_back(folder + "test_shadow_3.json");
+    out.emplace_back(folder + "refraction_7.json");
+    out.emplace_back(folder + "refraction_shadow_3.json");
+    out.emplace_back(folder + "refraction_shadow_4.json");
+    out.emplace_back(folder + "soap_bubble_1.json");
+
+    return out;
 }
 
 
@@ -152,7 +171,7 @@ int test1(RayEngine* engine) {
 
 
 
-int main(void) {
+int main2(void) {
     RayEngine* engine;
     engine = new RayEngine();
     engine->resize(400);
@@ -179,4 +198,82 @@ int main(void) {
         cout << "\nALL Tests passed\n";
     }
 
+    return 0;
 }
+
+int main(int argc, char** argv) {
+    CLI::App app{"Engine Unit Test using PNGs"};
+
+
+    bool exitAfterOptions = false;
+
+    bool gotAll = false;
+    bool gotOne = false;
+    std::string onePath;
+
+
+    auto buildAllCb = [&](const std::int64_t count) {
+        gotAll = true;
+        // cout << "In lambda C with count " << count << "\n";
+    };
+    app.add_flag_function("-a", buildAllCb,
+        "Build all scenes");
+
+
+
+    auto buildOneCb = [&](const std::string oneScene) {
+        gotOne = true;
+        // cout << "In lambda S with " << oneScene << "\n";
+        onePath = oneScene;
+    };
+    app.add_option_function<std::string>("-s", buildOneCb, 
+        "build one scene, path to json file");
+
+
+    auto dumpScenesCb = [&](const std::int64_t count) {
+        // gotAll = true;
+        // cout << "In lambda C with count " << count << "\n";
+        exitAfterOptions = true;
+        auto all = getAllScenes();
+        for(const auto&s : all) {
+            cout << s << "\n";
+        }
+    };
+    app.add_flag_function("--dump", dumpScenesCb,
+        "Dump scenes that will be run with -a");
+
+
+
+    // If you pass --help, this macro will exit and no code
+    // below it will run
+    CLI11_PARSE(app, argc, argv);
+
+    if( exitAfterOptions ) {
+        return 0;
+    }
+
+    if( !gotAll && !gotOne ) {
+        cout << "Dumping because no options\n";
+        cout << app.help();
+        return 0;
+    }
+
+    if( gotAll && gotOne) {
+        cout << "\nPlease specify either -a or -s but not both\n\n";
+        cout << app.help();
+        return 0;
+    }
+
+    return 0;
+}
+
+
+
+
+
+    // app.add_option_function<void>("-c",
+    //            lc,
+    //            "lambda call void");
+
+    // bool defaultA = false;
+    // app.add_option("-a", defaultA, "Build All Scenes");
