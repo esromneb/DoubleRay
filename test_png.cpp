@@ -12,6 +12,8 @@
 #include <cstdint>
 #include <chrono>
 #include <functional>
+#include <algorithm>
+#include <ctime>
 
 using namespace std;
 
@@ -32,9 +34,14 @@ std::vector<std::string> getAllScenes(void) {
     out.emplace_back(folder + "test_shadow_2.json");
     out.emplace_back(folder + "test_shadow_3.json");
     out.emplace_back(folder + "refraction_7.json");
+    out.emplace_back(folder + "refraction_9.json");
     out.emplace_back(folder + "refraction_shadow_3.json");
     out.emplace_back(folder + "refraction_shadow_4.json");
     out.emplace_back(folder + "soap_bubble_1.json");
+    out.emplace_back(folder + "color_balls_refraction_2.json");
+    out.emplace_back(folder + "cool_reflection_1.json");
+    out.emplace_back(folder + "hit_order_1.json");
+    out.emplace_back(folder + "three_color_balls_yellow.json");
 
     return out;
 }
@@ -201,37 +208,124 @@ int main2(void) {
     return 0;
 }
 
+std::string stripPath(const std::string& s1) {
+    const auto int w = s1.find_last_of("\\/");
+
+    // cout << "found w " << w << "\n";
+
+    if( w == string::npos ) {
+        return s1;
+    } else {
+        return s1.substr(w+1, s1.size()-w);
+    }
+}
+
+std::string stripExtension(const std::string& s1) {
+    const auto int w = s1.find_last_of(".");
+
+    if( w == string::npos ) {
+        return s1;
+    } else {
+        return s1.substr(0, w);
+    }
+}
+
+std::string outputPathForInput(const std::string& s1) {
+    const auto noPath = stripPath(s1);
+
+    const auto noExtension = stripExtension(noPath);
+
+    return "img/test/" + noExtension + ".png";
+}
+
+
+void batchRender(const std::vector<std::string>& paths, const bool cleanBetween) {
+
+    RayEngine* engine;
+    if( !cleanBetween ) {
+        engine = new RayEngine();
+        engine->resize(400);
+    }
+
+    for(const auto& p : paths ) {
+        if( cleanBetween ) {
+            // leak the old one for now
+            engine = new RayEngine();
+            engine->resize(400);
+        }
+
+        const auto outputPath = outputPathForInput(p);
+
+        cout << "Rendering " << p << " to " << outputPath << "\n";
+
+        auto [ret,error] = Parser::parseFile(p, engine);
+
+        cout << "PARSE Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 0 ) {
+            cout << "File: " << p << " failed with " << error << "\n";
+            continue;
+        }
+
+        localRender(engine);
+
+        // std::string savePath = "img/test/test_shadow_3.png";
+
+        auto [ret2,error2] = HandlePng::save(outputPath, engine);
+
+        cout << "PNG Got code " << ret2 << " with message [" << error2 << "]\n";
+        if( ret2 != 0 ) {
+            cout << "Writin file to disk " << outputPath << " failed with " << error2 << "\n";
+        }
+    }
+}
+
+
+
 int main(int argc, char** argv) {
     CLI::App app{"Engine Unit Test using PNGs"};
 
 
     bool exitAfterOptions = false;
 
-    bool gotAll = false;
-    bool gotOne = false;
+    bool renderAll = false;
+    bool renderOne = false;
     std::string onePath;
+    bool cleanEngine = false;
+    bool randomizeList = false;
 
 
     auto buildAllCb = [&](const std::int64_t count) {
-        gotAll = true;
+        renderAll = true;
         // cout << "In lambda C with count " << count << "\n";
     };
     app.add_flag_function("-a", buildAllCb,
         "Build all scenes");
 
 
-
     auto buildOneCb = [&](const std::string oneScene) {
-        gotOne = true;
+        renderOne = true;
         // cout << "In lambda S with " << oneScene << "\n";
         onePath = oneScene;
     };
     app.add_option_function<std::string>("-s", buildOneCb, 
-        "build one scene, path to json file");
+        "Build one scene (path to json file)");
+
+
+    auto cleanCb = [&](const std::int64_t count) {
+        cleanEngine = true;
+    };
+    app.add_flag_function("-c", cleanCb,
+        "Clean Engine betweeen builds");
+
+    auto rndCb = [&](const std::int64_t count) {
+        randomizeList = true;
+    };
+    app.add_flag_function("-r", rndCb,
+        "Randomize order scenes are rendered");
 
 
     auto dumpScenesCb = [&](const std::int64_t count) {
-        // gotAll = true;
+        // renderAll = true;
         // cout << "In lambda C with count " << count << "\n";
         exitAfterOptions = true;
         auto all = getAllScenes();
@@ -252,17 +346,32 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    if( !gotAll && !gotOne ) {
+    if( !renderAll && !renderOne ) {
         cout << "Dumping because no options\n";
         cout << app.help();
         return 0;
     }
 
-    if( gotAll && gotOne) {
+    if( renderAll && renderOne) {
         cout << "\nPlease specify either -a or -s but not both\n\n";
         cout << app.help();
         return 0;
     }
+
+
+    std::vector<std::string> paths = renderOne ? std::vector<std::string>{onePath} : getAllScenes();
+
+    if( randomizeList ) {
+        std::srand ( unsigned ( std::time(0) ) );
+        // Shuffel list using built-in random generator
+        std::random_shuffle ( paths.begin(), paths.end() );
+    }
+
+
+    batchRender(paths,cleanEngine);
+
+
+
 
     return 0;
 }

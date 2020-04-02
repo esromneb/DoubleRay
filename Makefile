@@ -189,6 +189,17 @@ test_png: test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) $(CPP_TEST_FILES) -g -o $@
 
 
+.PHONY: rmtest movetestideal rmideal
+
+rmtest: 
+	rm -rf img/test/*.png
+
+rmideal: 
+	rm -rf img/ideal/*.png
+
+movetestideal: rmideal
+	mv img/test/*.png img/ideal/
+
 
 clean:
 	rm -rf out/ray.wasm out/ray.js out/ray.html out/ray.data
