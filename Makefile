@@ -77,7 +77,9 @@ CLANG_WARN_FLAGS = \
 # -Wshadow
 #  -Wconversion
 
-
+# works however adds 100ms or more to the
+# render time
+#-s DISABLE_EXCEPTION_CATCHING=0 \
 
 out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 	emcc $(WASM_MAIN) $(CPP_FILES) -s WASM=1 -o out/ray.html \
