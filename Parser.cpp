@@ -121,38 +121,38 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
     switch(restrictParse) {
         default:
         case 0: 
-            std::tie(subCode, subMessage) = parseCamera(obj, e);
+            std::tie(subCode, subMessage) = parseCamera(obj);
             if( subCode ) {
                 return std::make_tuple(subCode, subMessage);
             }
 
-            std::tie(subCode, subMessage) = parseGlobal(obj, e);
+            std::tie(subCode, subMessage) = parseGlobal(obj);
             if( subCode ) {
                 return std::make_tuple(subCode, subMessage);
             }
 
-            std::tie(subCode, subMessage) = parseSpheres(obj, e);
+            std::tie(subCode, subMessage) = parseSpheres(obj);
             if( subCode ) {
                 return std::make_tuple(subCode, subMessage);
             }
 
-            std::tie(subCode, subMessage) = parseLights(obj, e);
+            std::tie(subCode, subMessage) = parseLights(obj);
             if( subCode ) {
                 return std::make_tuple(subCode, subMessage);
             }
 
             break;
         case 1:
-            return parseCamera(obj, e);
+            return parseCamera(obj);
             break;
         case 2:
-            return parseGlobal(obj, e);
+            return parseGlobal(obj);
             break;
         case 3:
-            return parseSpheres(obj, e);
+            return parseSpheres(obj);
             break;
         case 4:
-            return parseLights(obj, e);
+            return parseLights(obj);
             break;
     }
 
@@ -161,7 +161,7 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
 
 }
 
-std::tuple<unsigned,std::string> Parser::parseCamera(const nlohmann::json& obj, RayEngine* e) {
+std::tuple<unsigned,std::string> Parser::parseCamera(const nlohmann::json& obj) {
     if( valid_object(obj, "camera") ) {
 
         // cout << "Have Camera\n";
@@ -194,7 +194,7 @@ std::tuple<unsigned,std::string> Parser::parseCamera(const nlohmann::json& obj, 
 }
 
 
-std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj, RayEngine* e) {
+std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj) {
     if( valid_object(obj, "global") ) {
 
         const auto gg = obj["global"];
@@ -229,7 +229,7 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj, 
     return std::make_tuple(0,"");
 }
 
-std::tuple<unsigned,std::string> Parser::parseSpheres(const nlohmann::json& obj, RayEngine* e) {
+std::tuple<unsigned,std::string> Parser::parseSpheres(const nlohmann::json& obj) {
     if( valid_array(obj, "spheres") ) {
 
         const auto spheres = obj["spheres"];
@@ -283,7 +283,7 @@ std::tuple<unsigned,std::string> Parser::parseSpheres(const nlohmann::json& obj,
     return std::make_tuple(0,"");
 }
 
-std::tuple<unsigned,std::string> Parser::parseLights(const nlohmann::json& obj, RayEngine* e) {
+std::tuple<unsigned,std::string> Parser::parseLights(const nlohmann::json& obj) {
     if( valid_array(obj, "lights") ) {
 
         const auto lights = obj["lights"];
