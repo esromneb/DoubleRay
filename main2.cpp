@@ -31,7 +31,7 @@ using namespace std;
 
 
 RayEngine* engine;
-std::vector<std::vector<uint32_t>> buffer;
+// std::vector<std::vector<uint32_t>> buffer;
 float gain = 1.1;
 
 void t1(void) {
@@ -53,12 +53,12 @@ void setupEngine(void) {
     // engine->makeObjects();
     // engine->render();
 
-    uint32_t x = 400;
-    uint32_t y = 400;
-    buffer.resize(x);
-    for(auto &row : buffer) {
-        row.resize(y);
-    }
+    // uint32_t x = 400;
+    // uint32_t y = 400;
+    // buffer.resize(x);
+    // for(auto &row : buffer) {
+    //     row.resize(y);
+    // }
 
     engine->makeObjects();
 
