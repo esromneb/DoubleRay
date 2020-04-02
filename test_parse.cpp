@@ -33,6 +33,10 @@ const std::string t11 = "JUNKASDFASD{\"global\":{\"ambient_color\":[1,0,0]},\"ca
 
 const std::string t12 = "{\"spheres\":[{\"rad\":1.1,\"loc\":[0,0,0],\"ambient\":2.5,\"specular\":2.01,\"reflected\":0.0,\"transmitted\":0.0,\"diffuse\":[1.0,1.0,1.0],\"n\":40}]}";
 const std::string t13 = "{\"spheres\":[{\"rad\":1.1,\"loc\":[0,0,0],\"ambient\":2.5,\"specular\":2.01,\"reflected\":0.0,\"transmitted\":0.0,\"diffuse\":[1.0,1.0,1.0],\"n\":41},{\"rad\":1.1,\"loc\":[0,0,0],\"ambient\":2.5,\"specular\":2.01,\"reflected\":0.0,\"transmitted\":0.0,\"diffuse\":[1.0,1.0,1.0],\"n\":42}]}";
+const std::string t14 = "{\"spheres\":[{\"loc\":[0,0,0],\"ambient\":2.5,\"specular\":2.01,\"reflected\":0.0,\"transmitted\":0.0,\"diffuse\":[1.0,1.0,1.0],\"n\":40}]}";
+
+const std::string t15 = "{\"lights\": [{\"dir\": [-0.4, 0, -1],\"color\": [20, 20, 20]}]}";
+const std::string t16 = "{\"lights\": [{\"dr\": [-0.4, 0, -1],\"color\": [20, 20, 20]}]}";
 
 int test0(RayEngine *engine) {
 
@@ -191,6 +195,53 @@ int test4(RayEngine* engine) {
     }
 
 
+    {
+        auto [ret,error] = Parser::parse(t14.c_str(), engine, restrictParse);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 2 ) {
+            return 3;
+        }
+    }
+
+
+
+    return 0;
+}
+
+int test5(RayEngine* engine) {
+    const unsigned restrictParse = 4;
+
+
+    {
+        auto [ret,error] = Parser::parse(t15.c_str(), engine, restrictParse);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 0 ) {
+            return 3;
+        }
+    }
+
+    {
+        auto [ret,error] = Parser::parse(t16.c_str(), engine, restrictParse);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 0 ) {
+            return 3;
+        }
+    }
+
+
+    // {
+    //     auto [ret,error] = Parser::parse(t13.c_str(), engine, restrictParse);
+
+    //     cout << "Got code " << ret << " with message [" << error << "]\n";
+    //     if( ret != 0 ) {
+    //         return 3;
+    //     }
+    // }
+
+
 
     return 0;
 }
@@ -208,8 +259,8 @@ int main(void) {
     // results.emplace_back(test1(engine));
     // results.emplace_back(test2(engine));
     // results.emplace_back(test3(engine));
-    results.emplace_back(test4(engine));
-    // results.emplace_back(test5(engine));
+    // results.emplace_back(test4(engine));
+    results.emplace_back(test5(engine));
 
     unsigned failCount = 0;
     unsigned i = 0;

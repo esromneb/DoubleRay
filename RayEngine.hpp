@@ -19,6 +19,8 @@ class Light
 public:
     Vec3 color;
     Vec3 d;
+    constexpr static Vec3 defaultDirection = {0,0,-1};
+    constexpr static Vec3 defaultColor = {20,20,20};
 };
 
 

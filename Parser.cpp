@@ -120,6 +120,11 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
                 return std::make_tuple(subCode, subMessage);
             }
 
+            std::tie(subCode, subMessage) = parseLights(obj, e);
+            if( subCode ) {
+                return std::make_tuple(subCode, subMessage);
+            }
+
             break;
         case 1:
             return parseCamera(obj, e);
@@ -129,6 +134,9 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
             break;
         case 3:
             return parseSpheres(obj, e);
+            break;
+        case 4:
+            return parseLights(obj, e);
             break;
     }
 
@@ -258,3 +266,45 @@ std::tuple<unsigned,std::string> Parser::parseSpheres(const nlohmann::json& obj,
 
     return std::make_tuple(0,"");
 }
+
+std::tuple<unsigned,std::string> Parser::parseLights(const nlohmann::json& obj, RayEngine* e) {
+    if( valid_array(obj, "lights") ) {
+
+        const auto lights = obj["lights"];
+
+        const unsigned lightCount = lights.size();
+        setLightCount(lightCount);
+        // cout << "found " << lightCount << " lights\n";
+
+        for(unsigned i = 0; i < lightCount; i++) {
+            auto s = lights[i];
+
+            if( 
+                valid_vec3(s, "dir") && 
+                valid_vec3(s, "color")
+                ) {
+                    setLight(
+                        i,
+                        VEC3_SPREAD(s["dir"]),
+                        VEC3_SPREAD(s["color"])
+                        );
+            } else {
+                // warning
+                // FIXME a better way than printing here?
+                cout << "Warning: Light #" + std::to_string(i) + " missing required keys\n";
+
+                setLight(
+                    i,
+                    VEC3_SPREAD(Light::defaultDirection),
+                    VEC3_SPREAD(Light::defaultColor)
+                    );
+
+            }
+        }
+    } else {
+        setLightCount(0);
+    }
+
+    return std::make_tuple(0,"");
+}
+
