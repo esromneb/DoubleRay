@@ -2,10 +2,9 @@
 
 #include "RayEngine.hpp"
 
-#include "json.hpp"
+#include "json_fwd.hpp"
 
 #include <tuple>
-
 
 
 class Parser {

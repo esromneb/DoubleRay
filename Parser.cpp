@@ -3,6 +3,8 @@
 #include "Macros.hpp"
 #include "Material.hpp"
 
+#include "json.hpp"
+
 
 #include <string>
 #include <iostream>
