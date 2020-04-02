@@ -553,12 +553,21 @@
 
 <script type="text/javascript">
 
+  var parseInJavascript = true;
+
   function parseAndRender() {
     // jsPrint('parseAndRender called ' + new Date());
 
     const scene = $('#jsonscene').val();
 
-    doJsonParse(scene);
+    if( parseInJavascript ) {
+
+      doJsonParse(scene);
+    } else {
+      //FIXBEN
+      parseJsonScene(scene, true);
+      // doRenderOfficialClick();
+    }
   }
 
   /// will call sub functions and eventually render the scene

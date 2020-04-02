@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -27,6 +28,8 @@ const std::string t8 = "{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"lo
 
 const std::string t9 = "{\"global\":{\"ambient_color\":[1,0,0],\"c\":10}}";
 const std::string t10 = "{\"global\":{\"color\":[1,0,0],\"c\":10}}";
+
+const std::string t11 = "JUNKASDFASD{\"global\":{\"ambient_color\":[1,0,0]},\"camera\":{\"loc\":[1,0,0],\"dir\": [-1, 0, 0],\"rot\": [0, 0, 1],\"depth\": 6}}";         // good
 
 
 int test0(RayEngine *engine) {
@@ -145,6 +148,22 @@ int test2(RayEngine* engine) {
 }
 
 
+// Test the exception-less exceptions from json parse
+int test3(RayEngine* engine) {
+    
+    {
+        auto [ret,error] = Parser::parse(t11.c_str(), engine);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 1 ) {
+            return 2;
+        }
+    }
+
+    return 0;
+}
+
+
 
 int main(void) {
     RayEngine* engine;
@@ -155,7 +174,10 @@ int main(void) {
 
     // results.emplace_back(test0(engine));
     // results.emplace_back(test1(engine));
-    results.emplace_back(test2(engine));
+    // results.emplace_back(test2(engine));
+    results.emplace_back(test3(engine));
+    // results.emplace_back(test4(engine));
+    // results.emplace_back(test5(engine));
 
     unsigned failCount = 0;
     unsigned i = 0;

@@ -25,22 +25,76 @@ static bool valid_object(const nlohmann::json& obj, const std::string& key) {
 }
 
 
+/*
+// Working code for using a input input adapter callback
+// using nlohmann::detail::input_adapter ;
+// using nlohmann::detail::input_adapter_protocol ;
+typedef nlohmann::detail::parser<nlohmann::basic_json<>>::parse_event_t json_parse_event_t;
+typedef std::function<bool(int depth, json_parse_event_t event, nlohmann::basic_json<>& parsed)> json_cb_t;
+json_cb_t the_callback = [](int depth, json_parse_event_t event, nlohmann::basic_json<>& parsed) {
+    const uint8_t _event = (uint8_t)event;
+    cout << "Depth: " << depth << " in the callback " << (int) _event << "\n";
+    return true;
+};
+
+*/
+
+
+
+using nlohmann::detail::input_buffer_adapter ;
+
+// this function is required to parse without exceptions
+std::optional<nlohmann::json> jsonParseExceptionFree(const std::string& str) {
+    const char* first = str.c_str();
+    auto len = str.size();
+
+    // The resulting json object
+    nlohmann::json j;
+
+    // some stuff I don't understand
+    auto ia = std::make_shared<input_buffer_adapter>(reinterpret_cast<const char*>(&(*first)), len);
+    nlohmann::detail::parser<nlohmann::basic_json<>>(ia, nullptr, false).parse(false, j);
+
+    if( j.is_discarded() ) {
+        // parse error
+        return {};
+    } else {
+        // parsed correctly
+        return j;
+    }
+}
+
+
+
 // 0 is ok
 // 1 is bad json
 // 2 is missing required keys
 
+
 std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine* e, const unsigned restrictParse) {
 
-    cout << "Parsed called with:\n\n" << str << "\n\n";
+    // cout << "Parsed called with:\n\n" << str << "\n\n";
 
     nlohmann::json obj;
 
-    try {
-        obj = nlohmann::json::parse(str);
-    } catch(nlohmann::json::parse_error &er) {
-        // cout << er.what() << "\n";
-        return std::make_tuple(1,er.what());
+    std::string _str = str;
+
+    auto maybeParsed = jsonParseExceptionFree(_str);
+
+    if( maybeParsed.has_value() ) {
+        obj = maybeParsed.value();
+    } else {
+        const std::string parseError = "Json parse error";
+        // cout << parseError << "\n";
+        return std::make_tuple(1,parseError);
     }
+
+    // try {
+    //     obj = nlohmann::json::parse(str);
+    // } catch(nlohmann::json::parse_error &er) {
+    //     cout << er.what() << "\n";
+    //     return std::make_tuple(1,er.what());
+    // }
 
     setRayApiTarget(e);
 
@@ -136,6 +190,11 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj, 
         } else {
             return std::make_tuple(2,"Global tree missing required keys");
         }
+
+        if(valid_vec3(gg, "nohit_color")) {
+            setNoHitColor(VEC3_SPREAD(gg["nohit_color"]));
+        }
+
 
     } else {
         return std::make_tuple(2,"Global tree missing");

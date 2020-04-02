@@ -364,10 +364,26 @@ void setPrint(int p) {
 }
 
 void parseJsonScene(const char* scene, const bool andRender ) {
-    cout << "Got: " << scene << "\n";
-    cout << "bool: " << andRender << "\n";
+    // cout << "parseJsonScene() Got: " << scene << "\n";
+    // cout << "parseJsonScene() bool: " << andRender << "\n";
 
-    Parser::parse("", engine);
+    // cout << "parseJsonScene() Got called\n";
+
+    unsigned ret;
+    std::string error;
+
+
+    std::tie(ret,error) = Parser::parse(scene, engine);
+
+
+    if( ret ) {
+        cout << "Parser returned error #" << ret << ": " << error << "\n";
+        return;
+    } else {
+        if( andRender ) {
+            doRenderOfficial();
+        }
+    }
 }
 
 void parseJsonSceneFragment(const std::string scene, const bool andRender ) {
