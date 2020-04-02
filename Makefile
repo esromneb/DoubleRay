@@ -150,6 +150,15 @@ copy_fs:
 	cp $(FS_COPY_LIST) root_fs/
 
 
+# files need only for test or desktop builds (aka not WASM builds)
+
+HPP_TEST_FILES = \
+lodepng.h
+
+CPP_TEST_FILES = \
+lodepng.cpp
+
+
 
 test_orbit2: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	g++ test_orbit.cpp $(CPP_FILES) -o $@
@@ -174,6 +183,8 @@ test_refl: test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 test_parse: test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
+test_png: test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) $(CPP_TEST_FILES) -g -o $@
 
 
 

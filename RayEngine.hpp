@@ -39,11 +39,6 @@ class RayEngine
 
 public:
     RayEngine( void );
-    void makeObjects( void );
-    // void scene1( void );
-    // void scene2( void );
-    // void scene3( void );
-    void paint( void );
     void render( void ) noexcept;
     std::tuple<bool,double> trace(
         const Ray& r, 
@@ -54,7 +49,6 @@ public:
     Ray camera;
     Vec3 up;
     int x, y; //pixels
-    // double alpha; // what is this for?
 
     //void setxy( int xin, int yin ); //resize output image
 
@@ -65,11 +59,8 @@ public:
     Vec3 noHitColor = {0,0,0}; // What color if don't hit anything?
     double c;
     std::vector<Sphere> spheres;
-    // int nSphere = 5;
 
     std::vector<Light> lights;
-    // Light lights[2];
-    // int nLight = 2;
     int depth = 0;
 
     int numPoly = 0;
@@ -84,9 +75,9 @@ public:
     // int jl = 219;
     // int jh = 222;
 
-    int il = 0;
+    int il = -1;
     int ih = 500;
-    int jl = 0;
+    int jl = -1;
     int jh = 500;
 
     int highlightX = -1;

@@ -60,7 +60,7 @@ void setupEngine(void) {
     //     row.resize(y);
     // }
 
-    engine->makeObjects();
+    // engine->makeObjects();
 
     // readWaveFront( *engine );
 

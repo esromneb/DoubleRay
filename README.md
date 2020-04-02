@@ -72,6 +72,13 @@ See Also Offtopic
 * https://nlohmann.github.io/json/classnlohmann_1_1basic__json_a8a3dd150c2d1f0df3502d937de0871db.html - nlohmann parse without exception 
 
 
+Libraries Used
+===
+* https://github.com/nlohmann/json
+* https://github.com/lvandeve/lodepng
+
+
+
 Notes
 ===
 Last version with my canvas and emscripten official canvas is in templates/both.html

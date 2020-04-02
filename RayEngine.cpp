@@ -7,11 +7,9 @@ RayEngine::RayEngine( void )
 {
     numPoly = 0;
     this->polygons.resize(POLYGONS);
-    // this->hits.resize(POLYGONS+30);
 
     r = g = b = 0;
     px = 0;
-    makeObjects();
 
     mat = new Matrix( 3, 3 );
     mat->m1 = new Matrix( 2, 2 );
@@ -20,17 +18,6 @@ RayEngine::RayEngine( void )
     
 }
 
-void RayEngine::makeObjects( void )
-{
-    // scene1();
-    // scene2();
-    // scene3();
-}
-
-void RayEngine::paint( void )
-{
-
-}
 
 void RayEngine::resize( const int _x )
 {
