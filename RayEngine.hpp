@@ -42,12 +42,12 @@ public:
     // void scene2( void );
     // void scene3( void );
     void paint( void );
-    void render( void );
+    void render( void ) noexcept;
     std::tuple<bool,double> trace(
         const Ray& r, 
         const int depthIn,
         Vec3 &color,
-        const bool shdFeeling );
+        const bool shdFeeling ) noexcept;
 
     Ray camera;
     Vec3 up;

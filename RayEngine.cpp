@@ -52,7 +52,7 @@ int g_j = 0;
 
 bool g_print = false;
 
-void RayEngine::render( void )
+void RayEngine::render( void ) noexcept
 {
     // bool nUsedB = false;
     // Vec3 nUsedI;
@@ -187,7 +187,7 @@ std::tuple<bool,double> RayEngine::trace(
     const Ray& r,
     const int depthIn,
     Vec3 &color,
-    const bool shdFeeling ) {
+    const bool shdFeeling ) noexcept {
 
     if( depthIn > this->depth ) {
         if( print ) {
