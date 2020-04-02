@@ -9,18 +9,6 @@ Vec3::Vec3( const Vec3 &in )
         this->data[i] = in.data[i];
 }
 
-Vec3::Vec3()
-{
-    //y = DEFAULT_Vec3;
-    //data = new double[DEFAULT_Vec3];
-}
-
-Vec3::Vec3( const double x, const double y, const double z )
-{
-    data[0] = x;
-    data[1] = y;
-    data[2] = z;
-}
 Vec3& Vec3::operator= (const Vec3 &rhs)
 {
     if (this == &rhs)      // Same object?

@@ -4,10 +4,9 @@
 class Vec3 {
 public:
     double data[3];
-    explicit Vec3();
     Vec3( const Vec3 &in );
-    //~Vec3( void );
-    Vec3( const double x, const double y, const double z );
+    constexpr Vec3( const double x, const double y, const double z ) : data{x,y,z}{};
+    constexpr Vec3() : data{0,0,0}{};
     Vec3& operator= (const Vec3 &rhs);
     Vec3 operator* ( const Vec3 &rhs ) const;
     Vec3 operator* ( double rhs ) const;
