@@ -74,3 +74,34 @@ std::tuple<unsigned,std::string> HandlePng::save(const std::string& path, RayEng
     return encodeOneStepp(path.c_str(), imageBuf, px, px);
 
 }
+
+
+
+/// Decode from disk to raw pixels with a single function call
+/// the Pixels in the vector are 4 bytes per pixel, ordered RGBARGBA...
+///
+static std::tuple<unsigned,std::string> decodeOneStep(const char* filename, std::vector<unsigned char>& image,  png_size_t& sz) {
+    // std::vector<unsigned char> image; //the raw pixels
+    unsigned width, height;
+
+    //decode
+    unsigned error = lodepng::decode(image, width, height, filename);
+
+    std::string s = "";
+
+    //if there's an error, display it
+    if(error) {
+        s = "PNG decoder error #" + std::to_string(error) + ": " + std::string(lodepng_error_text(error));
+        std::cout << s << "\n";
+    } else {
+        sz = std::make_tuple(width, height);
+    }
+
+    return std::make_tuple(error, s);
+}
+
+std::tuple<unsigned,std::string> HandlePng::load(const std::string& path, std::vector<unsigned char>& image,  png_size_t& sz) {
+    // int error = 0;
+    // std::string s = "";
+    return decodeOneStep(path.c_str(), image, sz);
+}

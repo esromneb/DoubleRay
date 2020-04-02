@@ -209,7 +209,7 @@ int main2(void) {
 }
 
 std::string stripPath(const std::string& s1) {
-    const auto int w = s1.find_last_of("\\/");
+    const auto w = s1.find_last_of("\\/");
 
     // cout << "found w " << w << "\n";
 
@@ -221,7 +221,7 @@ std::string stripPath(const std::string& s1) {
 }
 
 std::string stripExtension(const std::string& s1) {
-    const auto int w = s1.find_last_of(".");
+    const auto w = s1.find_last_of(".");
 
     if( w == string::npos ) {
         return s1;
@@ -236,6 +236,14 @@ std::string outputPathForInput(const std::string& s1) {
     const auto noExtension = stripExtension(noPath);
 
     return "img/test/" + noExtension + ".png";
+}
+
+std::string idealPathForInput(const std::string& s1) {
+    const auto noPath = stripPath(s1);
+
+    const auto noExtension = stripExtension(noPath);
+
+    return "img/ideal/" + noExtension + ".png";
 }
 
 
@@ -279,6 +287,151 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween)
     }
 }
 
+// xl,xh,yl,yh,count
+
+typedef std::tuple<unsigned,unsigned,unsigned,unsigned,unsigned> blemish_t;
+
+std::tuple<int,std::string> compareImages(
+    const std::vector<unsigned char>& ideal, const png_size_t& ideal_sz,
+    const std::vector<unsigned char>& test, const png_size_t& test_sz
+    ) {
+    if( ideal_sz == test_sz ) {
+        // cout << "Sizes match\n";
+    } else {
+        return std::make_tuple(1, "Different sized images");
+    }
+
+    std::string msg;
+
+    const auto [fx,fy] = ideal_sz;
+
+    const unsigned end = fx*fy*4;
+
+    unsigned total = 0;
+
+
+    std::vector<blemish_t> blem;
+    // int px = 2;
+
+    unsigned char ir;
+    unsigned char ib;
+    unsigned char ig;
+    unsigned char ia;
+    unsigned char tr;
+    unsigned char tb;
+    unsigned char tg;
+    unsigned char ta;
+
+    for(int i = 0; i < end; i+=4) {
+
+
+        ir = ideal[i+0];
+        ig = ideal[i+1];
+        ib = ideal[i+2];
+        ia = ideal[i+3];
+
+        tr = test [i+0];
+        tg = test [i+1];
+        tb = test [i+2];
+        ta = test [i+3];
+
+        bool mismatch = true;
+
+        if( ir==tr && ig==tg && ib==tb && ia==ta ) {
+            mismatch = false;
+        }
+
+        if( mismatch ) {
+            total++;
+            const int p = (i / 4);
+            const int y = (fy-1) - (p / fy);
+            const int x = p % fx;
+
+            cout << "[" << x << "," << y << "]: ";
+
+            // bool skip = false;
+            // switch(i%4) {
+            //     case 0:
+            //         cout << "r: ";
+            //         break;
+            //     case 1:
+            //         cout << "g: ";
+            //         break;
+            //     case 2:
+            //         cout << "b: ";
+            //         break;
+            //     default:
+            //     case 3:
+            //         cout << "a: ";
+            //         // skip = true;
+            //         break;
+            // }
+            if( ia != ta ) {
+                cout << "[" << (int)ir << " " << (int)ig << " " << (int)ib << " " << (int)ia << "] [" << (int)tr << " " << (int)tg << " " << (int)tb << " " << (int)ta  << "]\n";
+            } else {
+                cout << "[" << (int)ir << " " << (int)ig << " " << (int)ib << "] [" << (int)tr << " " << (int)tg << " " << (int)tb << "]\n";
+            }
+        }
+    }
+
+    if( total ) {
+        msg += "Total Different Pixels: " + std::to_string(total) + "\n";
+        return std::make_tuple(1, msg);
+    }
+
+
+    return std::make_tuple(0, "");
+}
+
+int batchCompare(const std::vector<std::string>& paths) {
+    for(const auto& p : paths ) {
+        const auto testPath = outputPathForInput(p);
+        const auto idealPath = idealPathForInput(p);
+
+        cout << "Comparing " << testPath << " against " << idealPath << "\n";
+        std::vector<unsigned char> ideal;
+        std::vector<unsigned char> test;
+
+        png_size_t ideal_sz;
+        png_size_t test_sz;
+
+        unsigned ret;
+        std::string error;
+
+        std::tie(ret,error) = HandlePng::load(idealPath, ideal, ideal_sz);
+        if( ret != 0 ) {
+            cout << "File: " << idealPath << " failed to load with " << error;
+            return 1;
+        } else {
+            auto [x,y] = ideal_sz;
+            cout << "loaded with size " << x << ", " << y << "\n";
+        }
+
+
+        std::tie(ret,error) = HandlePng::load(testPath, test, test_sz);
+        if( ret != 0 ) {
+            cout << "File: " << testPath << " failed to load with " << error;
+            return 2;
+        } else {
+            auto [x,y] = test_sz;
+            cout << "loaded with size " << x << ", " << y << "\n";
+        }
+
+
+
+        std::tie(ret,error) = compareImages(ideal, ideal_sz, test, test_sz);
+        if( ret != 0 ) {
+            cout << "Compare Failed: " << error << "\n";
+            return 3;
+        } else {
+            cout << "Compare Passed\n";
+        }
+
+    }
+
+    return 0;
+}
+
 
 
 int main(int argc, char** argv) {
@@ -287,14 +440,21 @@ int main(int argc, char** argv) {
 
     bool exitAfterOptions = false;
 
+    // only one of these is allowed
     bool renderAll = false;
     bool renderOne = false;
+    bool compareOnly = false;
+
+
     std::string onePath;
-    bool cleanEngine = false;
+
+    // any combination is fine
+    bool newEnginePerRender = false;
     bool randomizeList = false;
 
 
     auto buildAllCb = [&](const std::int64_t count) {
+        (void)count;
         renderAll = true;
         // cout << "In lambda C with count " << count << "\n";
     };
@@ -304,20 +464,28 @@ int main(int argc, char** argv) {
 
     auto buildOneCb = [&](const std::string oneScene) {
         renderOne = true;
-        // cout << "In lambda S with " << oneScene << "\n";
         onePath = oneScene;
     };
     app.add_option_function<std::string>("-s", buildOneCb, 
         "Build one scene (path to json file)");
 
+    auto compareCb = [&](const std::int64_t count) {
+        (void)count;
+        compareOnly = true;
+    };
+    app.add_flag_function("-c", compareCb,
+        "Compare png images");
+
 
     auto cleanCb = [&](const std::int64_t count) {
-        cleanEngine = true;
+        (void)count;
+        newEnginePerRender = true;
     };
-    app.add_flag_function("-c", cleanCb,
-        "Clean Engine betweeen builds");
+    app.add_flag_function("-n", cleanCb,
+        "Call new() RayEngine betweeen builds");
 
     auto rndCb = [&](const std::int64_t count) {
+        (void)count;
         randomizeList = true;
     };
     app.add_flag_function("-r", rndCb,
@@ -347,16 +515,30 @@ int main(int argc, char** argv) {
     }
 
     if( !renderAll && !renderOne ) {
-        cout << "Dumping because no options\n";
+        cout << "Quitting because I need -a or -s\n";
         cout << app.help();
         return 0;
     }
 
-    if( renderAll && renderOne) {
-        cout << "\nPlease specify either -a or -s but not both\n\n";
-        cout << app.help();
-        return 0;
+// for (std::vector v{1, 2, 3}; auto& e : v) {
+//   std::cout << e;
+// }
+    unsigned optCount = 0;
+    const std::vector opts{renderAll,renderOne};
+    for(auto b : opts) {
+        if( b ) {
+            optCount++;
+        }
+        // cout << "Bool: " << (b?"true":"false") << "\n";
     }
+
+    if( optCount > 2 ) {
+        cout << "\nPlease specify only one of [-a -s]\n\n";
+        cout << app.help();
+        return 1;
+    }
+
+
 
 
     std::vector<std::string> paths = renderOne ? std::vector<std::string>{onePath} : getAllScenes();
@@ -368,7 +550,21 @@ int main(int argc, char** argv) {
     }
 
 
-    batchRender(paths,cleanEngine);
+    if( compareOnly ) {
+        cout << "Do compare\n";
+        if( newEnginePerRender ) {
+            cout << "Please note that -n has no effect when -c is used\n";
+        }
+        return batchCompare(paths);
+    } else if( renderAll || renderOne ) {
+        batchRender(paths,newEnginePerRender);
+    } else {
+        cout << "internal options error\n";
+        cout << app.help();
+        return 1;
+    }
+
+
 
 
 
