@@ -14,4 +14,5 @@ public:
 private:
     static std::tuple<unsigned,std::string> parseCamera(const nlohmann::json& obj, RayEngine* e);
     static std::tuple<unsigned,std::string> parseGlobal(const nlohmann::json& obj, RayEngine* e);
+    static std::tuple<unsigned,std::string> parseSpheres(const nlohmann::json& obj, RayEngine* e);
 };

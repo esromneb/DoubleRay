@@ -30,4 +30,7 @@ public:
     // Window glass 1.52
     // Diamond 2.42
     float refraction = 1;
+
+    constexpr static unsigned defaultN = 32;
+    constexpr static float defaultRefraction = 1;
 };

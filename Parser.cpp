@@ -1,6 +1,7 @@
 #include "Parser.hpp"
 #include "RayApi.hpp"
 #include "Macros.hpp"
+#include "Material.hpp"
 
 
 #include <string>
@@ -105,13 +106,16 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
         default:
         case 0: 
             std::tie(subCode, subMessage) = parseCamera(obj, e);
-
             if( subCode ) {
                 return std::make_tuple(subCode, subMessage);
             }
 
             std::tie(subCode, subMessage) = parseGlobal(obj, e);
+            if( subCode ) {
+                return std::make_tuple(subCode, subMessage);
+            }
 
+            std::tie(subCode, subMessage) = parseSpheres(obj, e);
             if( subCode ) {
                 return std::make_tuple(subCode, subMessage);
             }
@@ -122,6 +126,9 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
             break;
         case 2:
             return parseGlobal(obj, e);
+            break;
+        case 3:
+            return parseSpheres(obj, e);
             break;
     }
 
@@ -185,11 +192,69 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj, 
 
         if(valid_vec3(gg, "nohit_color")) {
             setNoHitColor(VEC3_SPREAD(gg["nohit_color"]));
+        } else {
+            // if a scene doesn't have a nohit key
+            // we will never set this and the nohit_color from the previous scene will be used (without this)
+            setNoHitColor(0,0,0);
         }
 
 
     } else {
         return std::make_tuple(2,"Global tree missing");
     }
+    return std::make_tuple(0,"");
+}
+
+std::tuple<unsigned,std::string> Parser::parseSpheres(const nlohmann::json& obj, RayEngine* e) {
+    if( valid_array(obj, "spheres") ) {
+
+        const auto spheres = obj["spheres"];
+
+        const unsigned sphereCount = spheres.size();
+        setSphereCount(sphereCount);
+        // cout << "found " << sphereCount << " spheres\n";
+
+        for(unsigned i = 0; i < sphereCount; i++) {
+            auto s = spheres[i];
+            // cout << s << "\n";
+
+            if( 
+                valid_number(s, "rad") && 
+                valid_vec3(s, "loc") && 
+                valid_number(s, "ambient") && 
+                valid_number(s, "specular") && 
+                valid_number(s, "reflected") && 
+                valid_number(s, "transmitted") && 
+                valid_vec3(s, "diffuse")
+                ) {
+                    float _refraction = Material::defaultRefraction;
+                    if( valid_number(s, "refraction") ) {
+                        _refraction = s["refraction"];
+                    }
+
+                    float _n = Material::defaultN;
+                    if( valid_number(s, "n") ) {
+                        _n = s["n"];
+                    }
+
+                    setSphere(
+                        i,
+                        s["rad"],
+                        VEC3_SPREAD(s["loc"]),
+                        s["ambient"],
+                        s["specular"],
+                        s["reflected"],
+                        s["transmitted"],
+                        VEC3_SPREAD(s["diffuse"]),
+                        _n,
+                        _refraction);
+            } else {
+                return std::make_tuple(2, "Sphere #" + std::to_string(i) + " missing required keys");
+            }
+        }
+    } else {
+        setSphereCount(0);
+    }
+
     return std::make_tuple(0,"");
 }
