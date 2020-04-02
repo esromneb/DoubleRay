@@ -101,14 +101,6 @@ std::tuple<unsigned,std::string> Parser::parse(const char* const str, RayEngine*
     unsigned subCode = 0;
     std::string subMessage;
 
-    if( !restrictParse || restrictParse == 1 ) {
-        std::tie(subCode, subMessage) = parseCamera(obj, e);
-
-        if( subCode ) {
-            return std::make_tuple(subCode, subMessage);
-        }
-    }
-
     switch(restrictParse) {
         default:
         case 0: 

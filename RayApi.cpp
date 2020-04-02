@@ -96,7 +96,7 @@ void coutIntDual(const int a, const int b) {
 }
 
 void setCamera(VEC3_ARG(location), VEC3_ARG(direction), VEC3_ARG(rotation)) {
-    cout << "Rot: " << rotation_0 << "," << rotation_1 << "," << rotation_2 << "\n";
+    // cout << "Rot: " << rotation_0 << "," << rotation_1 << "," << rotation_2 << "\n";
 
     auto &camera = engine->camera;
 
