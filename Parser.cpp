@@ -8,6 +8,8 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <streambuf>
 
 using namespace std;
 
@@ -67,6 +69,18 @@ std::optional<nlohmann::json> jsonParseExceptionFree(const std::string& str) {
     }
 }
 
+
+
+std::tuple<unsigned,std::string> Parser::parseFile(const std::string& path, RayEngine* e, const unsigned restrictParse) {
+    std::ifstream ifs(path);
+
+
+    std::string contents((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+
+    ifs >> contents;
+
+    return Parser::parse(contents.c_str(), e, restrictParse);
+}
 
 
 // 0 is ok
@@ -159,7 +173,7 @@ std::tuple<unsigned,std::string> Parser::parseCamera(const nlohmann::json& obj, 
             valid_vec3(camera, "rot") && 
             valid_number(camera, "depth")
             ) {
-            cout << "Valid Camera Block\n";
+            // cout << "Valid Camera Block\n";
             // cout << "loc size " << camera["loc"].size() << "\n";
 
             // cout << "Grab Camera Rot: " << camera["rot"][2] << "\n";
@@ -191,7 +205,7 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj, 
             ) {
             const std::string ambientKey = valid_vec3(gg, "color") ? "color" : "ambient_color";
 
-            cout << "Ambient using key: " << ambientKey << "\n";
+            // cout << "Ambient using key: " << ambientKey << "\n";
 
             setAmbientColor(VEC3_SPREAD(gg[ambientKey]));
             setGlobalC(gg["c"]);

@@ -9,6 +9,7 @@ test_vec
 test_refl
 test_parse
 test_parse2
+test_png
 
 
 

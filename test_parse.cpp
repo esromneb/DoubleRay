@@ -38,30 +38,30 @@ const std::string t14 = "{\"spheres\":[{\"loc\":[0,0,0],\"ambient\":2.5,\"specul
 const std::string t15 = "{\"lights\": [{\"dir\": [-0.4, 0, -1],\"color\": [20, 20, 20]}]}";
 const std::string t16 = "{\"lights\": [{\"dr\": [-0.4, 0, -1],\"color\": [20, 20, 20]}]}";
 
-int test0(RayEngine *engine) {
+// int test0(RayEngine *engine) {
 
-    {
-        auto [ret,error] = Parser::parse(t0.c_str(), engine);
+//     {
+//         auto [ret,error] = Parser::parse(t0.c_str(), engine);
 
-        cout << "Got code " << ret << " with message [" << error << "]\n";
+//         cout << "Got code " << ret << " with message [" << error << "]\n";
 
-        if( ret != 0 ) {
-            return 1;
-        }
-    }
+//         if( ret != 0 ) {
+//             return 1;
+//         }
+//     }
 
-    {
-        auto [ret,error] = Parser::parse(t1.c_str(), engine);
+//     {
+//         auto [ret,error] = Parser::parse(t1.c_str(), engine);
 
-        cout << "Got code " << ret << " with message [" << error << "]\n";
-        if( ret == 0 ) {
-            return 2;
-        }
-    }
+//         cout << "Got code " << ret << " with message [" << error << "]\n";
+//         if( ret == 0 ) {
+//             return 2;
+//         }
+//     }
 
 
-    return 0;
-}
+//     return 0;
+// }
 
 int test1(RayEngine* engine) {
 
@@ -246,6 +246,25 @@ int test5(RayEngine* engine) {
     return 0;
 }
 
+int test6(RayEngine* engine) {
+    const unsigned restrictParse = 0;
+
+    std::string p0 = "scenes/test_shadow_1.json";
+
+    {
+        auto [ret,error] = Parser::parseFile(p0, engine, restrictParse);
+
+        cout << "Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 0 ) {
+            return 3;
+        }
+    }
+
+
+    return 0;
+}
+
+
 
 
 int main(void) {
@@ -256,11 +275,12 @@ int main(void) {
     std::vector<int> results;
 
     // results.emplace_back(test0(engine));
-    // results.emplace_back(test1(engine));
-    // results.emplace_back(test2(engine));
-    // results.emplace_back(test3(engine));
-    // results.emplace_back(test4(engine));
+    results.emplace_back(test1(engine));
+    results.emplace_back(test2(engine));
+    results.emplace_back(test3(engine));
+    results.emplace_back(test4(engine));
     results.emplace_back(test5(engine));
+    results.emplace_back(test6(engine));
 
     unsigned failCount = 0;
     unsigned i = 0;
