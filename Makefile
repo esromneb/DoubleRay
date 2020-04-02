@@ -189,6 +189,12 @@ test_png: test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) $(CPP_TEST_FILES) -g -o $@
 
 
+.PHONY: test
+
+test: test_png
+	./test_png -a
+
+
 .PHONY: rmtest movetestideal rmideal
 
 rmtest: 

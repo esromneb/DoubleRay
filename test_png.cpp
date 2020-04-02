@@ -260,7 +260,7 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween)
 
         auto [ret,error] = Parser::parseFile(p, engine);
 
-        cout << "PARSE Got code " << ret << " with message [" << error << "]\n";
+        // cout << "PARSE Got code " << ret << " with message [" << error << "]\n";
         if( ret != 0 ) {
             cout << "File: " << p << " failed with " << error << "\n";
             continue;
@@ -272,7 +272,7 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween)
 
         auto [ret2,error2] = HandlePng::save(outputPath, engine);
 
-        cout << "PNG Got code " << ret2 << " with message [" << error2 << "]\n";
+        // cout << "PNG Got code " << ret2 << " with message [" << error2 << "]\n";
         if( ret2 != 0 ) {
             cout << "Writin file to disk " << outputPath << " failed with " << error2 << "\n";
         }
