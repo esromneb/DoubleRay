@@ -153,10 +153,12 @@ copy_fs:
 # files need only for test or desktop builds (aka not WASM builds)
 
 HPP_TEST_FILES = \
-lodepng.h
+lodepng.h \
+HandlePng.hpp
 
 CPP_TEST_FILES = \
-lodepng.cpp
+lodepng.cpp \
+HandlePng.cpp
 
 
 

@@ -1,6 +1,7 @@
 #include "Vec3.hpp"
 #include "Parser.hpp"
 #include "RayEngine.hpp"
+#include "HandlePng.hpp"
 
 #include "lodepng.h"
 
@@ -54,10 +55,12 @@ void localRender(RayEngine* engine) {
 }
 
 
+std::string p0 = "scenes/test_shadow_3.json";
+std::string p1 = "scenes/test_shadow_2.json";
+
 int test0(RayEngine* engine) {
     const unsigned restrictParse = 0;
 
-    std::string p0 = "scenes/test_shadow_3.json";
 
     {
         auto [ret,error] = Parser::parseFile(p0, engine, restrictParse);
@@ -117,6 +120,36 @@ int test0(RayEngine* engine) {
 }
 
 
+int test1(RayEngine* engine) {
+
+    {
+        auto [ret,error] = Parser::parseFile(p1, engine);
+
+        cout << "PARSE Got code " << ret << " with message [" << error << "]\n";
+        if( ret != 0 ) {
+            return 3;
+        }
+
+        localRender(engine);
+
+        std::string savePath = "img/test/test_shadow_3.png";
+
+        auto [ret2,error2] = HandlePng::save(savePath, engine);
+
+        cout << "PNG Got code " << ret2 << " with message [" << error2 << "]\n";
+        if( ret2 != 0 ) {
+            return 4;
+        }
+
+
+
+    }
+
+    return 0;
+}
+
+
+
 
 
 int main(void) {
@@ -126,8 +159,8 @@ int main(void) {
 
     std::vector<int> results;
 
-    results.emplace_back(test0(engine));
-    // results.emplace_back(test1(engine));
+    // results.emplace_back(test0(engine));
+    results.emplace_back(test1(engine));
  
 
     unsigned failCount = 0;
