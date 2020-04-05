@@ -327,7 +327,8 @@ void reportBlemish(const std::vector<blemish_t>& blem) {
 
 std::tuple<int,std::string> compareImages(
     const std::vector<unsigned char>& ideal, const png_size_t& ideal_sz,
-    const std::vector<unsigned char>& test, const png_size_t& test_sz
+    const std::vector<unsigned char>& test, const png_size_t& test_sz,
+    const bool printAllValues = false
     ) {
     if( ideal_sz == test_sz ) {
         // cout << "Sizes match\n";
@@ -342,8 +343,6 @@ std::tuple<int,std::string> compareImages(
     const unsigned end = fx*fy*4;
 
     unsigned total = 0;
-
-    const bool print_all = false;
 
 
     std::vector<blemish_t> blem;
@@ -385,7 +384,7 @@ std::tuple<int,std::string> compareImages(
 
             addBlemish(blem, x, y);
 
-            if( print_all ) {
+            if( printAllValues ) {
                 cout << "[" << x << "," << y << "]: ";
                 if( ia != ta ) {
                     cout << "[" << (int)ir << " " << (int)ig << " " << (int)ib << " " << (int)ia << "] [" << (int)tr << " " << (int)tg << " " << (int)tb << " " << (int)ta  << "]\n";
@@ -408,7 +407,7 @@ std::tuple<int,std::string> compareImages(
     return std::make_tuple(0, "");
 }
 
-int batchCompare(const std::vector<std::string>& paths) {
+int batchCompare(const std::vector<std::string>& paths, const bool printAllValues = false) {
 
     bool allComparePassed = true;
 
@@ -459,7 +458,7 @@ int batchCompare(const std::vector<std::string>& paths) {
 
 
 
-        std::tie(ret,error) = compareImages(ideal, ideal_sz, test, test_sz);
+        std::tie(ret,error) = compareImages(ideal, ideal_sz, test, test_sz, printAllValues);
         if( ret != 0 ) {
             cout << "  Compare Failed: " << error << "\n";
             allComparePassed = false;
@@ -489,6 +488,7 @@ int main(int argc, char** argv) {
     bool renderOne = false;
     bool compareOnly = false;
     bool compareAndRender = false;
+    bool printAllValues = false;
 
 
     std::string onePath;
@@ -527,6 +527,13 @@ int main(int argc, char** argv) {
     };
     app.add_flag_function("-g", compareAndRenderCb,
         "Build, then compare png images");
+
+    auto printAllValuesCb = [&](const std::int64_t count) {
+        (void)count;
+        printAllValues = true;
+    };
+    app.add_flag_function("-p", printAllValuesCb,
+        "Print every pixel value that does not match during compare");
 
 
     auto cleanCb = [&](const std::int64_t count) {
@@ -609,14 +616,14 @@ int main(int argc, char** argv) {
         cout << "Render First\n";
         batchRender(paths,newEnginePerRender);
         cout << "Then Compare\n";
-        return batchCompare(paths);
+        return batchCompare(paths, printAllValues);
     }
     if( compareOnly ) {
         cout << "Do compare\n";
         if( newEnginePerRender ) {
             cout << "Please note that -n has no effect when -c is used\n";
         }
-        return batchCompare(paths);
+        return batchCompare(paths, printAllValues);
     } else if( renderAll || renderOne ) {
         batchRender(paths,newEnginePerRender);
     } else {

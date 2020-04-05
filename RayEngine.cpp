@@ -601,8 +601,8 @@ void typeTraitsExample(T a, P b) {
 ///
 template< class T, class P, class Q >
 void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
-    auto scale = RayEngine::scale;
-    float gain = 1.1;
+    // auto scale = RayEngine::scale;
+    double scale = 1.0/0.006;
 
     const uint32_t px = engine->px;
 
@@ -619,9 +619,9 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
             float r = engine->r[lookup];
             float g = engine->g[lookup];
             float b = engine->b[lookup];
-            float rs = gain + (r / scale);
-            float gs = gain + (g / scale);
-            float bs = gain + (b / scale);
+            float rs = (r * scale);
+            float gs = (g * scale);
+            float bs = (b * scale);
 
             uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
             uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
