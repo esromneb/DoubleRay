@@ -47,6 +47,7 @@ std::vector<std::string> getAllScenes(void) {
     out.emplace_back(folder + "cool_reflection_1.json");
     out.emplace_back(folder + "hit_order_1.json");
     out.emplace_back(folder + "three_color_balls_yellow.json");
+    out.emplace_back(folder + "test_scale_1.json");
 
     return out;
 }
