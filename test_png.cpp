@@ -89,6 +89,7 @@ void localRender(RayEngine* engine) {
 std::string p0 = "scenes/test_shadow_3.json";
 std::string p1 = "scenes/test_shadow_2.json";
 
+#ifdef OLDSTYLE_RENDER_OLD
 int test0(RayEngine* engine) {
     const unsigned restrictParse = 0;
 
@@ -149,7 +150,7 @@ int test0(RayEngine* engine) {
 
     return 0;
 }
-
+#endif
 
 int test1(RayEngine* engine) {
 

@@ -88,7 +88,11 @@ public:
 
     bool print = false;
 
-    static constexpr float scale = 0.006;
+    // Factor used to scale in-engine floating point colors
+    // to 0-255 rgb
+    double scale = 255;
+
+    constexpr static double defaultScale = 255;
 
 
     // copy internal state to pixel buffer for WASM

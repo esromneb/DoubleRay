@@ -222,6 +222,12 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj) 
             setNoHitColor(0,0,0);
         }
 
+        if(valid_number(gg, "scale")) {
+            setScale(gg["scale"]);
+        } else {
+            setScale(RayEngine::defaultScale);
+        }
+
 
     } else {
         return std::make_tuple(2,"Global tree missing");

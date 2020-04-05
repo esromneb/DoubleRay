@@ -20,7 +20,7 @@ void render(void);
 // void doDebugRender(void);
 // uint32_t get4(void);
 // uint32_t getNext(void);
-void setScale(const float s);
+void setScale(const double s);
 // void debug2(void);
 // void setFrameSleep(const int s);
 void onRuntimeInitialized(void);

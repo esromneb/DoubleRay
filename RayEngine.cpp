@@ -373,14 +373,48 @@ std::tuple<bool,double> RayEngine::trace(
 
             const Vec3 diffuse = (material.kd * norm.dot( negLightDirection ) );
 
+            if(print) {
+                cout << "norm dot " << norm.dot( negLightDirection ) << "\n";
+                cout << "diffuse " << diffuse.str(false) << "\n";
+            }
+
             const Vec3 negRayDirection = r.d*-1;
             Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
 
             const float specular = material.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), material.n);
 
-            Vec3 lightEffects =
+            if(print) {
+                cout << "specular: " << specular << "\n";
+                cout << "fp: " << fp.str(false) << " mag " << fp.mag() << "\n";
+                Vec3 t1 = lights[iLight].color / ( fp.mag() + this->c );
+                cout << "t1: " << t1.str(false) << "\n";
+
+                Vec3 t2 = diffuse + specular;
+                cout << "t2: " << t2.str(false) << "\n";
+
+                cout << "Visiblity: " << visibilityLevel << "\n";
+            }
+
+            Vec3 lightEffects;
+
+            // "no fog"
+            // in this mode we do not take into account the distance
+            // all objects will be lit with equal intensity regardless of distance
+            if( false ) {
+                lightEffects =
+                  ( lights[iLight].color ) 
+                * (diffuse + specular) * (visibilityLevel);
+            }
+
+            // "fog mode"
+            // in this mode the distance between the intersection point and then
+            // camera affects the intensity of the light
+            // this is where the global.c parameter comes into play
+            if( true ) {
+                lightEffects =
                   ( lights[iLight].color / ( fp.mag() + this->c ) ) 
                 * (diffuse + specular) * (visibilityLevel);
+            }
 
             // Lights cannot have negative effect
             lightEffects.saturateMin(0.0);
@@ -601,8 +635,9 @@ void typeTraitsExample(T a, P b) {
 ///
 template< class T, class P, class Q >
 void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
-    // auto scale = RayEngine::scale;
-    double scale = 1.0/0.006;
+    double scale = engine->scale;
+    // double scale = 1.0/0.006;
+    // scale = 256;
 
     const uint32_t px = engine->px;
 

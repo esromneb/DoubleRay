@@ -66,9 +66,8 @@ void setGlobalC(const int c) {
     engine->c = c;
 }
 
-void setScale(const float s) {
-    cout << "setScale() does nothing for now FIXME\n";
-    // scale = s;
+void setScale(const double s) {
+    engine->scale = s;
 }
 
 void onRuntimeInitialized(void) {
