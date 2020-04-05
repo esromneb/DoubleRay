@@ -386,10 +386,10 @@ void parseJsonScene(const char* scene, const bool andRender ) {
     }
 }
 
-void parseJsonSceneFragment(const std::string scene, const bool andRender ) {
-    // cout << "Got: " << scene << "\n";
-    // cout << "bool: " << andRender << "\n";
-}
+// void parseJsonSceneFragment(const std::string scene, const bool andRender ) {
+//     // cout << "Got: " << scene << "\n";
+//     // cout << "bool: " << andRender << "\n";
+// }
 
 
 

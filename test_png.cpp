@@ -490,6 +490,7 @@ int main(int argc, char** argv) {
     bool renderAll = false;
     bool renderOne = false;
     bool compareOnly = false;
+    bool compareAndRender = false;
 
 
     std::string onePath;
@@ -515,12 +516,19 @@ int main(int argc, char** argv) {
     app.add_option_function<std::string>("-s", buildOneCb, 
         "Build one scene (path to json file)");
 
-    auto compareCb = [&](const std::int64_t count) {
+    auto compareOnlyCb = [&](const std::int64_t count) {
         (void)count;
         compareOnly = true;
     };
-    app.add_flag_function("-c", compareCb,
+    app.add_flag_function("-c", compareOnlyCb,
         "Compare png images");
+
+    auto compareAndRenderCb = [&](const std::int64_t count) {
+        (void)count;
+        compareAndRender = true;
+    };
+    app.add_flag_function("-g", compareAndRenderCb,
+        "Build, then compare png images");
 
 
     auto cleanCb = [&](const std::int64_t count) {
@@ -539,6 +547,7 @@ int main(int argc, char** argv) {
 
 
     auto dumpScenesCb = [&](const std::int64_t count) {
+        (void)count;
         // renderAll = true;
         // cout << "In lambda C with count " << count << "\n";
         exitAfterOptions = true;
@@ -595,7 +604,15 @@ int main(int argc, char** argv) {
         std::random_shuffle ( paths.begin(), paths.end() );
     }
 
-
+    if( compareAndRender ) {
+        if( compareOnly ) {
+            cout << "Please note that -c is implied when -g is used\n";
+        }
+        cout << "Render First\n";
+        batchRender(paths,newEnginePerRender);
+        cout << "Then Compare\n";
+        return batchCompare(paths);
+    }
     if( compareOnly ) {
         cout << "Do compare\n";
         if( newEnginePerRender ) {
