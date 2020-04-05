@@ -314,16 +314,10 @@ void addBlemish(std::vector<blemish_t>& blem, const unsigned x, const unsigned y
         }
     }
 
-    // if(blem.size() == 0) {
-    //     addNew = true;
-    // }
-
     if(addNew) {
         blem.emplace_back(x,x,y,y,1);
         return;
     }
-
-
 }
 
 void reportBlemish(const std::vector<blemish_t>& blem) {
@@ -724,7 +718,3 @@ int main2(void) {
 
     return 0;
 }
-
-
-
-
