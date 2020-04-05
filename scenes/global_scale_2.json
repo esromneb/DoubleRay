@@ -9,7 +9,8 @@
 "comment":"with c at anything 1.53 is max red",
     "ambient_color": [1.53, 0, 0],
 "nohit_color":[0,0,0],
-    "c": 1
+    "c": 1,
+"scale":166.6666666
   },
   "spheres": [
 {

@@ -7,12 +7,13 @@
   },
   "global": {
     "color": [0.4, 0.4, 0.4],
-    "c": 7
+    "c": 7,
+"scale":166.6666666
   },
   "spheres": [{
       "rad": 1.1,
       "loc": [2, 0.0, 0],
-      "ambient": 1,
+      "ambient": 0.1,
       "specular": 0.2,
       "reflected": 0.0,
       "transmitted": 0.0,
@@ -22,7 +23,7 @@
     {
       "rad": 10,
       "loc": [0, -11, 0],
-      "ambient": 1,
+      "ambient": 0.1,
       "specular": 0,
       "reflected": 0.1,
       "transmitted": 0.0,
@@ -31,7 +32,7 @@
     }
   ],
   "lights": [{
-    "dir": [0, 1, 0],
+"dir": [0, -1.4, 1],
     "color": [10, 10, 10]
   }]
 }
