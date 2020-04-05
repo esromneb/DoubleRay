@@ -15,7 +15,12 @@
 #include <algorithm>
 #include <ctime>
 
-using namespace std;
+// using namespace std;
+
+using std::cout;
+using std::endl;
+using std::min;
+using std::max;
 
 
 // Annoying but required for now in the tests until we fix the RayApi
@@ -176,38 +181,6 @@ int test1(RayEngine* engine) {
 
 
 
-
-
-int main2(void) {
-    RayEngine* engine;
-    engine = new RayEngine();
-    engine->resize(400);
-
-    std::vector<int> results;
-
-    // results.emplace_back(test0(engine));
-    results.emplace_back(test1(engine));
- 
-
-    unsigned failCount = 0;
-    unsigned i = 0;
-    for(const auto r : results) {
-        if( r ) {
-            failCount++;
-            cout << "Test #" << i << " Failed";
-        }
-        i++;
-    }
-
-    if( failCount ) {
-        cout << "\n" << failCount << " Tests failed\n";
-    } else {
-        cout << "\nALL Tests passed\n";
-    }
-
-    return 0;
-}
-
 std::string stripPath(const std::string& s1) {
     const auto w = s1.find_last_of("\\/");
 
@@ -287,9 +260,78 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween)
     }
 }
 
+
+
 // xl,xh,yl,yh,count
 
+// low should be = 
+// and high should be <=
+// this is a datatype which records a square region of the image
+// and records how many different pixels we found there between test and ideal
+// the idea is to make it more simple for me to identify regions of changes between images
 typedef std::tuple<unsigned,unsigned,unsigned,unsigned,unsigned> blemish_t;
+
+// blin(x, min(0u,xl-tol), xh+tol)
+
+bool _blin(const unsigned x, const unsigned xl, const unsigned xh) {
+    if( x >= xl && x <= xh) {
+        return true;
+    }
+    return false;
+}
+
+
+bool blin(const unsigned x, const unsigned xl, const unsigned xh, const unsigned tol) {
+    return _blin(x, max(0u,xl-tol), xh+tol);
+}
+
+
+blemish_t growBlem(const blemish_t& b, const unsigned x, const unsigned y) {
+    const auto [xl,xh,yl,yh,count] = b;
+
+    return std::make_tuple(
+        min(x,xl),
+        max(x,xh),
+        min(y,yl),
+        max(y,yh),
+        count+1
+        );
+}
+
+
+
+void addBlemish(std::vector<blemish_t>& blem, const unsigned x, const unsigned y, const unsigned tol = 10) {
+
+    bool addNew = true;
+
+    for(unsigned i = 0; i < blem.size(); i++ ) {
+        auto search = blem[i];
+        const auto [xl,xh,yl,yh,count] = search;
+        if( blin(x, xl, xh, tol) && blin(y, yl, yh, tol) ) {
+            blem[i] = growBlem(search, x, y);
+            addNew = false;
+            break;
+        }
+    }
+
+    // if(blem.size() == 0) {
+    //     addNew = true;
+    // }
+
+    if(addNew) {
+        blem.emplace_back(x,x,y,y,1);
+        return;
+    }
+
+
+}
+
+void reportBlemish(const std::vector<blemish_t>& blem) {
+    for(const auto& w : blem) {
+        const auto [xl,xh,yl,yh,count] = w;
+        cout << "Region: x: [" << xl << "," << xh << "] y: [" << yl << "," << yh << "] with " << count << " pixels" <<  "\n";
+    }
+}
 
 std::tuple<int,std::string> compareImages(
     const std::vector<unsigned char>& ideal, const png_size_t& ideal_sz,
@@ -308,6 +350,8 @@ std::tuple<int,std::string> compareImages(
     const unsigned end = fx*fy*4;
 
     unsigned total = 0;
+
+    bool print_all = false;
 
 
     std::vector<blemish_t> blem;
@@ -347,35 +391,24 @@ std::tuple<int,std::string> compareImages(
             const int y = (fy-1) - (p / fy);
             const int x = p % fx;
 
-            cout << "[" << x << "," << y << "]: ";
+            addBlemish(blem, x, y);
 
-            // bool skip = false;
-            // switch(i%4) {
-            //     case 0:
-            //         cout << "r: ";
-            //         break;
-            //     case 1:
-            //         cout << "g: ";
-            //         break;
-            //     case 2:
-            //         cout << "b: ";
-            //         break;
-            //     default:
-            //     case 3:
-            //         cout << "a: ";
-            //         // skip = true;
-            //         break;
-            // }
-            if( ia != ta ) {
-                cout << "[" << (int)ir << " " << (int)ig << " " << (int)ib << " " << (int)ia << "] [" << (int)tr << " " << (int)tg << " " << (int)tb << " " << (int)ta  << "]\n";
-            } else {
-                cout << "[" << (int)ir << " " << (int)ig << " " << (int)ib << "] [" << (int)tr << " " << (int)tg << " " << (int)tb << "]\n";
+            if( print_all ) {
+                cout << "[" << x << "," << y << "]: ";
+                if( ia != ta ) {
+                    cout << "[" << (int)ir << " " << (int)ig << " " << (int)ib << " " << (int)ia << "] [" << (int)tr << " " << (int)tg << " " << (int)tb << " " << (int)ta  << "]\n";
+                } else {
+                    cout << "[" << (int)ir << " " << (int)ig << " " << (int)ib << "] [" << (int)tr << " " << (int)tg << " " << (int)tb << "]\n";
+                }
             }
         }
     }
 
     if( total ) {
         msg += "Total Different Pixels: " + std::to_string(total) + "\n";
+        cout << "\n";
+        reportBlemish(blem);
+
         return std::make_tuple(1, msg);
     }
 
@@ -384,11 +417,22 @@ std::tuple<int,std::string> compareImages(
 }
 
 int batchCompare(const std::vector<std::string>& paths) {
+
+    bool allComparePassed = true;
+
     for(const auto& p : paths ) {
         const auto testPath = outputPathForInput(p);
         const auto idealPath = idealPathForInput(p);
 
-        cout << "Comparing " << testPath << " against " << idealPath << "\n";
+        const bool printLoadSz = false;
+        const bool printFullPathCompare = false;
+
+        if( printFullPathCompare ) {
+            cout << "Comparing " << testPath << " against " << idealPath << "\n";
+        } else {
+            cout << "Comparing " << testPath << "\n";
+        }
+
         std::vector<unsigned char> ideal;
         std::vector<unsigned char> test;
 
@@ -404,7 +448,9 @@ int batchCompare(const std::vector<std::string>& paths) {
             return 1;
         } else {
             auto [x,y] = ideal_sz;
-            cout << "loaded with size " << x << ", " << y << "\n";
+            if( printLoadSz ) {
+                cout << "loaded with size " << x << ", " << y << "\n";
+            }
         }
 
 
@@ -414,22 +460,28 @@ int batchCompare(const std::vector<std::string>& paths) {
             return 2;
         } else {
             auto [x,y] = test_sz;
-            cout << "loaded with size " << x << ", " << y << "\n";
+            if( printLoadSz ) {
+                cout << "loaded with size " << x << ", " << y << "\n";
+            }
         }
 
 
 
         std::tie(ret,error) = compareImages(ideal, ideal_sz, test, test_sz);
         if( ret != 0 ) {
-            cout << "Compare Failed: " << error << "\n";
-            return 3;
+            cout << "  Compare Failed: " << error << "\n";
+            allComparePassed = false;
         } else {
-            cout << "Compare Passed\n";
+            cout << "  Compare Passed\n";
         }
-
     }
 
-    return 0;
+    if( allComparePassed ) {
+        return 0;
+    } else {
+        return 3;
+    }
+
 }
 
 
@@ -582,3 +634,97 @@ int main(int argc, char** argv) {
 
     // bool defaultA = false;
     // app.add_option("-a", defaultA, "Build All Scenes");
+
+
+
+
+int test2(void) {
+
+    std::vector<blemish_t> blem;
+
+    addBlemish(blem, 0, 10);
+    addBlemish(blem, 0, 11);
+    addBlemish(blem, 0, 12);
+    addBlemish(blem, 0, 13);
+    addBlemish(blem, 3, 13);
+    // addBlemish(blem, 12, 13);
+
+    addBlemish(blem, 13, 10);
+
+    reportBlemish(blem);
+
+    return 0;
+}
+
+
+int test3(void) {
+    std::vector<blemish_t> b;
+
+    addBlemish(b,349,227);
+    addBlemish(b,350,227);
+    addBlemish(b,351,227);
+    addBlemish(b,352,227);
+    addBlemish(b,353,227);
+    addBlemish(b,354,227);
+    addBlemish(b,355,227);
+    addBlemish(b,344,226);
+    addBlemish(b,345,226);
+    addBlemish(b,22,23);
+    addBlemish(b,23,23);
+    addBlemish(b,24,23);
+    addBlemish(b,22,22);
+    addBlemish(b,23,22);
+    addBlemish(b,24,22);
+    addBlemish(b,22,21);
+    addBlemish(b,23,21);
+    addBlemish(b,24,21);
+
+    reportBlemish(b);
+
+    if( b.size() != 2 ) {
+        cout << "Blemish classification wrong\n";
+        return 1;
+    }
+
+    return 0;
+}
+
+
+
+
+
+int main2(void) {
+    // RayEngine* engine;
+    // engine = new RayEngine();
+    // engine->resize(400);
+
+    std::vector<int> results;
+
+    // results.emplace_back(test0(engine));
+    // results.emplace_back(test1(engine));
+    // results.emplace_back(test2());
+    results.emplace_back(test3());
+ 
+
+    unsigned failCount = 0;
+    unsigned i = 0;
+    for(const auto r : results) {
+        if( r ) {
+            failCount++;
+            cout << "Test #" << i << " Failed";
+        }
+        i++;
+    }
+
+    if( failCount ) {
+        cout << "\n" << failCount << " Tests failed\n";
+    } else {
+        cout << "\nALL Tests passed\n";
+    }
+
+    return 0;
+}
+
+
+
+
