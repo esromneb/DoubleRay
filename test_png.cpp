@@ -271,8 +271,6 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween)
 // the idea is to make it more simple for me to identify regions of changes between images
 typedef std::tuple<unsigned,unsigned,unsigned,unsigned,unsigned> blemish_t;
 
-// blin(x, min(0u,xl-tol), xh+tol)
-
 bool _blin(const unsigned x, const unsigned xl, const unsigned xh) {
     if( x >= xl && x <= xh) {
         return true;
@@ -282,7 +280,7 @@ bool _blin(const unsigned x, const unsigned xl, const unsigned xh) {
 
 
 bool blin(const unsigned x, const unsigned xl, const unsigned xh, const unsigned tol) {
-    return _blin(x, max(0u,xl-tol), xh+tol);
+    return _blin(x, max(0,(signed)xl-(signed)tol), xh+tol);
 }
 
 
@@ -345,7 +343,7 @@ std::tuple<int,std::string> compareImages(
 
     unsigned total = 0;
 
-    bool print_all = false;
+    const bool print_all = false;
 
 
     std::vector<blemish_t> blem;
@@ -700,21 +698,32 @@ int test3(void) {
     return 0;
 }
 
+int test4(void) {
+    std::vector<blemish_t> b;
+    addBlemish(b,0,399);
+    addBlemish(b,1,399);
+
+    reportBlemish(b);
+
+    if( b.size() != 1 ) {
+        cout << "Blemish classification wrong\n";
+        return 1;
+    }
+
+    return 0;
+}
+
 
 
 
 
 int main2(void) {
-    // RayEngine* engine;
-    // engine = new RayEngine();
-    // engine->resize(400);
 
     std::vector<int> results;
 
-    // results.emplace_back(test0(engine));
-    // results.emplace_back(test1(engine));
     // results.emplace_back(test2());
-    results.emplace_back(test3());
+    // results.emplace_back(test3());
+    results.emplace_back(test4());
  
 
     unsigned failCount = 0;
