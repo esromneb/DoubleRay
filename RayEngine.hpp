@@ -32,6 +32,9 @@ public:
     Material m;
 };
 
+// forward declare and type so that RayEngine can render to pixels 100% internally
+class SDL_PixelFormat;
+typedef uint32_t (*wasm_gl_pixel_t)(const SDL_PixelFormat*, uint8_t, uint8_t, uint8_t);
 
 
 class RayEngine
@@ -86,5 +89,11 @@ public:
     bool print = false;
 
     static constexpr float scale = 0.006;
-};
 
+
+    // copy internal state to pixel buffer for WASM
+    void copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const format) const;
+
+    // copy internal state to pixel buffer for PNG
+    void copyToPixels(std::vector<unsigned char>& buffer) const;
+};

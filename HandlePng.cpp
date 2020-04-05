@@ -34,42 +34,12 @@ static std::tuple<unsigned,std::string> encodeOneStepp(const char* const filenam
 ///
 std::tuple<unsigned,std::string> HandlePng::save(const std::string& path, RayEngine* engine) {
 
-    // FIXME
-    const uint32_t px = 400;
-
     std::vector<unsigned char> imageBuf;
-    imageBuf.reserve(px*px*4);
 
+    engine->copyToPixels(imageBuf);
 
-    auto scale = RayEngine::scale;
-    float gain = 1.1;
+    const uint32_t px = engine->px; // FIXME
 
-
-    for( int y = 0; y < px; y++ ) {
-        for( int x = 0; x < px; x++ ) {
-            // const auto lookup = x+y*px;
-            const auto lookup = x+((px-1)-y)*px;
-            float r = engine->r[lookup];
-            float g = engine->g[lookup];
-            float b = engine->b[lookup];
-            float rs = gain + (r / scale);
-            float gs = gain + (g / scale);
-            float bs = gain + (b / scale);
-
-            uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
-            uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
-            uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
-
-            imageBuf.emplace_back(rb);
-            imageBuf.emplace_back(gb);
-            imageBuf.emplace_back(bb);
-            imageBuf.emplace_back(255);
-
-            // *((Uint32*)screen->pixels + ((px-1-y) * px) + x) = SDL_MapRGBA(screen->format, rb, gb, bb, 255);
-
-
-        }
-    }
 
     return encodeOneStepp(path.c_str(), imageBuf, px, px);
 

@@ -1,7 +1,12 @@
 
-.PHONY: all clean e
+.PHONY: wasm all important clean e
 
-all: out/ray.wasm
+
+wasm: out/ray.wasm
+
+all: test_png test_parse test_refl test_vec test_orbit
+
+important: wasm test_png
 
 
 
@@ -185,7 +190,7 @@ test_refl: test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 test_parse: test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
-test_png: test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) Makefile
+test_png: test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) $(CPP_TEST_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) $(CPP_TEST_FILES) -g -o $@
 
 

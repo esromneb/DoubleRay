@@ -247,6 +247,9 @@ void officialRenderRainbow(bool boolA, bool boolB) {
 }
 
 
+#ifdef ORIGINAL_COPY_BUFFER
+// this is the original function we used to copy
+// to the wasm gl buffer
 void officialCopyBuffer(void) {
     const uint32_t px = 400;
 
@@ -293,6 +296,22 @@ void officialCopyBuffer(void) {
     // cout << rmax << "\n";
     // glEnd();
 }
+#endif
+
+///
+/// Lock the screen
+/// call the RayEngine's internal copy to pixels
+/// and done
+///
+void officialCopyBuffer(void) {
+    if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
+
+    engine->copyToPixels(SDL_MapRGB, screen->pixels, screen->format);
+
+    if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
+    SDL_Flip(screen);
+}
+
 
 
 

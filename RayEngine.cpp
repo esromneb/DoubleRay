@@ -2,6 +2,7 @@
 #include <math.h>
 #include <iostream>
 #include <tuple>
+#include <type_traits>
 
 RayEngine::RayEngine( void )
 {
@@ -550,3 +551,104 @@ std::tuple<bool,double> RayEngine::trace(
 }
 
 
+
+
+#ifdef TYPE_TRAITS_EXAMPLE
+
+template< class T, class P >
+void typeTraitsExample(T a, P b) {
+    bool match = false;
+    if constexpr (std::is_pointer<T>::value) {
+        cout << "is_pointer\n";
+        match = true;
+    }
+
+    if ( std::is_base_of<std::vector<unsigned char>, T>::value ) {
+        cout << "is_base_of vector\n";
+        match = true;
+    }
+
+    if ( std::is_same<std::vector<unsigned char>, T>::value ) {
+        cout << "is_same vector\n";
+        match = true;
+    }
+
+    // use this
+    if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
+        cout << "is_same vector&\n";
+        match = true;
+    }
+
+    if( !match ) {
+        cout << "no match\n";
+    }
+}
+#endif
+
+
+///
+/// This template allows us to have 1 for loop that can copy
+/// to the GL buffer (WASM), or to the vector of chars (PNG)
+/// because we are in c++20 we can use constexpr if to get
+/// performant inner loop
+///
+/// We check this by comparing the first argument
+/// against a refrence to a vector of chars
+/// if it matches, we are in the PNG mode
+/// if it doesn't match we are in the WASM mode
+/// the wasm mode is way more complicated requiring 1 funciton pointer and 2 void*
+/// we also have a different pixel order in the 2 modes
+///
+template< class T, class P, class Q >
+void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
+    auto scale = RayEngine::scale;
+    float gain = 1.1;
+
+    const uint32_t px = engine->px;
+
+    for( int y = 0; y < px; y++ ) {
+        for( int x = 0; x < px; x++ ) {
+            
+            unsigned lookup;
+            if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
+                lookup = x+((px-1)-y)*px;
+            } else {
+                lookup = x+y*px;
+            }
+
+            float r = engine->r[lookup];
+            float g = engine->g[lookup];
+            float b = engine->b[lookup];
+            float rs = gain + (r / scale);
+            float gs = gain + (g / scale);
+            float bs = gain + (b / scale);
+
+            uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
+            uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
+            uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
+
+            if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
+                arg0.emplace_back(rb);
+                arg0.emplace_back(gb);
+                arg0.emplace_back(bb);
+                arg0.emplace_back(255);
+            } else {
+                *((uint32_t*)arg1 + ((px-1-y) * px) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
+
+                // *((Uint32*)screen->pixels + ((px-1-y) * px) + x) = SDL_MapRGB(screen->format, rb, gb, bb);
+            }
+        } // for x
+    } // for y
+} // _copyToPixels
+
+
+void RayEngine::copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const format) const {
+    _copyToPixels(fn, pixels, format, this);
+}
+
+void RayEngine::copyToPixels(std::vector<unsigned char>& buffer) const {
+    buffer.resize(0);
+    buffer.reserve(px*px*4);
+
+    _copyToPixels<std::vector<unsigned char>&, void*>(buffer, 0, 0, this);
+}
