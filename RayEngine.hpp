@@ -11,8 +11,8 @@
 
 using namespace::std;
 
-#define ALLOW_PRINT
-#define ALLOW_CHOKE
+// #define ALLOW_PRINT
+// #define ALLOW_CHOKE
 // #define ALLOW_HIGHLIGHT
 
 
