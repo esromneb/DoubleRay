@@ -222,7 +222,7 @@ std::string idealPathForInput(const std::string& s1) {
 }
 
 
-void batchRender(const std::vector<std::string>& paths, const bool cleanBetween) {
+void batchRender(const std::vector<std::string>& paths, const bool cleanBetween, const bool skipWrite) {
 
     RayEngine* engine;
     if( !cleanBetween ) {
@@ -250,6 +250,10 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween)
         }
 
         localRender(engine);
+
+        if( skipWrite ) {
+            continue;
+        }
 
         // std::string savePath = "img/test/test_shadow_3.png";
 
@@ -491,6 +495,7 @@ int main(int argc, char** argv) {
     bool compareOnly = false;
     bool compareAndRender = false;
     bool printAllValues = false;
+    bool skipWrite = false;
 
 
     std::string onePath;
@@ -551,6 +556,13 @@ int main(int argc, char** argv) {
     };
     app.add_flag_function("-r", rndCb,
         "Randomize order scenes are rendered");
+
+    auto skipCb = [&](const std::int64_t count) {
+        (void)count;
+        skipWrite = true;
+    };
+    app.add_flag_function("--skip", skipCb,
+        "Skip writing png to disk");
 
 
     auto dumpScenesCb = [&](const std::int64_t count) {
@@ -616,7 +628,7 @@ int main(int argc, char** argv) {
             cout << "Please note that -c is implied when -g is used\n";
         }
         cout << "Render First\n";
-        batchRender(paths,newEnginePerRender);
+        batchRender(paths,newEnginePerRender, skipWrite);
         cout << "Then Compare\n";
         return batchCompare(paths, printAllValues);
     }
@@ -627,7 +639,7 @@ int main(int argc, char** argv) {
         }
         return batchCompare(paths, printAllValues);
     } else if( renderAll || renderOne ) {
-        batchRender(paths,newEnginePerRender);
+        batchRender(paths,newEnginePerRender, skipWrite);
     } else {
         cout << "internal options error\n";
         cout << app.help();
