@@ -449,65 +449,66 @@ std::tuple<bool,double> RayEngine::trace(
 
     if( hitDistance != NO_HIT ) {
 
-        Vec3 outward_normal;
-        Vec3 refracted;
 
-        float ref_idx = savedRefractionIndex;
-
-        float ni_over_nt;
-        float reflect_prob = 0;
-        float cosine;
+        float reflect_prob = 1;
 
         // when shadow feeling we will calculate these
         // bool refractedHit = false;
         double childRefractedVisibility = 0;
         double thisRefractedVisibility = 0;
 
-        bool rayEntering = false;
+        if( savedKt != 0 ) {
+            Vec3 outward_normal;
+            Vec3 refracted;
 
-        // when ray shoot through object back into vacuum,
-        // ni_over_nt = ref_idx, surface normal has to be inverted.
-        if ( Vec3::dot(r.d, savedNormal) > 0){
-            outward_normal = savedNormal * -1.0;
-            ni_over_nt = ref_idx;
-            cosine = Vec3::dot(Vec3::normalize(r.d), savedNormal);
-            if( PRINT ) {
-                cout << "Ray exiting, cos:" << cosine << "\n";
+            const float ref_idx = savedRefractionIndex;
+            float ni_over_nt;
+            float cosine;
+
+            bool rayEntering = false;
+
+            // when ray shoot through object back into vacuum,
+            // ni_over_nt = ref_idx, surface normal has to be inverted.
+            if ( Vec3::dot(r.d, savedNormal) > 0){
+                outward_normal = savedNormal * -1.0;
+                ni_over_nt = ref_idx;
+                cosine = Vec3::dot(r.d, savedNormal);
+                if( PRINT ) {
+                    cout << "Ray exiting, cos:" << cosine << "\n";
+                }
+                rayEntering = false;
             }
-            rayEntering = false;
-        }
-        // when ray shoots into object,
-        // ni_over_nt = 1 / ref_idx.
-        else{
-            outward_normal = savedNormal;
-            ni_over_nt = 1.0 / ref_idx;
-            cosine = -Vec3::dot(Vec3::normalize(r.d), savedNormal);
-            if( PRINT ) {
-                cout << "Ray entering, cos:" << cosine << "\n";
+            // when ray shoots into object,
+            // ni_over_nt = 1 / ref_idx.
+            else{
+                outward_normal = savedNormal;
+                ni_over_nt = 1.0 / ref_idx;
+                cosine = -Vec3::dot(r.d, savedNormal);
+                if( PRINT ) {
+                    cout << "Ray entering, cos:" << cosine << "\n";
+                }
+                rayEntering = true;
             }
-            rayEntering = true;
-        }
 
 
 
 
-        // refracted ray exists
-        if(refract(r.d, outward_normal, ni_over_nt, refracted)){
-            reflect_prob = schlick(cosine, ref_idx);
-        }
-        // refracted ray does not exist
-        else{
-            // total reflection
-            reflect_prob = 1.0;
-        }
+            // refracted ray exists
+            if(refract(r.d, outward_normal, ni_over_nt, refracted)){
+                reflect_prob = schlick(cosine, ref_idx);
+            }
+            // refracted ray does not exist
+            else{
+                // total reflection
+                reflect_prob = 1.0;
+            }
 
-        if(PRINT) {
-            cout << "reflect prob: " << reflect_prob << "\n";
-        }
+            if(PRINT) {
+                cout << "reflect prob: " << reflect_prob << "\n";
+            }
 
 
         // Refraction (transmission)
-        if( savedKt != 0 ) {
             Vec3 refractedColor(0,0,0);
             Ray refractedRay(savedIntersect,refracted);
             
@@ -550,9 +551,10 @@ std::tuple<bool,double> RayEngine::trace(
 
 
 
-        Ray reflRay(savedIntersect,savedRefl);
 
         if( ((savedKr > 0) || (reflect_prob > 0)) && !shdFeeling ) {
+            
+            const Ray reflRay(savedIntersect,savedRefl);
 
             if( PRINT ) {
                 cout << "\n" << std::string(depthIn, ' ') << "Tracing Reflection using " << reflRay.d.str(false) << "\n";
