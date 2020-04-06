@@ -327,6 +327,8 @@ void initSetResolution(const unsigned x, const unsigned y) {
 }
 
 int main(int argc, char ** argv) {
+    (void)argc;
+    (void)argv;
 
     // initSetResolution(256, 256);
     initSetResolution(400, 400);
@@ -341,7 +343,7 @@ int main(int argc, char ** argv) {
     return 0;
 }
 
-static uint32_t nextVal = 0;
+// static uint32_t nextVal = 0;
 
 
 

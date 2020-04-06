@@ -232,12 +232,12 @@ std::tuple<bool,double> RayEngine::trace(
         const double a = r.d.dot(r.d);
 
         // const double b = 2*(r.d[0] * (r.o[0] - s.c[0]) + r.d[1] * (r.o[1] - s.c[1]) + r.d[2] * (r.o[2] - s.c[2]));
-        const double b = 2.0 * oc.dot(r.d);
+        const double sb = 2.0 * oc.dot(r.d);
 
         // double c = pow((r.o[0] - s.c[0]),2) + pow((r.o[1] - s.c[1]),2) + pow((r.o[2] - s.c[2]),2) - s.r*s.r;
-        const double c = oc.dot(oc) - (s.r*s.r);
+        const double sc = oc.dot(oc) - (s.r*s.r);
 
-        const double discriminant = (b*b) - (4*a*c);
+        const double discriminant = (sb*sb) - (4*a*sc);
 
         if(PRINT) {
             cout << "Discr: " << discriminant << " " << i << "\n";
@@ -254,8 +254,8 @@ std::tuple<bool,double> RayEngine::trace(
             continue;
         }
 
-        double t0 = ((-b) - sqrt(discriminant)) / (2*a);
-        double t1 = ((-b) + sqrt(discriminant)) / (2*a);
+        double t0 = ((-sb) - sqrt(discriminant)) / (2*a);
+        double t1 = ((-sb) + sqrt(discriminant)) / (2*a);
 
         if( PRINT ) {
             cout << "t0 " << t0 << " t1 " << t1 << "\n";
