@@ -221,8 +221,12 @@ void dumpPoly(const int index) {
 
 
 void setHighlightPixel(const int x, const int y) {
+#ifdef ALLOW_HIGHLIGHT
     engine->highlightX = x;
     engine->highlightY = y;
+#else
+    cout << "RayEngine was compiled without the ALLOW_HIGHLIGHT macro\n";
+#endif
 }
 
 
@@ -352,14 +356,22 @@ void dumpCamera() {
 }
 
 void chokeOutput(int il, int ih, int jl, int jh) {
+#ifdef ALLOW_CHOKE
     engine->il = il;
     engine->ih = ih;
     engine->jl = jl;
     engine->jh = jh;
+#else
+    cout << "RayEngine was compiled without the ALLOW_CHOKE macro\n";
+#endif
 }
 
 void setPrint(int p) {
+#ifdef ALLOW_PRINT
     engine->print = p?true:false;
+#else
+    cout << "RayEngine was compiled without the ALLOW_PRINT macro\n";
+#endif
 }
 
 void parseJsonScene(const char* scene, const bool andRender ) {

@@ -11,7 +11,9 @@
 
 using namespace::std;
 
-
+// #define ALLOW_PRINT
+// #define ALLOW_CHOKE
+// #define ALLOW_HIGHLIGHT
 
 
 class Light
@@ -78,15 +80,21 @@ public:
     // int jl = 219;
     // int jh = 222;
 
+#ifdef ALLOW_CHOKE
     int il = -1;
     int ih = 500;
     int jl = -1;
     int jh = 500;
+#endif
 
+#ifdef ALLOW_HIGHLIGHT
     int highlightX = -1;
     int highlightY = -1;
+#endif
 
+#ifdef ALLOW_PRINT
     bool print = false;
+#endif
 
     // Factor used to scale in-engine floating point colors
     // to 0-255 rgb

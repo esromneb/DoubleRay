@@ -4,6 +4,16 @@
 #include <tuple>
 #include <type_traits>
 
+// also controls choke
+
+
+#ifdef ALLOW_PRINT
+#define PRINT print
+#else
+#define PRINT false
+#endif
+
+
 RayEngine::RayEngine( void )
 {
     numPoly = 0;
@@ -38,8 +48,6 @@ void RayEngine::resize( const int _x )
 int g_i = 0;
 int g_j = 0;
 
-bool g_print = false;
-
 void RayEngine::render( void ) noexcept
 {
     // bool nUsedB = false;
@@ -69,27 +77,31 @@ void RayEngine::render( void ) noexcept
             r.d = pixel-e;
             r.d.normalize();
             //red = green = blue = 0;
+
+#ifdef ALLOW_PRINT
             g_i = i;
             g_j = j;
+#endif
 
+#ifdef ALLOW_CHOKE
             if( (i > il && i < ih) && (j > jl && j < jh ) ) {
 
-                g_print = false;
-                if( (i >= 198 && i < 200) && (j > 198 && j < 200)) {
-                    g_print = true;
-                }
-
                 trace( r, 0, color, false );
-                if( print ) {
+                if( PRINT ) {
                     cout << "\n Final: " << color[0] << "\n";
                 }
             } else {
                 color = Vec3(0,0,0);
             }
+#else
+            trace( r, 0, color, false );
+#endif
 
+#ifdef ALLOW_HIGHLIGHT
             if( (highlightX >= 0 && highlightY >= 0) && (i == highlightX && j == highlightY) ) {
                 color = Vec3(2,0,0);
             }
+#endif
 
             this->r[i+j*px] = color[0];
             this->g[i+j*px] = color[1];
@@ -103,14 +115,11 @@ void RayEngine::render( void ) noexcept
 // n is the surface normal
 // ni_over_nt is n1/n2
 // refracted (output) is the refracted ray direaction
-bool refract(const Vec3& v, const Vec3& n, const double ni_over_nt, Vec3& refracted, const bool print = false) {
+bool refract(const Vec3& v, const Vec3& n, const double ni_over_nt, Vec3& refracted) {
     const Vec3 uv = Vec3::normalize(v);
     const double dt = uv.dot(n);
     
     const double discriminant = 1.0 - ni_over_nt * ni_over_nt * (1-dt*dt);
-    if( print ) {
-        cout << "refr discr: " << discriminant << "\n";
-    }
 
     if(discriminant > 0){
         refracted = ((uv-n*dt)*ni_over_nt) - n*sqrt(discriminant);
@@ -178,13 +187,13 @@ std::tuple<bool,double> RayEngine::trace(
     const bool shdFeeling ) noexcept {
 
     if( depthIn > this->depth ) {
-        if( print ) {
+        if( PRINT ) {
             cout << "Abort\n";
         }
         return std::make_tuple(false,1.0);
     }
 
-    if( print ) {
+    if( PRINT ) {
         cout << "trace px " << g_i << ", " << g_j << " depth " << depthIn << "\n";
     }
 
@@ -230,7 +239,7 @@ std::tuple<bool,double> RayEngine::trace(
 
         const double discriminant = (b*b) - (4*a*c);
 
-        if(print) {
+        if(PRINT) {
             cout << "Discr: " << discriminant << " " << i << "\n";
         }
 
@@ -239,7 +248,7 @@ std::tuple<bool,double> RayEngine::trace(
         /// dis > 0   two points of intersection
 
         if( discriminant < 0 ) {
-            if( print ) {
+            if( PRINT ) {
                 cout << "sphere break A " << i << "\n";
             }
             continue;
@@ -248,7 +257,7 @@ std::tuple<bool,double> RayEngine::trace(
         double t0 = ((-b) - sqrt(discriminant)) / (2*a);
         double t1 = ((-b) + sqrt(discriminant)) / (2*a);
 
-        if( print ) {
+        if( PRINT ) {
             cout << "t0 " << t0 << " t1 " << t1 << "\n";
         }
 
@@ -288,7 +297,7 @@ std::tuple<bool,double> RayEngine::trace(
         // any hit, no matter the distance, means the light is blocked
 
         if( shdFeeling && s.m.kt == 0 ) {
-            if( print ) {
+            if( PRINT ) {
                 cout << "sphere break shadow " << i << "\n";
             }
 
@@ -299,7 +308,7 @@ std::tuple<bool,double> RayEngine::trace(
         // if this hit is closer then the last
         // save it
         if( sphereBestT < hitDistance ) {
-            if( print ) {
+            if( PRINT ) {
                 cout << "Update best hit to " << sphereBestT << " (sphere " << i << ")\n";
             }
             hitDistance = sphereBestT;
@@ -338,14 +347,14 @@ std::tuple<bool,double> RayEngine::trace(
             shadowFeeler.d = lights[iLight].d * -1;
             // shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
             Vec3 shadowColor; // unused
-            if(print) {
+            if(PRINT) {
                 cout << "\n" << std::string(depthIn, ' ') << "Looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
             }
             // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
             // set depth to maximum to prevent further bounces
             const auto [lightBlocked,visibilityLevel] = trace( shadowFeeler, depthIn+1, shadowColor, true );
 
-            if(print) {
+            if(PRINT) {
                 cout << "Light " << iLight;
             }
 
@@ -356,13 +365,13 @@ std::tuple<bool,double> RayEngine::trace(
             // calculation in order to get the shadow right with transparent (kt) spheres
 
             if( lightBlocked && visibilityLevel <= 0.0) {
-                if(print) {
+                if(PRINT) {
                     cout << " Blocked\n";
                 }
                 continue;
             }
 
-            if(print) {
+            if(PRINT) {
                 cout << " Visible\n";
             }
 
@@ -373,7 +382,7 @@ std::tuple<bool,double> RayEngine::trace(
 
             const Vec3 diffuse = (material.kd * norm.dot( negLightDirection ) );
 
-            if(print) {
+            if(PRINT) {
                 cout << "norm dot " << norm.dot( negLightDirection ) << "\n";
                 cout << "diffuse " << diffuse.str(false) << "\n";
             }
@@ -383,7 +392,7 @@ std::tuple<bool,double> RayEngine::trace(
 
             const float specular = material.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), material.n);
 
-            if(print) {
+            if(PRINT) {
                 cout << "specular: " << specular << "\n";
                 cout << "fp: " << fp.str(false) << " mag " << fp.mag() << "\n";
                 Vec3 t1 = lights[iLight].color / ( fp.mag() + this->c );
@@ -462,7 +471,7 @@ std::tuple<bool,double> RayEngine::trace(
             outward_normal = savedNormal * -1.0;
             ni_over_nt = ref_idx;
             cosine = Vec3::dot(Vec3::normalize(r.d), savedNormal);
-            if( print ) {
+            if( PRINT ) {
                 cout << "Ray exiting, cos:" << cosine << "\n";
             }
             rayEntering = false;
@@ -473,7 +482,7 @@ std::tuple<bool,double> RayEngine::trace(
             outward_normal = savedNormal;
             ni_over_nt = 1.0 / ref_idx;
             cosine = -Vec3::dot(Vec3::normalize(r.d), savedNormal);
-            if( print ) {
+            if( PRINT ) {
                 cout << "Ray entering, cos:" << cosine << "\n";
             }
             rayEntering = true;
@@ -483,7 +492,7 @@ std::tuple<bool,double> RayEngine::trace(
 
 
         // refracted ray exists
-        if(refract(r.d, outward_normal, ni_over_nt, refracted, print)){
+        if(refract(r.d, outward_normal, ni_over_nt, refracted)){
             reflect_prob = schlick(cosine, ref_idx);
         }
         // refracted ray does not exist
@@ -492,7 +501,7 @@ std::tuple<bool,double> RayEngine::trace(
             reflect_prob = 1.0;
         }
 
-        if(print) {
+        if(PRINT) {
             cout << "reflect prob: " << reflect_prob << "\n";
         }
 
@@ -502,7 +511,7 @@ std::tuple<bool,double> RayEngine::trace(
             Vec3 refractedColor(0,0,0);
             Ray refractedRay(savedIntersect,refracted);
             
-            if( print ) {
+            if( PRINT ) {
                 cout << "\n" << std::string(depthIn, ' ') << "Tracing Refraction:\n";
             }
             auto [refractedHit, _childRefractedVisibility] =
@@ -514,7 +523,7 @@ std::tuple<bool,double> RayEngine::trace(
 
             const double refractionDamp = savedKt * (1-reflect_prob);
 
-            if( print ) {
+            if( PRINT ) {
                 cout << "\n" << std::string(depthIn, ' ') << "Refraction Damp: " << refractionDamp << " \n";
             }
 
@@ -545,7 +554,7 @@ std::tuple<bool,double> RayEngine::trace(
 
         if( ((savedKr > 0) || (reflect_prob > 0)) && !shdFeeling ) {
 
-            if( print ) {
+            if( PRINT ) {
                 cout << "\n" << std::string(depthIn, ' ') << "Tracing Reflection using " << reflRay.d.str(false) << "\n";
             }
 
@@ -572,7 +581,7 @@ std::tuple<bool,double> RayEngine::trace(
 
         const double returnVisibility = (thisRefractedVisibility * childRefractedVisibility);
 
-        if( print ) {
+        if( PRINT ) {
             cout << "\n" << std::string(depthIn, ' ') << "Return Vis: " << returnVisibility << " \n";
         }
         
