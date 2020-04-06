@@ -48,6 +48,7 @@ void setLight(const int index,
     VEC3_ARG(color));
 void dumpPoly(const int index);
 void setHighlightPixel(const int x, const int y);
+void setRefractShadows(const bool r);
 typedef std::function<void(void)> scene_animation_t;
 void setupOrbit(const int _frames);
 void nextOrbitRender(void);

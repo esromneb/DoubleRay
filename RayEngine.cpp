@@ -4,8 +4,6 @@
 #include <tuple>
 #include <type_traits>
 
-// also controls choke
-
 
 #ifdef ALLOW_PRINT
 #define PRINT print
@@ -48,8 +46,17 @@ void RayEngine::resize( const int _x )
 int g_i = 0;
 int g_j = 0;
 
-void RayEngine::render( void ) noexcept
-{
+
+void RayEngine::render( void ) noexcept {
+    if( memberRefractShadows ) {
+        _render<true>();
+    } else {
+        _render<false>();
+    }
+}
+
+template <bool refractShadowsT>
+void RayEngine::_render( void ) noexcept {
     // bool nUsedB = false;
     // Vec3 nUsedI;
     Ray r;
@@ -86,7 +93,7 @@ void RayEngine::render( void ) noexcept
 #ifdef ALLOW_CHOKE
             if( (i > il && i < ih) && (j > jl && j < jh ) ) {
 
-                trace( r, 0, color, false );
+                trace<refractShadowsT>( r, 0, color, false );
                 if( PRINT ) {
                     cout << "\n Final: " << color[0] << "\n";
                 }
@@ -94,7 +101,7 @@ void RayEngine::render( void ) noexcept
                 color = Vec3(0,0,0);
             }
 #else
-            trace( r, 0, color, false );
+            trace<refractShadowsT>( r, 0, color, false );
 #endif
 
 #ifdef ALLOW_HIGHLIGHT
@@ -180,6 +187,7 @@ typedef std::tuple<uint8_t, size_t> hit_t;
 
 // returns true for hitting anything
 // returns a double "visible amount" to do with shadow tracing, 0 is blocked 1 is visible
+template <bool refractShadowsT>
 std::tuple<bool,double> RayEngine::trace(
     const Ray& r,
     const int depthIn,
@@ -293,15 +301,24 @@ std::tuple<bool,double> RayEngine::trace(
         }
 
         // if we are doing a shadow feeler
-        // we are sending one single ray back to the light source
-        // any hit, no matter the distance, means the light is blocked
 
-        if( shdFeeling && s.m.kt == 0 ) {
-            if( PRINT ) {
-                cout << "sphere break shadow " << i << "\n";
+        if constexpr( refractShadowsT ) {
+
+            // If we are refracting shadows
+            // we need to check every sphere along the path of the ray
+            // for the cloesest hit, as the closest one may be transparent
+            // FIXME this may be wrong as a sold object far away is different
+            // than a refracted object up close
+            if( shdFeeling && s.m.kt == 0 ) {
+                return std::make_tuple(true, 0.0);
             }
+        } else {
 
-            return std::make_tuple(true, 0.0);
+            // we are sending one single ray back to the light source
+            // any hit, no matter the distance, means the light is blocked
+            if( shdFeeling ) {
+                return std::make_tuple(true, 0.0);
+            }
         }
 
 
@@ -351,8 +368,18 @@ std::tuple<bool,double> RayEngine::trace(
                 cout << "\n" << std::string(depthIn, ' ') << "Looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
             }
             // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
-            // set depth to maximum to prevent further bounces
-            const auto [lightBlocked,visibilityLevel] = trace( shadowFeeler, depthIn+1, shadowColor, true );
+
+            int shadowDepth;
+
+            if constexpr (refractShadowsT) {
+                // set depth to next value as we will be refracting the shadow detection
+                shadowDepth = depthIn+1;
+            } else {
+                // set depth to maximum to prevent further bounces
+                shadowDepth = this->depth;
+            }
+
+            const auto [lightBlocked,visibilityLevel] = trace<refractShadowsT>( shadowFeeler, shadowDepth, shadowColor, true );
 
             if(PRINT) {
                 cout << "Light " << iLight;
@@ -516,7 +543,7 @@ std::tuple<bool,double> RayEngine::trace(
                 cout << "\n" << std::string(depthIn, ' ') << "Tracing Refraction:\n";
             }
             auto [refractedHit, _childRefractedVisibility] =
-                trace(refractedRay, depthIn+1, refractedColor, shdFeeling);
+                trace<refractShadowsT>(refractedRay, depthIn+1, refractedColor, shdFeeling);
 
             // the color we get back from refraction is damped by kt
 
@@ -562,7 +589,7 @@ std::tuple<bool,double> RayEngine::trace(
 
 
             Vec3 newColor(0,0,0);
-            trace( reflRay, depthIn+1, newColor, shdFeeling );
+            trace<refractShadowsT>( reflRay, depthIn+1, newColor, shdFeeling );
 
             // frenel adds the schlick function
             // which reduces the reflection on the sphere greatly as you move in from the edge
@@ -698,3 +725,19 @@ void RayEngine::copyToPixels(std::vector<unsigned char>& buffer) const {
 
     _copyToPixels<std::vector<unsigned char>&, void*>(buffer, 0, 0, this);
 }
+
+
+
+/// Normally to force compiler to compile each of your template options you can use something like
+/// the code below this function
+/// however I can't figure out how to get it to work, so this is a more old school way of doing it
+void templateHack(void) {
+    RayEngine r;
+
+    r._render<false>();
+    r._render<true>();
+}
+
+// template function RayEngine::render<bool>;
+// template function RayEngine::render<true>;
+// template function RayEngine::render<false>;

@@ -44,7 +44,13 @@ class RayEngine
 
 public:
     RayEngine( void );
+
     void render( void ) noexcept;
+
+    template <bool refractShadows>
+    void _render( void ) noexcept;
+
+    template <bool refractShadowsT>
     std::tuple<bool,double> trace(
         const Ray& r, 
         const int depthIn,
@@ -96,11 +102,21 @@ public:
     bool print = false;
 #endif
 
+    constexpr static double defaultScale = 255;
+    constexpr static bool defaultMemberRefractShadows = true;
+
+    ///
+    /// these should not be read inside render() or trace()
+    /// instead these should be read and then used to choose
+    /// which template to call
+    ///
+    bool memberRefractShadows = defaultMemberRefractShadows;
+
     // Factor used to scale in-engine floating point colors
     // to 0-255 rgb
-    double scale = 255;
+    double scale = defaultScale;
 
-    constexpr static double defaultScale = 255;
+
 
 
     // copy internal state to pixel buffer for WASM
@@ -109,3 +125,4 @@ public:
     // copy internal state to pixel buffer for PNG
     void copyToPixels(std::vector<unsigned char>& buffer) const;
 };
+

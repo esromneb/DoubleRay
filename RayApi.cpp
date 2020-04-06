@@ -232,6 +232,12 @@ void setHighlightPixel(const int x, const int y) {
 }
 
 
+void setRefractShadows(const bool r) {
+    engine->memberRefractShadows = r;
+}
+
+
+
 
 typedef std::function<void(void)> scene_animation_t;
 

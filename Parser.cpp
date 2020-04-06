@@ -29,6 +29,10 @@ static bool valid_object(const nlohmann::json& obj, const std::string& key) {
     return obj.contains(key) && obj[key].is_object();
 }
 
+static bool valid_bool(const nlohmann::json& obj, const std::string& key) {
+    return obj.contains(key) && obj[key].is_boolean();
+}
+
 
 /*
 // Working code for using a input input adapter callback
@@ -227,6 +231,14 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj) 
         } else {
             setScale(RayEngine::defaultScale);
         }
+
+        if(valid_bool(gg, "refract_shadows")) {
+            setRefractShadows(gg["refract_shadows"]);
+        } else {
+            setRefractShadows(RayEngine::defaultMemberRefractShadows);
+        }
+
+
 
 
     } else {
