@@ -9,7 +9,7 @@
   "global": {
     "color": [1, 1, 1],
     "c": 4,
-    "refract_shadows":true
+    "refract_shadows":false
   },
   "spheres": [
 
