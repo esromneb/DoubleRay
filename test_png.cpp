@@ -363,7 +363,7 @@ std::tuple<int,std::string> compareImages(
     unsigned char tg;
     unsigned char ta;
 
-    for(int i = 0; i < end; i+=4) {
+    for(unsigned i = 0; i < end; i+=4) {
 
 
         ir = ideal[i+0];

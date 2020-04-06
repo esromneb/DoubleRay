@@ -26,7 +26,7 @@ void setRayApiTarget(RayEngine* e) {
 // automatically resize the vector
 // (grow only)
 template<class T>
-void growOnly(const int index, T& vec) {
+void growOnly(const size_t index, T& vec) {
     if( (index + 1) > vec.size() ) {
         vec.resize((index+1));
     }
@@ -226,6 +226,8 @@ void setHighlightPixel(const int x, const int y) {
     engine->highlightY = y;
 #else
     cout << "RayEngine was compiled without the ALLOW_HIGHLIGHT macro\n";
+    (void)x;
+    (void)y;
 #endif
 }
 
@@ -363,6 +365,10 @@ void chokeOutput(int il, int ih, int jl, int jh) {
     engine->jh = jh;
 #else
     cout << "RayEngine was compiled without the ALLOW_CHOKE macro\n";
+    (void)il;
+    (void)ih;
+    (void)jl;
+    (void)jh;
 #endif
 }
 
@@ -371,6 +377,7 @@ void setPrint(int p) {
     engine->print = p?true:false;
 #else
     cout << "RayEngine was compiled without the ALLOW_PRINT macro\n";
+    (void)p;
 #endif
 }
 

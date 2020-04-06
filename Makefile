@@ -4,7 +4,7 @@
 
 wasm: out/ray.wasm
 
-all: test_png test_parse test_refl test_vec test_orbit
+all: test_png test_parse test_refl test_vec test_orbit wasm
 
 important: wasm test_png
 

@@ -650,8 +650,8 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
 
     const uint32_t px = engine->px;
 
-    for( int y = 0; y < px; y++ ) {
-        for( int x = 0; x < px; x++ ) {
+    for( unsigned y = 0; y < px; y++ ) {
+        for( unsigned x = 0; x < px; x++ ) {
             
             unsigned lookup;
             if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
