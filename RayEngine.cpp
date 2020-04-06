@@ -4,6 +4,10 @@
 #include <tuple>
 #include <type_traits>
 
+using std::min;
+using std::max;
+
+
 
 #ifdef ALLOW_PRINT
 #define PRINT print
@@ -376,7 +380,10 @@ std::tuple<bool,double> RayEngine::trace(
 
                     if constexpr (refractShadowsT) {
                         // set depth to next value as we will be refracting the shadow detection
-                        shadowDepth = depthIn+1;
+                        // in this case, we fudge so that we will always allow 1 shadow feeler
+                        // to go out.  (this could cause us to actually recurse +1 from what we requested)
+                        // however it will prevent shadowed colors from showing up in final bounce reflections
+                        shadowDepth = min(this->depth,depthIn+1);
                     } else {
                         // set depth to maximum to prevent further bounces
                         shadowDepth = this->depth;
