@@ -101,7 +101,7 @@ void RayEngine::_render( void ) noexcept {
 #ifdef ALLOW_CHOKE
             if( (i > il && i < ih) && (j > jl && j < jh ) ) {
 
-                trace<enableShadowsT, refractShadowsT>( r, 0, color, false );
+                trace<enableShadowsT, refractShadowsT, false>( r, 0, color);
                 if( PRINT ) {
                     cout << "\n Final: " << color[0] << "\n";
                 }
@@ -109,7 +109,7 @@ void RayEngine::_render( void ) noexcept {
                 color = Vec3(0,0,0);
             }
 #else
-            trace<enableShadowsT, refractShadowsT>( r, 0, color, false );
+            trace<enableShadowsT, refractShadowsT, false>( r, 0, color);
 #endif
 
 #ifdef ALLOW_HIGHLIGHT
@@ -195,12 +195,11 @@ typedef std::tuple<uint8_t, size_t> hit_t;
 
 // returns true for hitting anything
 // returns a double "visible amount" to do with shadow tracing, 0 is blocked 1 is visible
-template <bool enableShadowsT, bool refractShadowsT>
+template <bool enableShadowsT, bool refractShadowsT, bool shadowFeelingT>
 std::tuple<bool,double> RayEngine::trace(
     const Ray& r,
     const int depthIn,
-    Vec3 &color,
-    const bool shdFeeling ) noexcept {
+    Vec3 &color) noexcept {
 
     if( depthIn > this->depth ) {
         if( PRINT ) {
@@ -317,14 +316,16 @@ std::tuple<bool,double> RayEngine::trace(
             // for the cloesest hit, as the closest one may be transparent
             // FIXME this may be wrong as a sold object far away is different
             // than a refracted object up close
-            if( shdFeeling && s.m.kt == 0 ) {
-                return std::make_tuple(true, 0.0);
+            if constexpr ( shadowFeelingT ) {
+                if( s.m.kt == 0 ) {
+                    return std::make_tuple(true, 0.0);
+                }
             }
         } else {
 
             // we are sending one single ray back to the light source
             // any hit, no matter the distance, means the light is blocked
-            if( shdFeeling ) {
+            if constexpr( shadowFeelingT ) {
                 return std::make_tuple(true, 0.0);
             }
         }
@@ -362,8 +363,8 @@ std::tuple<bool,double> RayEngine::trace(
 
         // a bad guess, don't want multiply
         // color = (this->ia+material.kd) * material.ka * material.kd;
-        if ( !shdFeeling ) {
-            for( unsigned iLight = 0; (iLight < lights.size()) && !shdFeeling ; iLight++ ) {
+        if constexpr ( !shadowFeelingT ) {
+            for( unsigned iLight = 0; (iLight < lights.size()); iLight++ ) {
                 double visibilityLevel;
 
                 // decide if we can see this light
@@ -395,7 +396,7 @@ std::tuple<bool,double> RayEngine::trace(
 
                     bool lightBlocked;
 
-                    std::tie(lightBlocked, visibilityLevel) = trace<enableShadowsT,refractShadowsT>( shadowFeeler, shadowDepth, shadowColor, true );
+                    std::tie(lightBlocked, visibilityLevel) = trace<enableShadowsT,refractShadowsT,true>( shadowFeeler, shadowDepth, shadowColor );
 
                     if(PRINT) {
                         cout << "Light " << iLight;
@@ -565,7 +566,7 @@ std::tuple<bool,double> RayEngine::trace(
                 cout << "\n" << std::string(depthIn, ' ') << "Tracing Refraction:\n";
             }
             auto [refractedHit, _childRefractedVisibility] =
-                trace<enableShadowsT,refractShadowsT>(refractedRay, depthIn+1, refractedColor, shdFeeling);
+                trace<enableShadowsT,refractShadowsT,shadowFeelingT>(refractedRay, depthIn+1, refractedColor);
 
             // the color we get back from refraction is damped by kt
 
@@ -601,31 +602,35 @@ std::tuple<bool,double> RayEngine::trace(
 
 
 
-        if( ((savedKr > 0) || (reflect_prob > 0)) && !shdFeeling ) {
-            
-            const Ray reflRay(savedIntersect,savedRefl);
+        if constexpr( !shadowFeelingT ) {
+            if( ((savedKr > 0) || (reflect_prob > 0)) ) {
+                
+                const Ray reflRay(savedIntersect,savedRefl);
 
-            if( PRINT ) {
-                cout << "\n" << std::string(depthIn, ' ') << "Tracing Reflection using " << reflRay.d.str(false) << "\n";
+                if( PRINT ) {
+                    cout << "\n" << std::string(depthIn, ' ') << "Tracing Reflection using " << reflRay.d.str(false) << "\n";
+                }
+
+
+                Vec3 newColor(0,0,0);
+                trace<enableShadowsT,refractShadowsT,shadowFeelingT>( reflRay, depthIn+1, newColor);
+
+                // frenel adds the schlick function
+                // which reduces the reflection on the sphere greatly as you move in from the edge
+
+                double noTransmissonFactor = savedKr;
+                double fullTransmissionFactor = savedKr * reflect_prob;
+
+                double blendFactor = (fullTransmissionFactor*savedKt) + noTransmissonFactor*(1-savedKt);
+                color = savedColor + (newColor * blendFactor);
+
+                // This line is the first step towards my concept of "mirror ball"
+                // it doesn't look like I thought it would so abandon it
+                // color = savedColor + (newColor * savedKr);
+
+            } else {
+                color = savedColor;
             }
-
-
-            Vec3 newColor(0,0,0);
-            trace<enableShadowsT,refractShadowsT>( reflRay, depthIn+1, newColor, shdFeeling );
-
-            // frenel adds the schlick function
-            // which reduces the reflection on the sphere greatly as you move in from the edge
-
-            double noTransmissonFactor = savedKr;
-            double fullTransmissionFactor = savedKr * reflect_prob;
-
-            double blendFactor = (fullTransmissionFactor*savedKt) + noTransmissonFactor*(1-savedKt);
-            color = savedColor + (newColor * blendFactor);
-
-            // This line is the first step towards my concept of "mirror ball"
-            // it doesn't look like I thought it would so abandon it
-            // color = savedColor + (newColor * savedKr);
-
         } else {
             color = savedColor;
         }

@@ -50,12 +50,11 @@ public:
     template <bool enableShadowsT, bool refractShadowsT>
     void _render( void ) noexcept;
 
-    template <bool enableShadowsT, bool refractShadowsTT>
+    template <bool enableShadowsT, bool refractShadowsT, bool shadowFeelingT>
     std::tuple<bool,double> trace(
         const Ray& r, 
         const int depthIn,
-        Vec3 &color,
-        const bool shdFeeling ) noexcept;
+        Vec3 &color) noexcept;
 
     Ray camera;
     Vec3 up;
