@@ -180,7 +180,7 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween,
 // this is a datatype which records a square region of the image
 // and records how many different pixels we found there between test and ideal
 // the idea is to make it more simple for me to identify regions of changes between images
-typedef std::tuple<unsigned,unsigned,unsigned,unsigned,unsigned> blemish_t;
+typedef std::tuple<unsigned,unsigned,unsigned,unsigned,unsigned,int,int,int> blemish_t;
 
 bool _blin(const unsigned x, const unsigned xl, const unsigned xh) {
     if( x >= xl && x <= xh) {
@@ -195,44 +195,68 @@ bool blin(const unsigned x, const unsigned xl, const unsigned xh, const unsigned
 }
 
 
-blemish_t growBlem(const blemish_t& b, const unsigned x, const unsigned y) {
-    const auto [xl,xh,yl,yh,count] = b;
+blemish_t growBlem(
+    const blemish_t& b,
+    const unsigned x,
+    const unsigned y,
+    const int dr,
+    const int dg,
+    const int db ) {
+    const auto [xl,xh,yl,yh,count,edr,edg,edb] = b;
 
     return std::make_tuple(
         min(x,xl),
         max(x,xh),
         min(y,yl),
         max(y,yh),
-        count+1
+        count+1,
+        edr+dr,
+        edg+dg,
+        edb+db
         );
 }
 
 
 
-void addBlemish(std::vector<blemish_t>& blem, const unsigned x, const unsigned y, const unsigned tol = 10) {
+void addBlemish(
+    std::vector<blemish_t>& blem,
+    const unsigned x,
+    const unsigned y,
+    const int dr = 0,
+    const int dg = 0,
+    const int db = 0,
+    const unsigned tol = 10
+    ) {
 
     bool addNew = true;
 
     for(unsigned i = 0; i < blem.size(); i++ ) {
         auto search = blem[i];
-        const auto [xl,xh,yl,yh,count] = search;
+        const auto [xl,xh,yl,yh,count,dnc0,dnc1,dnc2] = search;
         if( blin(x, xl, xh, tol) && blin(y, yl, yh, tol) ) {
-            blem[i] = growBlem(search, x, y);
+            blem[i] = growBlem(search, x, y,dr,dg,db);
             addNew = false;
             break;
         }
     }
 
     if(addNew) {
-        blem.emplace_back(x,x,y,y,1);
+        blem.emplace_back(x,x,y,y,1,dr,dg,db);
         return;
     }
 }
 
 void reportBlemish(const std::vector<blemish_t>& blem) {
     for(const auto& w : blem) {
-        const auto [xl,xh,yl,yh,count] = w;
-        cout << "Region: x: [" << xl << "," << xh << "] y: [" << yl << "," << yh << "] with " << count << " pixels" <<  "\n";
+        const auto [xl,xh,yl,yh,count,dr,dg,db] = w;
+        const double _ar = ((double)(dr) / count);
+        const double _ag = ((double)(dg) / count);
+        const double _ab = ((double)(db) / count);
+        const double ar = ((int)((_ar*10)+0.5))/10.0;
+        const double ag = ((int)((_ag*10)+0.5))/10.0;
+        const double ab = ((int)((_ab*10)+0.5))/10.0;
+        cout << "Region: x: [" << xl << "," << xh << "] y: [" << yl << "," << yh
+             << "] with " << count << " pixels, average [" << ar << "," << ag << "," << ab << "]\n";
     }
 }
 
@@ -293,7 +317,14 @@ std::tuple<int,std::string> compareImages(
             const int y = (fy-1) - (p / fy);
             const int x = p % fx;
 
-            addBlemish(blem, x, y);
+            addBlemish(
+                blem,
+                x,
+                y,
+                (signed)tr-(signed)ir,
+                (signed)tg-(signed)ig,
+                (signed)tb-(signed)ib
+                );
 
             if( printAllValues ) {
                 cout << "[" << x << "," << y << "]: ";
