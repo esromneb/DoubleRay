@@ -32,6 +32,9 @@ public:
     double r; //radius
     Vec3 c; //center
     Material m;
+    double r_inv;
+    double r_sq;
+    void constexpr calc(void) { r_inv = 1.0/r; r_sq = r*r; };
 };
 
 // forward declare and type so that RayEngine can render to pixels 100% internally

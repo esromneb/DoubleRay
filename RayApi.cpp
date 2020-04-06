@@ -177,6 +177,7 @@ void setSphere(
     spheres[index].m.n = n;
     spheres[index].m.kt = transmitted;
     spheres[index].m.refraction = refraction;
+    spheres[index].calc();
 }
 
 

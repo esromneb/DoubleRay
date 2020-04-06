@@ -166,7 +166,7 @@ std::tuple<Vec3, Vec3, Vec3, Vec3> intersectSphere(const Ray& r, const Sphere& s
 
     intersect = r.pointAt(t0);
 
-    const double srInverse = 1.0f/s.r;
+    const double srInverse = s.r_inv;
 
 
     norm = Vec3( ( intersect[0] - s.c[0] )*srInverse, ( intersect[1] - s.c[1] )*srInverse, ( intersect[2] - s.c[2] )*srInverse );
@@ -250,7 +250,7 @@ std::tuple<bool,double> RayEngine::trace(
         const double sb = 2.0 * oc.dot(r.d);
 
         // double c = pow((r.o[0] - s.c[0]),2) + pow((r.o[1] - s.c[1]),2) + pow((r.o[2] - s.c[2]),2) - s.r*s.r;
-        const double sc = oc.dot(oc) - (s.r*s.r);
+        const double sc = oc.dot(oc) - (s.r_sq);
 
         const double discriminant = (sb*sb) - (4*a*sc);
 
