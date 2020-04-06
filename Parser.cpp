@@ -238,6 +238,12 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj) 
             setRefractShadows(RayEngine::defaultMemberRefractShadows);
         }
 
+        if(valid_bool(gg, "shadows")) {
+            setEnableShadows(gg["shadows"]);
+        } else {
+            setEnableShadows(RayEngine::defaultEnableShadows);
+        }
+
 
 
 

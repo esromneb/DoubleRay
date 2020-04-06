@@ -8,7 +8,8 @@
   "global": {
     "color": [1, 1, 1],
     "c": 10,
-"scale":166.6666666
+    "scale":166.6666666,
+    "refract_shadows":true
   },
   "spheres": [{
       "rad": 0.5,

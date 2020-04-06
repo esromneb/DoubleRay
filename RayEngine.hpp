@@ -11,8 +11,8 @@
 
 using namespace::std;
 
-// #define ALLOW_PRINT
-// #define ALLOW_CHOKE
+#define ALLOW_PRINT
+#define ALLOW_CHOKE
 // #define ALLOW_HIGHLIGHT
 
 
@@ -47,10 +47,10 @@ public:
 
     void render( void ) noexcept;
 
-    template <bool refractShadows>
+    template <bool enableShadowsT, bool refractShadowsT>
     void _render( void ) noexcept;
 
-    template <bool refractShadowsT>
+    template <bool enableShadowsT, bool refractShadowsTT>
     std::tuple<bool,double> trace(
         const Ray& r, 
         const int depthIn,
@@ -104,13 +104,19 @@ public:
 
     constexpr static double defaultScale = 255;
     constexpr static bool defaultMemberRefractShadows = true;
+    constexpr static bool defaultEnableShadows = true;
 
     ///
     /// these should not be read inside render() or trace()
     /// instead these should be read and then used to choose
     /// which template to call
     ///
+    /// This option determines if we do fancy refraction of shadows
+    /// for objects that have transmission
     bool memberRefractShadows = defaultMemberRefractShadows;
+
+    /// do we calculate shadows at all
+    bool enableShadows = defaultEnableShadows;
 
     // Factor used to scale in-engine floating point colors
     // to 0-255 rgb

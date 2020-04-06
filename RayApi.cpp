@@ -232,8 +232,12 @@ void setHighlightPixel(const int x, const int y) {
 }
 
 
-void setRefractShadows(const bool r) {
-    engine->memberRefractShadows = r;
+void setRefractShadows(const bool b) {
+    engine->memberRefractShadows = b;
+}
+
+void setEnableShadows(const bool b) {
+    engine->enableShadows = b;
 }
 
 

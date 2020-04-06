@@ -48,14 +48,18 @@ int g_j = 0;
 
 
 void RayEngine::render( void ) noexcept {
-    if( memberRefractShadows ) {
-        _render<true>();
+    if( enableShadows ) {
+        if( memberRefractShadows ) {
+            _render<true, true>();
+        } else {
+            _render<true, false>();
+        }
     } else {
-        _render<false>();
+        _render<false, false>();
     }
 }
 
-template <bool refractShadowsT>
+template <bool enableShadowsT, bool refractShadowsT>
 void RayEngine::_render( void ) noexcept {
     // bool nUsedB = false;
     // Vec3 nUsedI;
@@ -93,7 +97,7 @@ void RayEngine::_render( void ) noexcept {
 #ifdef ALLOW_CHOKE
             if( (i > il && i < ih) && (j > jl && j < jh ) ) {
 
-                trace<refractShadowsT>( r, 0, color, false );
+                trace<enableShadowsT, refractShadowsT>( r, 0, color, false );
                 if( PRINT ) {
                     cout << "\n Final: " << color[0] << "\n";
                 }
@@ -101,7 +105,7 @@ void RayEngine::_render( void ) noexcept {
                 color = Vec3(0,0,0);
             }
 #else
-            trace<refractShadowsT>( r, 0, color, false );
+            trace<enableShadowsT, refractShadowsT>( r, 0, color, false );
 #endif
 
 #ifdef ALLOW_HIGHLIGHT
@@ -187,7 +191,7 @@ typedef std::tuple<uint8_t, size_t> hit_t;
 
 // returns true for hitting anything
 // returns a double "visible amount" to do with shadow tracing, 0 is blocked 1 is visible
-template <bool refractShadowsT>
+template <bool enableShadowsT, bool refractShadowsT>
 std::tuple<bool,double> RayEngine::trace(
     const Ray& r,
     const int depthIn,
@@ -206,7 +210,7 @@ std::tuple<bool,double> RayEngine::trace(
     }
 
     // Vec3 fp;
-    color[0] = color[1] = color[2] = 0;
+    // color[0] = color[1] = color[2] = 0;
 
     // double vd, vo, t; // tri stuff
     // Vec3 d1,d2,d3; // tri stuff
@@ -262,8 +266,8 @@ std::tuple<bool,double> RayEngine::trace(
             continue;
         }
 
-        double t0 = ((-sb) - sqrt(discriminant)) / (2*a);
-        double t1 = ((-sb) + sqrt(discriminant)) / (2*a);
+        const double t0 = ((-sb) - sqrt(discriminant)) / (2*a);
+        const double t1 = ((-sb) + sqrt(discriminant)) / (2*a);
 
         if( PRINT ) {
             cout << "t0 " << t0 << " t1 " << t1 << "\n";
@@ -276,14 +280,14 @@ std::tuple<bool,double> RayEngine::trace(
         double sphereBestT;
 
         // has hit detection issues
-        if( false ) {
+        if constexpr ( false ) {
             sphereBestT = min( t0, t1 );
         }
 
         
         // the tolerance here can be changed to 0 if we "advance"
         // the reflected ray just a bit.  whichever is more efficient
-        if( true ) {
+        if constexpr ( true ) {
 
             // this fixes shadow issues
             const double sphereLift = 1E-12;
@@ -354,108 +358,119 @@ std::tuple<bool,double> RayEngine::trace(
 
         // a bad guess, don't want multiply
         // color = (this->ia+material.kd) * material.ka * material.kd;
+        if ( !shdFeeling ) {
+            for( unsigned iLight = 0; (iLight < lights.size()) && !shdFeeling ; iLight++ ) {
+                double visibilityLevel;
 
-        for( unsigned iLight = 0; (iLight < lights.size()) && !shdFeeling ; iLight++ )
-        {
-            // decide if we can see this light
+                // decide if we can see this light
+                if constexpr ( enableShadowsT ) {
+                    Ray shadowFeeler;
+                    shadowFeeler.o = intersect;
+                    shadowFeeler.d = lights[iLight].d * -1;
+                    // shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
+                    Vec3 shadowColor; // unused
 
-            Ray shadowFeeler;
-            shadowFeeler.o = intersect;
-            shadowFeeler.d = lights[iLight].d * -1;
-            // shadowFeeler.o = shadowFeeler.o + shadowFeeler.d * 2;
-            Vec3 shadowColor; // unused
-            if(PRINT) {
-                cout << "\n" << std::string(depthIn, ' ') << "Looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << "\n";
-            }
-            // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
+                    // trace( shadowFeeler, depth, effect, shadowColor, false, bSphere, objectNum, true );
 
-            int shadowDepth;
+                    int shadowDepth;
 
-            if constexpr (refractShadowsT) {
-                // set depth to next value as we will be refracting the shadow detection
-                shadowDepth = depthIn+1;
-            } else {
-                // set depth to maximum to prevent further bounces
-                shadowDepth = this->depth;
-            }
+                    if constexpr (refractShadowsT) {
+                        // set depth to next value as we will be refracting the shadow detection
+                        shadowDepth = depthIn+1;
+                    } else {
+                        // set depth to maximum to prevent further bounces
+                        shadowDepth = this->depth;
+                    }
 
-            const auto [lightBlocked,visibilityLevel] = trace<refractShadowsT>( shadowFeeler, shadowDepth, shadowColor, true );
+                    if(PRINT) {
+                        cout << "\n" << std::string(depthIn, ' ') << "Looking at light " << iLight << " " << shadowFeeler.o.str(false) << " " << shadowFeeler.d.str(false) << " with depth " << shadowDepth << "\n";
+                    }
 
-            if(PRINT) {
-                cout << "Light " << iLight;
-            }
+                    bool lightBlocked;
+
+                    std::tie(lightBlocked, visibilityLevel) = trace<enableShadowsT,refractShadowsT>( shadowFeeler, shadowDepth, shadowColor, true );
+
+                    if(PRINT) {
+                        cout << "Light " << iLight;
+                    }
 
 
-            // just because the light was blocked doesn't mean it was 100% blocked
-            // in order to ignore this light, we need a true and 0.0
-            // if it's a value larger than 0 we need to do the full color
-            // calculation in order to get the shadow right with transparent (kt) spheres
+                    // just because the light was blocked doesn't mean it was 100% blocked
+                    // in order to ignore this light, we need a true and 0.0
+                    // if it's a value larger than 0 we need to do the full color
+                    // calculation in order to get the shadow right with transparent (kt) spheres
 
-            if( lightBlocked && visibilityLevel <= 0.0) {
+                    if( lightBlocked && visibilityLevel <= 0.0) {
+                        if(PRINT) {
+                            cout << " Blocked\n";
+                        }
+                        continue;
+                    }
+
+                    if(PRINT) {
+                        cout << " Visible\n";
+                    }
+                } // if enable shadows
+
+
+
+                // now that we know we can see the light
+                const Vec3 negLightDirection = lights[iLight].d*-1;
+
+                const Vec3 diffuse = (material.kd * norm.dot( negLightDirection ) );
+
                 if(PRINT) {
-                    cout << " Blocked\n";
+                    cout << "norm dot " << norm.dot( negLightDirection ) << "\n";
+                    cout << "diffuse " << diffuse.str(false) << "\n";
                 }
-                continue;
+
+                const Vec3 negRayDirection = r.d*-1;
+                Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
+
+                const float specular = material.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), material.n);
+
+                if(PRINT) {
+                    cout << "specular: " << specular << "\n";
+                    cout << "fp: " << fp.str(false) << " mag " << fp.mag() << "\n";
+                    Vec3 t1 = lights[iLight].color / ( fp.mag() + this->c );
+                    cout << "t1: " << t1.str(false) << "\n";
+
+                    Vec3 t2 = diffuse + specular;
+                    cout << "t2: " << t2.str(false) << "\n";
+
+                    // cout << "Visiblity: " << visibilityLevel << "\n";
+                }
+
+                Vec3 lightEffects;
+
+                // "no fog"
+                // in this mode we do not take into account the distance
+                // all objects will be lit with equal intensity regardless of distance
+                // if( false ) {
+                //     lightEffects =
+                //       ( lights[iLight].color ) 
+                //     * (diffuse + specular) * (visibilityLevel);
+                // }
+
+                // "fog mode"
+                // in this mode the distance between the intersection point and then
+                // camera affects the intensity of the light
+                // this is where the global.c parameter comes into play
+                if constexpr ( enableShadowsT ) {
+                    lightEffects =
+                      ( lights[iLight].color / ( fp.mag() + this->c ) ) 
+                    * (diffuse + specular) * (visibilityLevel);
+                } else {
+                    lightEffects =
+                      ( lights[iLight].color / ( fp.mag() + this->c ) ) 
+                    * (diffuse + specular);
+                }
+
+                // Lights cannot have negative effect
+                lightEffects.saturateMin(0.0);
+
+                color = color + lightEffects;
             }
-
-            if(PRINT) {
-                cout << " Visible\n";
-            }
-
-
-
-            // now that we know we can see the light
-            const Vec3 negLightDirection = lights[iLight].d*-1;
-
-            const Vec3 diffuse = (material.kd * norm.dot( negLightDirection ) );
-
-            if(PRINT) {
-                cout << "norm dot " << norm.dot( negLightDirection ) << "\n";
-                cout << "diffuse " << diffuse.str(false) << "\n";
-            }
-
-            const Vec3 negRayDirection = r.d*-1;
-            Vec3 idealR = Vec3::reflect(lights[iLight].d, norm );
-
-            const float specular = material.ks * pow( std::max((double)0, idealR.dot( negRayDirection )), material.n);
-
-            if(PRINT) {
-                cout << "specular: " << specular << "\n";
-                cout << "fp: " << fp.str(false) << " mag " << fp.mag() << "\n";
-                Vec3 t1 = lights[iLight].color / ( fp.mag() + this->c );
-                cout << "t1: " << t1.str(false) << "\n";
-
-                Vec3 t2 = diffuse + specular;
-                cout << "t2: " << t2.str(false) << "\n";
-
-                cout << "Visiblity: " << visibilityLevel << "\n";
-            }
-
-            Vec3 lightEffects;
-
-            // "no fog"
-            // in this mode we do not take into account the distance
-            // all objects will be lit with equal intensity regardless of distance
-            if( false ) {
-                lightEffects =
-                  ( lights[iLight].color ) 
-                * (diffuse + specular) * (visibilityLevel);
-            }
-
-            // "fog mode"
-            // in this mode the distance between the intersection point and then
-            // camera affects the intensity of the light
-            // this is where the global.c parameter comes into play
-            if( true ) {
-                lightEffects =
-                  ( lights[iLight].color / ( fp.mag() + this->c ) ) 
-                * (diffuse + specular) * (visibilityLevel);
-            }
-
-            // Lights cannot have negative effect
-            lightEffects.saturateMin(0.0);
-
-            color = color + lightEffects;
         }
 
         savedColor = color;
@@ -543,7 +558,7 @@ std::tuple<bool,double> RayEngine::trace(
                 cout << "\n" << std::string(depthIn, ' ') << "Tracing Refraction:\n";
             }
             auto [refractedHit, _childRefractedVisibility] =
-                trace<refractShadowsT>(refractedRay, depthIn+1, refractedColor, shdFeeling);
+                trace<enableShadowsT,refractShadowsT>(refractedRay, depthIn+1, refractedColor, shdFeeling);
 
             // the color we get back from refraction is damped by kt
 
@@ -589,7 +604,7 @@ std::tuple<bool,double> RayEngine::trace(
 
 
             Vec3 newColor(0,0,0);
-            trace<refractShadowsT>( reflRay, depthIn+1, newColor, shdFeeling );
+            trace<enableShadowsT,refractShadowsT>( reflRay, depthIn+1, newColor, shdFeeling );
 
             // frenel adds the schlick function
             // which reduces the reflection on the sphere greatly as you move in from the edge
@@ -734,8 +749,9 @@ void RayEngine::copyToPixels(std::vector<unsigned char>& buffer) const {
 void templateHack(void) {
     RayEngine r;
 
-    r._render<false>();
-    r._render<true>();
+    r._render<false, false>();
+    r._render<true, false>();
+    r._render<true, true>();
 }
 
 // template function RayEngine::render<bool>;
