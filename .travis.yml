@@ -15,4 +15,4 @@ before_install:
 
 script:
   - docker exec -it make wasm
-  - make test
+  - make test 
