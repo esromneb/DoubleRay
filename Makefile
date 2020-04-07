@@ -11,32 +11,32 @@ important: wasm test_png
 
 
 HPP_FILES = \
-RayEngine.hpp \
-Vec3.hpp \
-Poly.hpp \
-Matrix.hpp \
-fileio.h \
-Material.hpp \
-Ray.hpp \
-Parser.hpp \
-RayApi.hpp \
-json.hpp \
-Macros.hpp \
-Vec.hpp
+src/RayEngine.hpp \
+src/Vec3.hpp \
+src/Poly.hpp \
+src/Matrix.hpp \
+src/fileio.h \
+src/Material.hpp \
+src/Ray.hpp \
+src/Parser.hpp \
+src/RayApi.hpp \
+src/json.hpp \
+src/Macros.hpp \
+src/Vec.hpp
 
-WASM_MAIN = main2.cpp
+WASM_MAIN = src/main2.cpp
 
 CPP_FILES = \
-Vec3.cpp \
-Poly.cpp \
-Matrix.cpp \
-RayEngine.cpp \
-fileio.cpp \
-Material.cpp \
-Ray.cpp \
-Parser.cpp \
-RayApi.cpp \
-Vec.cpp
+src/Vec3.cpp \
+src/Poly.cpp \
+src/Matrix.cpp \
+src/RayEngine.cpp \
+src/fileio.cpp \
+src/Material.cpp \
+src/Ray.cpp \
+src/Parser.cpp \
+src/RayApi.cpp \
+src/Vec.cpp
 
 # this is a list of all C functions we want to publish to javascript
 # In the main cpp file, each of these is wrapped in extern "C" {}
@@ -159,46 +159,46 @@ copy_fs:
 # files need only for test or desktop builds (aka not WASM builds)
 
 HPP_TEST_FILES = \
-lodepng.h \
-HandlePng.hpp
+src/lodepng.h \
+src/HandlePng.hpp
 
 CPP_TEST_FILES = \
-lodepng.cpp \
-HandlePng.cpp
+src/lodepng.cpp \
+src/HandlePng.cpp
 
 
 
-test_orbit2: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+test_orbit2: src/test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	g++ test_orbit.cpp $(CPP_FILES) -o $@
 
-test_parse2: test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+test_parse2: src/test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	g++ $< $(CPP_FILES) -std=c++17  -g -o $@
 
 
 # $< name of first prerequisite
 # $@ name of target
-test_orbit: test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+test_orbit: src/test_orbit.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
-test_vec: test_vec.cpp $(CPP_FILES) $(HPP_FILES) Makefile
-	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
-
-
-test_refl: test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+test_vec: src/test_vec.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
 
-test_parse: test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+test_refl: src/test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
-test_png: test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) $(CPP_TEST_FILES) Makefile
+
+test_parse: src/test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
+
+test_png: src/test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) $(CPP_TEST_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) $(CPP_TEST_FILES) -O3 -o $@
 
 
 .PHONY: test
 
 test: test_png
-	./test_png -a
+	./test_png -a -g
 
 
 .PHONY: rmtest movetestideal rmideal
