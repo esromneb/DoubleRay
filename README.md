@@ -1,6 +1,31 @@
-Raytracer
+DoubleRay raytracer
 ===
-From UC Davis ECS175
+This project came from a homework assignment I had 12 years ago in my undergraduate computer graphics class (UC Davis ECS175).  The purpose of this project is to modernize and package the raytracer for use in the browser via WASM.  In general I had the idea that this should be able to render semi-realtime, however I'm not sure it's there yet.  The name (Double Ray) is just a play on the double precision float datatype.
+
+Project Priorities
+===
+These are the priorities I kept in mind through development:
+* Correctness
+* Ease of Use
+* Performance
+* Code cleanliness
+
+
+State of things
+===
+Currently the project is a bit limited in functionality, but it does support:
+* Spheres only
+* Reflection, Refraction, Diffuse, Specular (phong), light shadows
+* Light sources are a direction only, and have no origin
+* Multiple shadowing modes
+
+Things I want to add
+===
+* Poloygon support (triangles)
+* Bounding boxes to improve performance
+* Diffuse shading that includes reflection from lights
+* Spherical light model
+
 
 
 Compile
@@ -77,9 +102,3 @@ Libraries Used
 * https://github.com/nlohmann/json
 * https://github.com/lvandeve/lodepng
 * https://github.com/CLIUtils/CLI11
-
-
-
-Notes
-===
-Last version with my canvas and emscripten official canvas is in templates/both.html
