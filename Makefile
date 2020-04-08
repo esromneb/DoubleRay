@@ -87,12 +87,13 @@ CLANG_WARN_FLAGS = \
 # render time
 #-s DISABLE_EXCEPTION_CATCHING=0 \
 
+# don't need this until we get poly working
+#--preload-file 'root_fs'
 out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 	emcc $(WASM_MAIN) $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
 	--pre-js $(JS_TEMPLATE_FILE) \
-	--preload-file 'root_fs' \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 	'-std=c++2a' '-O3' $(CLANG_WARN_FLAGS)
