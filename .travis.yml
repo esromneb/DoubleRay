@@ -15,5 +15,5 @@ before_install:
   - docker run -dit --name dtest -v $(pwd):/src esromneb/simple-clang bash
 
 script:
-  - docker exec -it dtest make test
+  - docker exec -it dtest make -C src test
   - docker exec -it emscripten make wasm
