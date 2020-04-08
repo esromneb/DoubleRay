@@ -21,13 +21,13 @@ RayEngine::RayEngine( void )
     numPoly = 0;
     this->polygons.resize(POLYGONS);
 
-    r = g = b = 0;
-    px = 0;
+    // r = g = b = 0;
+    // px = 0;
 
-    mat = new Matrix( 3, 3 );
-    mat->m1 = new Matrix( 2, 2 );
-    mat->m2 = new Matrix( 2, 2 );
-    mat->m3 = new Matrix( 2, 2 );
+    // mat = new Matrix( 3, 3 );
+    // mat->m1 = new Matrix( 2, 2 );
+    // mat->m2 = new Matrix( 2, 2 );
+    // mat->m3 = new Matrix( 2, 2 );
     
 }
 
@@ -35,16 +35,16 @@ RayEngine::RayEngine( void )
 void RayEngine::resize( const int _x )
 {
     px = _x;
-    if( r && g && b )
+    if( rBuffer && gBuffer && bBuffer )
     {
-        delete r;
-        delete g;
-        delete b;
+        delete rBuffer;
+        delete gBuffer;
+        delete bBuffer;
     }
 
-    r = new float[_x*_x];
-    g = new float[_x*_x];
-    b = new float[_x*_x];
+    rBuffer = new float[_x*_x];
+    gBuffer = new float[_x*_x];
+    bBuffer = new float[_x*_x];
 }
 
 int g_i = 0;
@@ -118,9 +118,9 @@ void RayEngine::_render( void ) noexcept {
             }
 #endif
 
-            this->r[i+j*px] = color[0];
-            this->g[i+j*px] = color[1];
-            this->b[i+j*px] = color[2];
+            this->rBuffer[i+j*px] = color[0];
+            this->gBuffer[i+j*px] = color[1];
+            this->bBuffer[i+j*px] = color[2];
 
         }
 }
@@ -716,16 +716,16 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
                 lookup = x+y*px;
             }
 
-            float r = engine->r[lookup];
-            float g = engine->g[lookup];
-            float b = engine->b[lookup];
-            float rs = (r * scale);
-            float gs = (g * scale);
-            float bs = (b * scale);
+            const float r = engine->rBuffer[lookup];
+            const float g = engine->gBuffer[lookup];
+            const float b = engine->bBuffer[lookup];
+            const float rs = (r * scale);
+            const float gs = (g * scale);
+            const float bs = (b * scale);
 
-            uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
-            uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
-            uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
+            const uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
+            const uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
+            const uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
 
             if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
                 arg0.emplace_back(rb);

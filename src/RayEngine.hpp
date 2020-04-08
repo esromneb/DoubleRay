@@ -3,7 +3,7 @@
 #include "Macros.hpp"
 #include "Vec3.hpp"
 #include "Poly.hpp"
-#include "Matrix.hpp"
+// #include "Matrix.hpp"
 #include "Material.hpp"
 #include "Ray.hpp"
 
@@ -61,13 +61,18 @@ public:
 
     Ray camera;
     Vec3 up;
-    int x, y; //pixels
+
+    // unsigned int xPx, yPx; // Dimensions of output in pixels
 
     //void setxy( int xin, int yin ); //resize output image
 
     void resize( const int _x );
-    float *r, *g, *b;
-    int px;
+
+    float *rBuffer = 0;
+    float *gBuffer = 0;
+    float *bBuffer = 0;
+
+    int px = 0;
     Vec3 ia; // Ambient color
     Vec3 noHitColor = {0,0,0}; // What color if don't hit anything?
     double c;
@@ -79,7 +84,7 @@ public:
     int numPoly = 0;
     vector<Poly> polygons;
 
-    Matrix *mat = 0;
+    // Matrix *mat = 0;
     // vector<double> hits;
     // int numHit;
 
