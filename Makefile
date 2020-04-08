@@ -95,7 +95,7 @@ out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPL
 	--preload-file 'root_fs' \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
-	'-std=c++2a' '-O2' $(CLANG_WARN_FLAGS)
+	'-std=c++2a' '-O3' $(CLANG_WARN_FLAGS)
 
 
 e: out/empty

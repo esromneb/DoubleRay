@@ -472,59 +472,58 @@
 <input type="button" value="Safe Gif Frame" onclick="saveGifFrame()"/><br>
 <input type="button" value="Download Gif" onclick="downloadGif()"/><br>
 </td><td>
-
-<div class="square"></div>
-<img src="https://en.js.cx/clipart/ball.svg" id="ball">
-
-
-</td><td>
 <textarea id="jsonscene" rows="13" cols="50">
 {
   "camera": {
-    "loc": [0, 0, -10],
-    "dir": [0, 0, 1],
-    "rot": [0, 1, 0],
-    "depth": 3
+    "loc": [5, 0, 0],
+    "dir": [-1, 0, 0],
+    "rot": [0, 0, 1],
+    "depth": 6
   },
   "global": {
-    "color": [0.4, 0.4, 0.4],
-    "c": 7
+    "color": [0.2, 0.2, 0.2],
+    "c": 10,
+"scale":166.6666666
   },
   "spheres": [{
-      "rad": 1.1,
-      "loc": [1, 0, 0],
-      "ambient": 0.4,
-      "specular": 0.1,
-      "reflected": 0.0,
-      "transmitted": 0.0,
-      "diffuse": [0.0, 1, 0],
-      "n": 8
-    },
-    {
-      "rad": 0.7,
+      "rad": 1,
       "loc": [-1, 0, 0],
-      "ambient": 0.0,
-      "specular": 0.03,
-      "reflected": 1,
+      "ambient": 0.1,
+      "specular": 1.46,
+      "reflected": 0,
       "transmitted": 0.0,
-      "diffuse": [1, 0.8, 0],
-      "n": 7
+      "diffuse": [0.9, 0.0, 0.0],
+      "n": 32
     },
+{
+      "rad": 0.3,
+      "loc": [-0.1, 0, 1.1],
+      "ambient": 0.1,
+      "specular": 1.46,
+      "reflected": 0,
+      "transmitted": 0.0,
+      "diffuse": [0.8, 0.8, 0.8],
+      "n": 32
+    },
+
+
+
     {
       "rad": 10,
-      "loc": [0, -11, 0],
+      "loc": [-4, 0, -11],
       "ambient": 0.4,
-      "specular": 0.0,
+      "specular": 0,
       "reflected": 1,
       "transmitted": 0.0,
-      "diffuse": [0, 0.0, 0],
-      "n": 11
+      "diffuse": [0.4, 0.4, 0.4],
+      "n": 1
     }
   ],
   "lights": [{
-    "dir": [0, -1, -0.5],
-    "color": [10, 10, 10]
-  }]
+    "dir": [-0.4, 0, -1],
+    "color": [20, 20, 20]
+  }
+]
 }
 </textarea><br>
 </td><td>
@@ -538,18 +537,6 @@
 </tr></table>
 
 
-    <style>
-    #ball {
-      cursor: pointer;
-      width: 25px;
-      height: 25px;
-    }
-    .square {
-        height: 200px;
-        width: 200px;
-        background-color: #333;
-      }
-    </style>
 
 <script type="text/javascript">
 
@@ -745,106 +732,7 @@
   });
 </script>
 
-<script type="text/javascript">
-  // js for UI controls
-    let currentDroppable = null;
 
-    // unused for now
-    function getDocumentOffsetPosition(el) {
-      var position = {
-          top: el.offsetTop,
-          left: el.offsetLeft
-      };
-      if (el.offsetParent) {
-          var parentPosition = getDocumentOffsetPosition(el.offsetParent);
-          position.top += parentPosition.top;
-          position.left += parentPosition.left;
-      }
-      return position;
-  }
-
-    ball.onmousedown = function(event) {
-
-      let shiftX = event.clientX - ball.getBoundingClientRect().left;
-      let shiftY = event.clientY - ball.getBoundingClientRect().top;
-
-      ball.style.position = 'absolute';
-      ball.style.zIndex = 1000;
-      document.body.append(ball);
-
-      moveAt(event.pageX, event.pageY);
-
-      function moveAt(pageX, pageY) {
-        ball.style.left = pageX - shiftX + 'px';
-        ball.style.top = pageY - shiftY + 'px';
-      }
-
-      function onMouseMove(event) {
-        moveAt(event.pageX, event.pageY);
-
-        /*
-        ball.hidden = true;
-        let elemBelow = document.elementFromPoint(event.clientX, event.clientY);
-        ball.hidden = false;
-
-        if (!elemBelow) return;
-
-        let droppableBelow = elemBelow.closest('.droppable');
-        if (currentDroppable != droppableBelow) {
-          if (currentDroppable) { // null when we were not over a droppable before this event
-            leaveDroppable(currentDroppable);
-          }
-          currentDroppable = droppableBelow;
-          if (currentDroppable) { // null if we're not coming over a droppable now
-            // (maybe just left the droppable)
-            enterDroppable(currentDroppable);
-          }
-        }
-
-        */
-      }
-
-      document.addEventListener('mousemove', onMouseMove);
-
-      ball.onmouseup = function() {
-        document.removeEventListener('mousemove', onMouseMove);
-        ball.onmouseup = null;
-      };
-
-    };
-
-    // function enterDroppable(elem) {
-    //   elem.style.background = 'pink';
-    // }
-
-    // function leaveDroppable(elem) {
-    //   elem.style.background = '';
-    // }
-
-    ball.ondragstart = function() {
-      return false;
-    };
-
-    function floatBall() {
-      let shiftX = window.scrollX + ball.getBoundingClientRect().left;
-      let shiftY = window.scrollY + ball.getBoundingClientRect().top;
-
-      ball.style.position = 'absolute';
-      ball.style.zIndex = 1000;
-      document.body.append(ball);
-
-      ball.style.left = shiftX + 'px';
-      ball.style.top  = shiftY + 'px';
-
-    }
-
-    setTimeout(()=>{
-      floatBall();
-    }, 0);
-
-
-
-</script>
 
 <script type="text/javascript">
   function getElementPosition(obj) {
