@@ -26,6 +26,13 @@ Things I want to add
 * Diffuse shading that includes reflection from lights
 * Spherical light model
 
+Travis Details
+===
+The emscripten travis docker image has some weird issues with clang that I do not understand.  I have opted to use two docker images, one for the png tests, and one to build the wasm.
+
+[![Build Status](https://travis-ci.com/esromneb/DoubleRay.svg?branch=master)](https://travis-ci.com/esromneb/DoubleRay)
+
+
 
 
 Compile
