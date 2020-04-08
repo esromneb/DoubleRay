@@ -50,6 +50,7 @@ void dumpPoly(const int index);
 void setHighlightPixel(const int x, const int y);
 void setRefractShadows(const bool b);
 void setEnableShadows(const bool b);
+void resizeBuffer(const unsigned x, const unsigned y);
 typedef std::function<void(void)> scene_animation_t;
 void setupOrbit(const int _frames);
 void nextOrbitRender(void);

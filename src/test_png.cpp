@@ -133,14 +133,14 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween,
     RayEngine* engine;
     if( !cleanBetween ) {
         engine = new RayEngine();
-        engine->resize(400);
+        engine->resize(400,400);
     }
 
     for(const auto& p : paths ) {
         if( cleanBetween ) {
             // leak the old one for now
             engine = new RayEngine();
-            engine->resize(400);
+            engine->resize(400,400);
         }
 
         const auto outputPath = outputPathForInput(p);

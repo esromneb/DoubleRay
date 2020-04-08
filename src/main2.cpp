@@ -32,7 +32,10 @@ using namespace std;
 
 RayEngine* engine;
 // std::vector<std::vector<uint32_t>> buffer;
-float gain = 1.1;
+// float gain = 1.1;
+
+unsigned xCanvas = 0;
+unsigned yCanvas = 0;
 
 void t1(void) {
     Vec3 v1(1,2,3);
@@ -46,7 +49,7 @@ extern "C" {
 
 void setupEngine(void) {
     engine = new RayEngine();
-    engine->resize(400);
+    engine->resize(400,400);
 
     setRayApiTarget(engine);
 
@@ -200,8 +203,8 @@ unsigned frames_p = 0;
 
 void officialRenderRainbow(bool boolA, bool boolB) {
     if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
-      for (int i = 0; i < 400; i++) {
-        for (int j = 0; j < 400; j++) {
+      for (int i = 0; i < yCanvas; i++) {
+        for (int j = 0; j < xCanvas; j++) {
 
 // #ifdef TEST_SDL_LOCK_OPTS
           // Alpha behaves like in the browser, so write proper opaque pixels.
@@ -217,7 +220,7 @@ void officialRenderRainbow(bool boolA, bool boolB) {
           const uint8_t b = 255-i;
 
 
-          *((Uint32*)screen->pixels + i * 400 + j) = SDL_MapRGBA(screen->format, r, g, b, alpha);
+          *((Uint32*)screen->pixels + i * xCanvas + j) = SDL_MapRGBA(screen->format, r, g, b, alpha);
         }
       }
       if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
@@ -324,6 +327,9 @@ void initSetResolution(const unsigned x, const unsigned y) {
     EM_ASM("SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = true; SDL.defaults.opaqueFrontBuffer = false;");
     #endif
 
+    xCanvas = x;
+    yCanvas = y;
+
 }
 
 int main(int argc, char ** argv) {
@@ -367,6 +373,15 @@ EM_JS(void, call_alert, (), {
 ///
 
 extern "C" {
+
+void resizeCanvas(const unsigned x, const unsigned y) {
+    // SDL_Init(SDL_INIT_VIDEO);
+    screen = SDL_SetVideoMode(x, y, 32, SDL_SWSURFACE);
+
+    resizeBuffer(x,y);
+    xCanvas = x;
+    yCanvas = y;
+}
 
 void renderNextRainbow(void) {
     static int v = 1;

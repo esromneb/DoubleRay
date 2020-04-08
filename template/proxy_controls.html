@@ -446,6 +446,14 @@
         postCustomMessage({type:'call',fn:'parseJsonScene',rt:'void',at:['string','boolean'],av:[str,andRender]});
       }
 
+      function resizeBuffer(x,y) {
+        postCustomMessage({type:'call',fn:'resizeBuffer',rt:'void',at:['number','number'],av:[x,y]});
+      }
+
+      function resizeCanvas(x,y) {
+        postCustomMessage({type:'call',fn:'resizeCanvas',rt:'void',at:['number','number'],av:[x,y]});
+      }
+
 
 
 

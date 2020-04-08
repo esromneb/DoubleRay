@@ -69,6 +69,8 @@ EXPORT_STRING = \
 "_parseJsonScene", \
 "_setRefractShadows", \
 "_setEnableShadows", \
+"_resizeBuffer", \
+"_resizeCanvas", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html
