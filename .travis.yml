@@ -12,7 +12,8 @@ services:
 
 before_install:
   - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
+  - docker run -dit --name dtest -v $(pwd):/src esromneb/simple-clang bash
 
 script:
-  - docker exec -it make wasm
-  - make test 
+  - docker exec -it emscripten make test
+  - docker exec -it emscripten make wasm

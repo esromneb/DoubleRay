@@ -90,6 +90,7 @@ See Also Emscripten
 * https://blog.scottlogic.com/2014/03/12/native-code-emscripten-webgl-simmer-gently.html - webgl
 * https://compile.fi/canvas-filled-three-ways-js-webassembly-and-webgl/ - 3 ways to canvas
 * https://brionv.com/log/2019/10/24/exception-handling-in-emscripten-how-it-works-and-why-its-disabled-by-default/ - exceptions
+* https://emscripten.org/docs/compiling/Travis.html - travis
 
 See Also Offtopic
 ===
