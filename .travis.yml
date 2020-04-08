@@ -16,4 +16,4 @@ before_install:
 
 script:
   - docker exec -it dtest make -C src test
-  - docker exec -it emscripten make wasm
+  - docker exec -it emscripten make copy wasm
