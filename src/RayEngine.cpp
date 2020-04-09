@@ -97,8 +97,8 @@ void RayEngine::_render( void ) noexcept {
     u.normalize();
     Vec3 v = Vec3::cross( w, u );
 
-    // i is y
-    // j is x
+    // i is x
+    // j is y
 
     unsigned fixedYWidth = 400; // yPx
     unsigned fixedXWidth = 400; // xPx
@@ -108,11 +108,11 @@ void RayEngine::_render( void ) noexcept {
 
     cout << "Render with x " << xPx << " y " << yPx << "\n";
 
-    for( int j = 0; j < xPx; j++ )
-        for( int i = 0; i < yPx; i++ )
+    for( int j = 0; j < yPx; j++ )
+        for( int i = 0; i < xPx; i++ )
         {
-            cu = ((2.0f*i + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
-            cv = ((2.0f*j + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
+            cu = ((2.0f*i + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
+            cv = ((2.0f*j + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
             pixel = a + u*cu + v*cv;
             r.o = e;
             r.d = pixel-e;
@@ -146,7 +146,7 @@ void RayEngine::_render( void ) noexcept {
             }
 #endif
 
-            const auto writeOut = (i+j*yPx);
+            const auto writeOut = (i+j*xPx);
 
 #ifdef DEBUG_PX
             cout << "y: " << i << " x: " << j << ": " << "Write buffer " << writeOut << "\n";
@@ -741,17 +741,18 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
     const uint32_t xPx = engine->xPx;
     const uint32_t yPx = engine->yPx;
 
-    for( unsigned y = 0; y < yPx; y++ ) {
-        for( unsigned x = 0; x < xPx; x++ ) {
+    for( unsigned y = 0; y < xPx; y++ ) {
+        for( unsigned x = 0; x < yPx; x++ ) {
             
             unsigned lookup;
             if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
                 // png
-                // lookup = x+((xPx-1)-y)*yPx;
-                lookup = yPx*x+y;
+                // lookup = x+((yPx-1)-y)*xPx;
+                // lookup = xPx*x+y; // exactly backwards
+                lookup = x+yPx*y;
             } else {
                 // wasm
-                lookup = x+y*yPx;
+                lookup = x+y*xPx;
             }
 
 #ifdef DEBUG_PX
@@ -776,7 +777,7 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
                 arg0.emplace_back(255);
             } else {
                 // wasm
-                *((uint32_t*)arg1 + ((xPx-1-y) * xPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
+                *((uint32_t*)arg1 + ((yPx-1-y) * yPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
 
                 // *((Uint32*)screen->pixels + ((px-1-y) * px) + x) = SDL_MapRGB(screen->format, rb, gb, bb);
             }
@@ -791,7 +792,7 @@ void RayEngine::copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const
 
 void RayEngine::copyToPixels(std::vector<unsigned char>& buffer) const {
     buffer.resize(0);
-    buffer.reserve(xPx*yPx*4);
+    buffer.reserve(yPx*xPx*4);
 
     _copyToPixels<std::vector<unsigned char>&, void*>(buffer, 0, 0, this);
 }
