@@ -741,45 +741,35 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
     const uint32_t xPx = engine->xPx;
     const uint32_t yPx = engine->yPx;
 
-    for( unsigned y = 0; y < xPx; y++ ) {
-        for( unsigned x = 0; x < yPx; x++ ) {
+    for( unsigned y = 0; y < yPx; y++ ) {
+        for( unsigned x = 0; x < xPx; x++ ) {
             
-            unsigned lookup;
-            if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
-                // png
-                // lookup = x+((yPx-1)-y)*xPx;
-                // lookup = xPx*x+y; // exactly backwards
-                lookup = x+yPx*y;
-            } else {
-                // wasm
-                lookup = x+y*xPx;
-            }
+            const unsigned lookup = x + (xPx*(yPx - 1 - y));
 
 #ifdef DEBUG_PX
             cout << "x: " << x << " y: " << y <<  " lookup: " << lookup << "\n";
 #endif
 
-            const float r = engine->rBuffer[lookup];
-            const float g = engine->gBuffer[lookup];
-            const float b = engine->bBuffer[lookup];
-            const float rs = (r * scale);
-            const float gs = (g * scale);
-            const float bs = (b * scale);
+            const float fr = engine->rBuffer[lookup];
+            const float fg = engine->gBuffer[lookup];
+            const float fb = engine->bBuffer[lookup];
+            const float rs = (fr * scale);
+            const float gs = (fg * scale);
+            const float bs = (fb * scale);
 
             const uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
             const uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
             const uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
 
             if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
+                // png
                 arg0.emplace_back(rb);
                 arg0.emplace_back(gb);
                 arg0.emplace_back(bb);
                 arg0.emplace_back(255);
             } else {
                 // wasm
-                *((uint32_t*)arg1 + ((yPx-1-y) * yPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
-
-                // *((Uint32*)screen->pixels + ((px-1-y) * px) + x) = SDL_MapRGB(screen->format, rb, gb, bb);
+                *((uint32_t*)arg1 + ((y) * xPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
             }
         } // for x
     } // for y
@@ -787,6 +777,7 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
 
 
 void RayEngine::copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const format) const {
+    cout << "wasm_gl copyToPixels(2)\n";
     _copyToPixels(fn, pixels, format, this);
 }
 

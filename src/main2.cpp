@@ -329,15 +329,28 @@ void initSetResolution(const unsigned x, const unsigned y) {
 
     xCanvas = x;
     yCanvas = y;
+}
 
+// This is for wasm only, however it should not be visible to javascript
+// this gets called by RayApi::resizeBuffer
+// we should not call resizeBuffer() from here to avoid recursion loop
+void resizeCanvasInternal(const unsigned x, const unsigned y) {
+    // SDL_Init(SDL_INIT_VIDEO);
+    screen = SDL_SetVideoMode(x, y, 32, SDL_SWSURFACE);
+
+    // resizeBuffer(x,y);
+    xCanvas = x;
+    yCanvas = y;
 }
 
 int main(int argc, char ** argv) {
     (void)argc;
     (void)argv;
 
+
     // initSetResolution(256, 256);
     initSetResolution(400, 400);
+    setResizeCallback(resizeCanvasInternal);
     
     frames_then = std::chrono::steady_clock::now();
 
@@ -349,7 +362,7 @@ int main(int argc, char ** argv) {
     return 0;
 }
 
-// static uint32_t nextVal = 0;
+
 
 
 
@@ -374,14 +387,6 @@ EM_JS(void, call_alert, (), {
 
 extern "C" {
 
-void resizeCanvas(const unsigned x, const unsigned y) {
-    // SDL_Init(SDL_INIT_VIDEO);
-    screen = SDL_SetVideoMode(x, y, 32, SDL_SWSURFACE);
-
-    resizeBuffer(x,y);
-    xCanvas = x;
-    yCanvas = y;
-}
 
 void renderNextRainbow(void) {
     static int v = 1;

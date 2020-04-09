@@ -8,9 +8,11 @@
 
 #include <functional>
 
+typedef std::function<void(const unsigned, const unsigned)> resize_canvas_cb_t;
 // A bunch of naked functions
 
 void setRayApiTarget(RayEngine* e);
+void setResizeCallback(const resize_canvas_cb_t cb);
 
 extern "C" {
 
