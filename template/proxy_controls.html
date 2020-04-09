@@ -154,6 +154,8 @@
       });
     });
 
+    var requestedX = 400;
+    var requestedY = 400;
 
     ///
     /// Emscripten also binds to all of the mouse events
@@ -170,7 +172,7 @@
           const browserY = loc.y;
           const browserX = loc.x;
 
-          const canvasYPixels = 400; // FIXME change this
+          const canvasYPixels = requestedY; // FIXME change this
 
           const canvasY = canvasYPixels - browserY;
 
@@ -559,9 +561,35 @@
 
       doJsonParse(scene);
     } else {
-      //FIXBEN
+      // 
       parseJsonScene(scene, true);
       // doRenderOfficialClick();
+      determineCanvas(scene);
+    }
+  }
+
+  // Parse json ourselves as well and grab canvas resolution
+  function determineCanvas(scene) {
+
+    let obj;
+    try {
+      obj = JSON.parse(scene);
+    } catch(e) {
+      // jsPrint("ERROR: illegal json");
+      // jsPrint(e.toString());
+      return;
+    }
+
+    if(obj.global) {
+      const gg = obj.global;
+
+      if( typeof(gg.x) !== 'undefined' && typeof(gg.y) !== 'undefined' ) {
+        requestedX = gg.x;
+        requestedY = gg.y;
+      } else {
+        requestedX = 400;
+        requestedY = 400;
+      }
     }
   }
 

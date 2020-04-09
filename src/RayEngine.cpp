@@ -106,7 +106,7 @@ void RayEngine::_render( void ) noexcept {
     fixedYWidth = yPx;
     fixedXWidth = xPx;
 
-    cout << "Render with x " << xPx << " y " << yPx << "\n";
+    // cout << "Render with x " << xPx << " y " << yPx << "\n";
 
     for( int j = 0; j < yPx; j++ )
         for( int i = 0; i < xPx; i++ )
@@ -777,7 +777,6 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
 
 
 void RayEngine::copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const format) const {
-    cout << "wasm_gl copyToPixels(2)\n";
     _copyToPixels(fn, pixels, format, this);
 }
 
