@@ -131,7 +131,7 @@ public:
     // to 0-255 rgb
     double scale = defaultScale;
 
-    double p0 = 1;
+    double p0 = 0;
     double p1 = 1;
     double p2 = 2;
     double p3 = 0.5;

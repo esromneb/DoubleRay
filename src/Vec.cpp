@@ -13,9 +13,38 @@ Vec::Vec( const Vec &in )
         this->data[i] = in.data[i];
 }
 
-Vec::Vec( int yin ): y(yin)
-{
+Vec::Vec( const int yin ): y(yin) {
     data = new double[yin];
+}
+
+Vec::Vec( const int yin, const double d0 ): y(yin) {
+    data = new double[yin];
+    if( yin > 0 ) {
+        data[0] = d0;
+    }
+}
+
+Vec::Vec( const int yin, const double d0, const double d1 ): y(yin) {
+    data = new double[yin];
+    if( yin > 0 ) {
+        data[0] = d0;
+    }
+    if( yin > 1 ) {
+        data[1] = d1;
+    }
+}
+
+Vec::Vec( const int yin, const double d0, const double d1, const double d2 ): y(yin) {
+    data = new double[yin];
+    if( yin > 0 ) {
+        data[0] = d0;
+    }
+    if( yin > 1 ) {
+        data[1] = d1;
+    }
+    if( yin > 2 ) {
+        data[2] = d2;
+    }
 }
 
 Vec::Vec()
@@ -301,6 +330,7 @@ std::string Vec::str(bool vertical) const {
 }
 
 // returns angle between 2 vectors, in degrees or radians
+// seems like this is only correct for y = 2
 template <bool degrees>
 double Vec::angle(const Vec &v0, const Vec &v1) {
     if( v0.y != v1.y ) {

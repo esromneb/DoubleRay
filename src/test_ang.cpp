@@ -78,7 +78,7 @@ int main4(void) {
 }
 
 
-int main(void) {
+int main5(void) {
     // cout << "foo\n";
 
     Vec v0(2);
@@ -102,6 +102,32 @@ int main(void) {
 
     return 0;
 }
+
+int main(void) {
+    // cout << "foo\n";
+
+    Vec v0(3, 0,1,3);
+
+    cout << "Loaded " << v0.str(false) << "\n";
+
+
+    Vec v1(3);
+
+    v1.data[0] = 1;
+    v1.data[1] = 1;
+    v1.data[2] = 3;
+
+    double fnAngle0 = Vec::angle(v0,v1);
+
+    cout << "fn : " << fnAngle0 << "\n";
+
+
+    // cout << v0.str(false) << "\n";
+    // cout << v1.str(false) << "\n";
+
+    return 0;
+}
+
 
 
 

@@ -10,7 +10,10 @@ public:
     explicit Vec(); //default will be DEFAULT_VEC
     Vec( const Vec &in );
     virtual ~Vec( void );
-    Vec( int yin );
+    Vec( const int yin );
+    Vec( const int yin, const double d0 );
+    Vec( const int yin, const double d0, const double d1 );
+    Vec( const int yin, const double d0, const double d1, const double d2 );
     Vec& operator= (const Vec &rhs);
     Vec operator* ( const Vec &rhs ) const;
     Vec operator* ( double rhs );

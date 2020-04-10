@@ -1,8 +1,10 @@
 #include "RayEngine.hpp"
+#include "Vec.hpp"
 #include <math.h>
 #include <iostream>
 #include <tuple>
 #include <type_traits>
+
 
 using std::min;
 using std::max;
@@ -62,6 +64,18 @@ void RayEngine::resize( const unsigned _x, const unsigned _y )
     yPx = _y;
 }
 
+// acceps two Vec3
+// the z coord is dropped from both, demoding them to a Vec2
+// then the angle between x0,y0 and x1,y1 is calculated and 
+// returned in degrees
+double getVec2Angle(const Vec3& _v0, const Vec3& _v1) {
+    Vec a(2,_v0[0],_v0[1]);
+    Vec b(2,_v1[0],_v1[1]);
+
+    double angleDeg = Vec::angle(a,b);
+    return angleDeg;
+}
+
 int g_i = 0;
 int g_j = 0;
 
@@ -100,6 +114,8 @@ void RayEngine::_render( void ) noexcept {
 
     bool setl = true;
     bool seth = true;
+    Vec3 leftMost;
+    Vec3 rightMost;
 
     Ray r;
     r.o = e;
@@ -109,14 +125,22 @@ void RayEngine::_render( void ) noexcept {
 
     // cout << "Render with x " << xPx << " y " << yPx << "\n";
 
-    for( unsigned j = 0; j < yPx; j++ )
+    for( unsigned j = 0; j < yPx; j++ ) {
         for( unsigned i = 0; i < xPx; i++ )
         {
             // cu = ((p0*i + p1)/(p2*fixedXWidth) - p3); // xPx
             // cv = ((p0*j + p1)/(p2*fixedYWidth) - p3); // yPx
 
-            const double cu = ((2.0f*i + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
-            const double cv = ((2.0f*j + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
+            double cu;
+            double cv;
+
+            if( p0 == 0 ) {
+                cu = ((2.0f*i + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
+                cv = ((2.0f*j + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
+            } else {
+                cu = (p0*(2.0f*i + 1)/(2.0f*fixedXWidth) - (p0/2.0)); // xPx
+                cv = (p0*(2.0f*j + 1)/(2.0f*fixedYWidth) - (p0/2.0)); // yPx
+            }
 
 
             // const double cu = (p0*(2*i + 1)/(2*fixedXWidth) - (p0/2.0)); // xPx
@@ -128,11 +152,13 @@ void RayEngine::_render( void ) noexcept {
             r.d = Vec3::normalize(pixel-e);
 
             if( setl && i == 0 && j == ymid ) {
-                cout << "Left: " << r.d.str(false) << "\n";
+                // cout << "Left: " << r.d.str(false) << "\n";
+                leftMost = r.d;
                 setl = false;
             }
             if( seth && i == (xPx-1) && j == ymid ) {
-                cout << "Right: " << r.d.str(false) << "\n";
+                // cout << "Right: " << r.d.str(false) << "\n";
+                rightMost = r.d;
                 seth = false;
             }
 
@@ -175,6 +201,17 @@ void RayEngine::_render( void ) noexcept {
             this->bBuffer[writeOut] = color[2];
 
         }
+    }
+
+    // this only works for camera direction of
+    //     "dir": [-1, 0, 0]
+    const double fov = getVec2Angle(leftMost, rightMost);
+    cout << "Fov was " << fov << "\n";
+
+    Ray leftRay;
+    leftRay.o = e;
+    leftRay.d = leftMost;
+
 }
 
 
