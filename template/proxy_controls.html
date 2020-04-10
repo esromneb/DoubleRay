@@ -547,6 +547,8 @@
 ]
 }
 </textarea><br>
+<select id="loadScenesSel">
+</select>
 </td><td>
 Save or Load a scene (via a cookie).  There is only 1 save slot.<br>
 <input type="button" value="Save Scene" onclick="globalSave('default')"/><br>
@@ -558,6 +560,65 @@ Save or Load a scene (via a cookie).  There is only 1 save slot.<br>
 
 </tr></table>
 
+
+
+
+<script type="text/javascript">
+var $sel = $("#loadScenesSel");
+
+const ss = [
+'<Choose A Scene>',
+'color_balls_refraction_1.json',
+'color_balls_refraction_2.json',
+'color_balls_refraction.json',
+'cool_reflection_1.json',
+'false_color_reflection_1.json',
+'floating_spheres_1.json',
+'global_scale_1.json',
+'glowing_bomb.json',
+'hit_order_1.json',
+'orientation_1.json',
+'refraction_1.json',
+'refraction_2.json',
+'refraction_9.json',
+'refraction_shadow_1.json',
+'refraction_shadow_3.json',
+'refraction_shadow_4.json',
+'soap_bubble_1.json',
+'test_shadow_1.json',
+'test_shadow_2.json',
+'test_shadow_3.json',
+'three_color_balls.json',
+'three_color_balls_yellow.json'
+];
+
+ss.forEach(function(b){
+  $sel.append($("<option />").val('scenes/'+b).text(b));
+});
+// $sel.append($("<option />").val('scenes/three_color_balls.json').text('scenes/three_color_balls.json'));
+
+$sel.change(function(x){
+  const sval = $( this ).val();
+
+  if(sval === 'scenes/<Choose A Scene>') {
+    return;
+  }
+
+  $.ajax({
+    url: sval,
+    // url: "scenes/test_shadow_1.json",
+    // url: "scenes/refraction_7.json",
+    dataType: "text",
+    context: {}
+  }).done(function(x) {
+    // console.log(x);
+    // $('#jsonscene').val(JSON.stringify(x, null, 4));
+    $('#jsonscene').val(x);
+    parseAndRender();
+    // $( this ).addClass( "done" );
+  });
+});
+</script>
 
 
 <script type="text/javascript">
