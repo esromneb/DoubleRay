@@ -247,9 +247,19 @@
       }
 
       function downloadPng(n) {
+        // https://stackoverflow.com/questions/27798126/how-to-open-the-newly-created-image-in-a-new-tab
+        // this lame way required for chrome
         var tmp_canvas = document.getElementById('canvas');
         var dt = tmp_canvas.toDataURL("image/png");
-        window.open(dt);
+        var w = window.open("about:blank");
+        let image = new Image();
+        image.src = dt;
+        setTimeout(function(){
+          w.document.write(image.outerHTML);
+        }, 0);
+
+        // firefox can just:
+        // window.open(dt);
       }
 
       var simpleRotZRunning = false;
