@@ -80,22 +80,14 @@ void RayEngine::render( void ) noexcept {
 
 template <bool enableShadowsT, bool refractShadowsT>
 void RayEngine::_render( void ) noexcept {
-    // bool nUsedB = false;
-    // Vec3 nUsedI;
-    Ray r;
-    Vec3 pixel;
-    double cu,cv;
-    //float red, green, blue;
     Vec3 color;
 
     const Vec3 e = camera.o;
     const Vec3 a = e + camera.d;
-    Vec3 w = e-a;
-    w.normalize();
+    const Vec3 w = Vec3::normalize(e-a);
 
-    Vec3 u = Vec3::cross( up, e-a );
-    u.normalize();
-    Vec3 v = Vec3::cross( w, u );
+    const Vec3 u = Vec3::normalize(Vec3::cross( up, e-a ));
+    const Vec3 v = Vec3::cross( w, u );
 
     // i is x
     // j is y
@@ -111,13 +103,19 @@ void RayEngine::_render( void ) noexcept {
     for( int j = 0; j < yPx; j++ )
         for( int i = 0; i < xPx; i++ )
         {
-            cu = ((2.0f*i + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
-            cv = ((2.0f*j + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
-            pixel = a + u*cu + v*cv;
-            r.o = e;
-            r.d = pixel-e;
-            r.d.normalize();
-            //red = green = blue = 0;
+            // cu = ((p0*i + p1)/(p2*fixedXWidth) - p3); // xPx
+            // cv = ((p0*j + p1)/(p2*fixedYWidth) - p3); // yPx
+
+            const double cu = ((2.0f*i + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
+            const double cv = ((2.0f*j + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
+
+
+            // const double cu = (p0*(2*i + 1)/(2*fixedXWidth) - (p0/2.0)); // xPx
+            // const double cv = (p0*(2*j + 1)/(2*fixedYWidth) - (p0/2.0)); // yPx
+
+
+            const Vec3 pixel = a + u*cu + v*cv;
+            const Ray r(e, Vec3::normalize(pixel-e));
 
 #ifdef ALLOW_PRINT
             g_i = i;

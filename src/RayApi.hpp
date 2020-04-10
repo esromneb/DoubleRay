@@ -62,4 +62,6 @@ void setPrint(int p);
 void parseJsonScene(const char* scene, const bool andRender );
 void parseJsonSceneFragment(const std::string scene, const bool andRender );
 
+void setP(const double,const double,const double,const double);
+
 } // extern C

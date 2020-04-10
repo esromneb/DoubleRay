@@ -438,5 +438,12 @@ void parseJsonScene(const char* scene, const bool andRender ) {
 // }
 
 
+void setP(const double p0,const double p1,const double p2,const double p3) {
+    engine->p0 = p0;
+    engine->p1 = p1;
+    engine->p2 = p2;
+    engine->p3 = p3;
+}
+
 
 } // extern C

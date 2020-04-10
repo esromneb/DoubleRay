@@ -436,6 +436,16 @@
         postCustomMessage({type:'call',fn:'chokeOutput',rt:'void',at:sig,av:args});
       }
 
+      function setP(a,b,c,d) {
+
+
+        const sig = addNumberSignature([],4);
+
+        const args = [a,b,c,d].flat();
+
+        postCustomMessage({type:'call',fn:'setP',rt:'void',at:sig,av:args});
+      }
+
       function setPrint(val) {
         postCustomMessage({type:'call',fn:'setPrint',rt:'void',at:['number'],av:[val]});
       }
