@@ -55,7 +55,7 @@ void setEnableShadows(const bool b);
 void resizeBuffer(const unsigned x, const unsigned y);
 typedef std::function<void(void)> scene_animation_t;
 void setupOrbit(const int _frames);
-void nextOrbitRender(void);
+void nextOrbitRender(const bool render = true);
 void dumpCamera();
 void chokeOutput(int il, int ih, int jl, int jh);
 void setPrint(int p);

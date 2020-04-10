@@ -246,6 +246,24 @@
         postCustomMessage({type:'call',fn:'dumpPoly',rt:'void',at:['number'],av:[n]});
       }
 
+      var simpleRotZRunning = false;
+
+      // hacked rotate z camera button
+      function simpleRotZClick() {
+
+        if(!simpleRotZRunning) {
+          setupOrbit(30);
+          simpleRotZRunning = true;
+          nextOrbitRender(false);
+          nextOrbitRender(true);
+          return;
+        }
+        nextOrbitRender(true);
+        dumpCamera();
+
+      }
+
+
       function addVec3Signature(vin, n) {
         var vin2 = typeof vin !== 'undefined' ? vin : [];
         var n2 = typeof n !== 'undefined' ? n : 1;
@@ -429,8 +447,8 @@
         postCustomMessage({type:'call',fn:'setupOrbit',rt:'void',at:['number'],av:[val]});
       }
 
-      function nextOrbitRender() {
-        postCustomMessage({type:'call',fn:'nextOrbitRender',rt:'void'});
+      function nextOrbitRender(doRender) {
+        postCustomMessage({type:'call',fn:'nextOrbitRender',rt:'void',at:['boolean'],av:[doRender]});
       }
 
       function dumpCamera() {
@@ -492,6 +510,7 @@
 <input type="button" id="dumpPolyButton" value="Dump Poly 0" onclick="dumpPoly(0)"/><br>
 <input type="button" id="saveGifFrameButton" value="Safe Gif Frame" onclick="saveGifFrame()"/><br>
 <input type="button" id="downloadGifButton" value="Download Gif" onclick="downloadGif()"/><br>
+<input type="button" id="downloadGifButton" value="Rotate Camera (z)" onclick="simpleRotZClick()"/><br>
 </td><td>
 <textarea id="jsonscene" rows="13" cols="50">
 {
@@ -627,6 +646,8 @@ $sel.change(function(x){
 
   function parseAndRender() {
     // jsPrint('parseAndRender called ' + new Date());
+
+    simpleRotZRunning = false;
 
     const scene = $('#jsonscene').val();
 

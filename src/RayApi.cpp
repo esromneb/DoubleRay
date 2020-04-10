@@ -348,7 +348,7 @@ void setupOrbit(const int _frames) {
 
 }
 
-void nextOrbitRender(void) {
+void nextOrbitRender(const bool render) {
     if( cameraOrbit.size() == 0 ) {
         cout << "nextOrbitRender() cannot run without setupOrbit() first\n";
         return;
@@ -360,8 +360,10 @@ void nextOrbitRender(void) {
     // update the scene
     cameraOrbit[nextOrbitFrame]();
 
-    // render
-    doRenderOfficial();
+    if( render ) {
+        // render
+        doRenderOfficial();
+    }
 
     nextOrbitFrame++;
 
