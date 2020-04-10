@@ -246,6 +246,12 @@
         postCustomMessage({type:'call',fn:'dumpPoly',rt:'void',at:['number'],av:[n]});
       }
 
+      function downloadPng(n) {
+        var tmp_canvas = document.getElementById('canvas');
+        var dt = tmp_canvas.toDataURL("image/png");
+        window.open(dt);
+      }
+
       var simpleRotZRunning = false;
 
       // hacked rotate z camera button
@@ -510,7 +516,8 @@
 <input type="button" id="dumpPolyButton" value="Dump Poly 0" onclick="dumpPoly(0)"/><br>
 <input type="button" id="saveGifFrameButton" value="Safe Gif Frame" onclick="saveGifFrame()"/><br>
 <input type="button" id="downloadGifButton" value="Download Gif" onclick="downloadGif()"/><br>
-<input type="button" id="downloadGifButton" value="Rotate Camera (z)" onclick="simpleRotZClick()"/><br>
+<input type="button" id="rotateCameraButton" value="Rotate Camera (z)" onclick="simpleRotZClick()"/><br>
+<input type="button" id="downloadPngButton" value="Download PNG" onclick="downloadPng()"/><br>
 </td><td>
 <textarea id="jsonscene" rows="13" cols="50">
 {
