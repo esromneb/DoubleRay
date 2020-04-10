@@ -64,13 +64,13 @@ void RayEngine::resize( const unsigned _x, const unsigned _y )
 // the z coord is dropped from both, demoding them to a Vec2
 // then the angle between x0,y0 and x1,y1 is calculated and 
 // returned in degrees
-double getVec2Angle(const Vec3& _v0, const Vec3& _v1) {
-    Vec a(2,_v0[0],_v0[1]);
-    Vec b(2,_v1[0],_v1[1]);
+// double getVec2Angle(const Vec3& _v0, const Vec3& _v1) {
+//     Vec a(2,_v0[0],_v0[1]);
+//     Vec b(2,_v1[0],_v1[1]);
 
-    double angleDeg = Vec::angle(a,b);
-    return angleDeg;
-}
+//     double angleDeg = Vec::angle(a,b);
+//     return angleDeg;
+// }
 
 int g_i = 0;
 int g_j = 0;
@@ -102,17 +102,11 @@ void RayEngine::_render( void ) noexcept {
     // i is x
     // j is y
 
-    unsigned fixedYWidth;// = 400; // yPx
-    unsigned fixedXWidth;// = 400; // xPx
-
-    fixedYWidth = yPx;
-    fixedXWidth = xPx;
-
+    const unsigned fixedYWidth = yPx;
+    const unsigned fixedXWidth = xPx;
 
     Ray r;
     r.o = e;
-
-    const unsigned ymid = yPx / 2;
 
 
     // cout << "Render with x " << xPx << " y " << yPx << "\n";
@@ -120,9 +114,6 @@ void RayEngine::_render( void ) noexcept {
     for( unsigned j = 0; j < yPx; j++ ) {
         for( unsigned i = 0; i < xPx; i++ )
         {
-            // cu = ((p0*i + p1)/(p2*fixedXWidth) - p3); // xPx
-            // cv = ((p0*j + p1)/(p2*fixedYWidth) - p3); // yPx
-
             const double cu = ((2.0f*i + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
             const double cv = ((2.0f*j + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
 

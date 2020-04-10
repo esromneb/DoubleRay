@@ -203,8 +203,8 @@ unsigned frames_p = 0;
 
 void officialRenderRainbow(bool boolA, bool boolB) {
     if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
-      for (int i = 0; i < yCanvas; i++) {
-        for (int j = 0; j < xCanvas; j++) {
+      for (unsigned i = 0; i < yCanvas; i++) {
+        for (unsigned j = 0; j < xCanvas; j++) {
 
 // #ifdef TEST_SDL_LOCK_OPTS
           // Alpha behaves like in the browser, so write proper opaque pixels.
