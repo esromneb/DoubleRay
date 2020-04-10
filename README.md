@@ -2,6 +2,17 @@ DoubleRay raytracer
 ===
 This project came from a homework assignment I had 12 years ago in my undergraduate computer graphics class (UC Davis ECS175).  The purpose of this project is to modernize and package the raytracer for use in the browser via WASM.  In general I had the idea that this should be able to render semi-realtime, however I'm not sure it's there yet.  The name (Double Ray) is just a play on the double precision float datatype.
 
+[Live Preview](https://esromneb.github.io/DoubleRay/out/ray.html)
+===
+Click [this live preview](https://esromneb.github.io/DoubleRay/out/ray.html) to render your own images.
+
+Images
+===
+![](img/ideal/refraction_9.png)
+![](img/ideal/soap_bubble_1.png)
+![](img/ideal/color_balls_refraction_2.png)
+![](img/ideal/test_shadow_2.png)
+
 Project Priorities
 ===
 These are the priorities I kept in mind through development:
