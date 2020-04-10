@@ -98,10 +98,17 @@ void RayEngine::_render( void ) noexcept {
     fixedYWidth = yPx;
     fixedXWidth = xPx;
 
+    // bool setl = true;
+    // bool seth = true;
+
+    Ray r;
+    r.o = e;
+
+
     // cout << "Render with x " << xPx << " y " << yPx << "\n";
 
-    for( int j = 0; j < yPx; j++ )
-        for( int i = 0; i < xPx; i++ )
+    for( unsigned j = 0; j < yPx; j++ )
+        for( unsigned i = 0; i < xPx; i++ )
         {
             // cu = ((p0*i + p1)/(p2*fixedXWidth) - p3); // xPx
             // cv = ((p0*j + p1)/(p2*fixedYWidth) - p3); // yPx
@@ -115,7 +122,8 @@ void RayEngine::_render( void ) noexcept {
 
 
             const Vec3 pixel = a + u*cu + v*cv;
-            const Ray r(e, Vec3::normalize(pixel-e));
+            // const Ray r(e, Vec3::normalize(pixel-e));
+            r.d = Vec3::normalize(pixel-e);
 
 #ifdef ALLOW_PRINT
             g_i = i;
