@@ -138,6 +138,17 @@
 
   </script>
 
+  <script type="text/javascript">
+    var doPublicRender = false;
+    if( doPublicRender ) {
+      $(document).ready(()=>{
+        ['setupEngineButton','coutButton','coutDualButton','dumpPolyButton'].forEach(function(b){
+          $('#'+b).remove();
+        });
+      });
+    }
+  </script>
+
 
   <script type="text/javascript">
     
@@ -471,16 +482,16 @@
 <br>
 <br>
 -->
-<input type="button" value="Setup Engine" onclick="setupEngineClick()"/><br>
-<input type="button" value="Render Official" onclick="doRenderOfficialClick()"/><br>
+<input type="button" id="setupEngineButton" value="Setup Engine" onclick="setupEngineClick()"/><br>
+<input type="button" id="renderOfficialButton" value="Render Official" onclick="doRenderOfficialClick()"/><br>
 <br>
 <br>
-<input type="button" value="Next Rainbow" onclick="nextRainbowClick()"/><br>
-<input type="button" value="Cout from C++" onclick="coutIntClick()"/><br>
-<input type="button" value="Cout from C++ dual" onclick="coutIntDualClick()"/><br>
-<input type="button" value="Dump Poly 0" onclick="dumpPoly(0)"/><br>
-<input type="button" value="Safe Gif Frame" onclick="saveGifFrame()"/><br>
-<input type="button" value="Download Gif" onclick="downloadGif()"/><br>
+<input type="button" id="nextRainbowButton" value="Next Rainbow" onclick="nextRainbowClick()"/><br>
+<input type="button" id="coutButton" value="Cout from C++" onclick="coutIntClick()"/><br>
+<input type="button" id="coutDualButton" value="Cout from C++ dual" onclick="coutIntDualClick()"/><br>
+<input type="button" id="dumpPolyButton" value="Dump Poly 0" onclick="dumpPoly(0)"/><br>
+<input type="button" id="saveGifFrameButton" value="Safe Gif Frame" onclick="saveGifFrame()"/><br>
+<input type="button" id="downloadGifButton" value="Download Gif" onclick="downloadGif()"/><br>
 </td><td>
 <textarea id="jsonscene" rows="13" cols="50">
 {
@@ -537,6 +548,7 @@
 }
 </textarea><br>
 </td><td>
+Save or Load a scene (via a cookie).  There is only 1 save slot.<br>
 <input type="button" value="Save Scene" onclick="globalSave('default')"/><br>
 <input type="button" value="Load Scene" onclick="globalLoad('default');parseAndRender();"/><br>
 </td>

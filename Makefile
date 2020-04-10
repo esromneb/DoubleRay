@@ -121,9 +121,9 @@ out/empty:  $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 #-s USE_PTHREADS=1 -s RESERVED_FUNCTION_POINTERS=1
 #-s PTHREAD_POOL_SIZE=4
 
-.PHONY: copy_files_target copy copy_fs
+.PHONY: copy_files_target copy copy_fs copy_scenes
 
-copy: copy_files_target copy_fs
+copy: copy_files_target copy_fs copy_scenes
 
 
 
@@ -155,6 +155,11 @@ models/1triB.txt
 copy_fs:
 	mkdir -p root_fs
 	cp $(FS_COPY_LIST) root_fs/
+
+copy_scenes:
+	mkdir -p out/scenes
+	cp scenes/*.json out/scenes
+
 
 
 # files need only for test or desktop builds (aka not WASM builds)
