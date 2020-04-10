@@ -36,6 +36,7 @@ Things I want to add
 * Bounding boxes to improve performance
 * Diffuse shading that includes reflection from lights
 * Spherical light model
+* Change FOV (currently fixed at 53.0155)
 
 Travis Details
 ===
