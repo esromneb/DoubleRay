@@ -98,11 +98,13 @@ void RayEngine::_render( void ) noexcept {
     fixedYWidth = yPx;
     fixedXWidth = xPx;
 
-    // bool setl = true;
-    // bool seth = true;
+    bool setl = true;
+    bool seth = true;
 
     Ray r;
     r.o = e;
+
+    const unsigned ymid = yPx / 2;
 
 
     // cout << "Render with x " << xPx << " y " << yPx << "\n";
@@ -124,6 +126,16 @@ void RayEngine::_render( void ) noexcept {
             const Vec3 pixel = a + u*cu + v*cv;
             // const Ray r(e, Vec3::normalize(pixel-e));
             r.d = Vec3::normalize(pixel-e);
+
+            if( setl && i == 0 && j == ymid ) {
+                cout << "Left: " << r.d.str(false) << "\n";
+                setl = false;
+            }
+            if( seth && i == (xPx-1) && j == ymid ) {
+                cout << "Right: " << r.d.str(false) << "\n";
+                seth = false;
+            }
+
 
 #ifdef ALLOW_PRINT
             g_i = i;

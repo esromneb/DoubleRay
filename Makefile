@@ -193,6 +193,11 @@ test_refl: src/test_refl.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 test_parse: src/test_parse.cpp $(CPP_FILES) $(HPP_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
 
+test_ang: src/test_ang.cpp $(CPP_FILES) $(HPP_FILES) Makefile
+	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) -g -o $@
+
+
+
 test_png: src/test_png.cpp $(CPP_FILES) $(HPP_FILES) $(HPP_TEST_FILES) $(CPP_TEST_FILES) Makefile
 	clang++ $(CLANG_WARN_FLAGS) -std=c++2a $< $(CPP_FILES) $(CPP_TEST_FILES) -O3 -o $@
 

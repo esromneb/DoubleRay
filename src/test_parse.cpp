@@ -270,7 +270,7 @@ int test6(RayEngine* engine) {
 int main(void) {
     RayEngine* engine;
     engine = new RayEngine();
-    engine->resize(400);
+    engine->resize(400,400);
 
     std::vector<int> results;
 
