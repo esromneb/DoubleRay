@@ -8,9 +8,11 @@
 
 #include <functional>
 
+typedef std::function<void(const unsigned, const unsigned)> resize_canvas_cb_t;
 // A bunch of naked functions
 
 void setRayApiTarget(RayEngine* e);
+void setResizeCallback(const resize_canvas_cb_t cb);
 
 extern "C" {
 
@@ -50,6 +52,7 @@ void dumpPoly(const int index);
 void setHighlightPixel(const int x, const int y);
 void setRefractShadows(const bool b);
 void setEnableShadows(const bool b);
+void resizeBuffer(const unsigned x, const unsigned y);
 typedef std::function<void(void)> scene_animation_t;
 void setupOrbit(const int _frames);
 void nextOrbitRender(void);

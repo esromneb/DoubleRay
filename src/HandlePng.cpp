@@ -36,13 +36,11 @@ std::tuple<unsigned,std::string> HandlePng::save(const std::string& path, RayEng
 
     std::vector<unsigned char> imageBuf;
 
+    // cout << "Before copy\n";
     engine->copyToPixels(imageBuf);
+    // cout << "After copy\n";
 
-    const uint32_t px = engine->px; // FIXME
-
-
-    return encodeOneStepp(path.c_str(), imageBuf, px, px);
-
+    return encodeOneStepp(path.c_str(), imageBuf, engine->xPx, engine->yPx);
 }
 
 

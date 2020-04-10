@@ -98,6 +98,7 @@ See Also Emscripten
 * https://compile.fi/canvas-filled-three-ways-js-webassembly-and-webgl/ - 3 ways to canvas
 * https://brionv.com/log/2019/10/24/exception-handling-in-emscripten-how-it-works-and-why-its-disabled-by-default/ - exceptions
 * https://emscripten.org/docs/compiling/Travis.html - travis
+* https://emscripten.org/docs/api_reference/emscripten.h.html?highlight=build_as_worker#worker-api - workers
 
 See Also Offtopic
 ===

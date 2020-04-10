@@ -1,7 +1,7 @@
 #include "Vec.hpp"
 #include "Matrix.hpp"
 
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 
@@ -13,9 +13,38 @@ Vec::Vec( const Vec &in )
         this->data[i] = in.data[i];
 }
 
-Vec::Vec( int yin ): y(yin)
-{
+Vec::Vec( const int yin ): y(yin) {
     data = new double[yin];
+}
+
+Vec::Vec( const int yin, const double d0 ): y(yin) {
+    data = new double[yin];
+    if( yin > 0 ) {
+        data[0] = d0;
+    }
+}
+
+Vec::Vec( const int yin, const double d0, const double d1 ): y(yin) {
+    data = new double[yin];
+    if( yin > 0 ) {
+        data[0] = d0;
+    }
+    if( yin > 1 ) {
+        data[1] = d1;
+    }
+}
+
+Vec::Vec( const int yin, const double d0, const double d1, const double d2 ): y(yin) {
+    data = new double[yin];
+    if( yin > 0 ) {
+        data[0] = d0;
+    }
+    if( yin > 1 ) {
+        data[1] = d1;
+    }
+    if( yin > 2 ) {
+        data[2] = d2;
+    }
 }
 
 Vec::Vec()
@@ -41,7 +70,7 @@ Vec& Vec::operator= (const Vec &rhs)
 
     return *this;
 }
-Vec Vec::operator *(Vec &rhs)
+Vec Vec::operator* ( const Vec &rhs ) const
 {
 
     if( y != rhs.y )
@@ -63,7 +92,7 @@ double Vec::operator[] (int index)
     return data[index];
 }
 
-double Vec::mag( void )
+double Vec::mag( void ) const
 {
     double ret = 0;
     for( int i = 0; i < y; i++ )
@@ -75,7 +104,7 @@ double Vec::mag( void )
     return ret;
 }
 
-double Vec::dot( Vec &rhs )
+double Vec::dot( const Vec &rhs ) const
 {
     if( y != rhs.y )
     {
@@ -300,8 +329,31 @@ std::string Vec::str(bool vertical) const {
     return out;
 }
 
+// returns angle between 2 vectors, in degrees or radians
+// seems like this is only correct for y = 2
+template <bool degrees>
+double Vec::angle(const Vec &v0, const Vec &v1) {
+    if( v0.y != v1.y ) {
+        return 0;
+    }
+
+    const double dotprod = v0.dot(v1);
+    const double inner = dotprod / (v0.mag()*v1.mag());
+
+    const double rads = acos(inner);
+    if constexpr (degrees) {
+        return rads * 180 / M_PI;
+    } else {
+        return rads;
+    }
+}
+template double Vec::angle<false>(const Vec &, const Vec &);
+template double Vec::angle<true>(const Vec &, const Vec &);
+
+
 Vec::~Vec( void )
 {
-    if( data && y != 0)
-        delete data;
+    if( data && y != 0 )
+        delete[] data;
 }
+

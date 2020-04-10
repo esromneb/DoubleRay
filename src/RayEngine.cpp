@@ -32,9 +32,17 @@ RayEngine::RayEngine( void )
 }
 
 
-void RayEngine::resize( const int _x )
+void RayEngine::resize( const unsigned _x, const unsigned _y )
 {
-    px = _x;
+    if( rBuffer && gBuffer && bBuffer && xPx == _x && yPx == _y ) {
+        // resize requested for exactly same size
+        // don't make any changes
+        // cout << "Resize aborting\n";
+        return;
+    }
+
+
+    // px = _x;
     if( rBuffer && gBuffer && bBuffer )
     {
         delete rBuffer;
@@ -42,9 +50,26 @@ void RayEngine::resize( const int _x )
         delete bBuffer;
     }
 
-    rBuffer = new float[_x*_x];
-    gBuffer = new float[_x*_x];
-    bBuffer = new float[_x*_x];
+    // cout << "Resize engine at " << _x << ", " << _y << "\n";
+
+    rBuffer = new float[_x*_y];
+    gBuffer = new float[_x*_y];
+    bBuffer = new float[_x*_y];
+
+    xPx = _x;
+    yPx = _y;
+}
+
+// acceps two Vec3
+// the z coord is dropped from both, demoding them to a Vec2
+// then the angle between x0,y0 and x1,y1 is calculated and 
+// returned in degrees
+double getVec2Angle(const Vec3& _v0, const Vec3& _v1) {
+    Vec a(2,_v0[0],_v0[1]);
+    Vec b(2,_v1[0],_v1[1]);
+
+    double angleDeg = Vec::angle(a,b);
+    return angleDeg;
 }
 
 int g_i = 0;
@@ -65,33 +90,46 @@ void RayEngine::render( void ) noexcept {
 
 template <bool enableShadowsT, bool refractShadowsT>
 void RayEngine::_render( void ) noexcept {
-    // bool nUsedB = false;
-    // Vec3 nUsedI;
-    Ray r;
-    Vec3 pixel;
-    double cu,cv;
-    //float red, green, blue;
     Vec3 color;
 
-    Vec3 e = camera.o;
-    Vec3 a = e + camera.d;
-    Vec3 w = e-a;
-    w.normalize();
+    const Vec3 e = camera.o;
+    const Vec3 a = e + camera.d;
+    const Vec3 w = Vec3::normalize(e-a);
 
-    Vec3 u = Vec3::cross( up, e-a );
-    u.normalize();
-    Vec3 v = Vec3::cross( w, u );
+    const Vec3 u = Vec3::normalize(Vec3::cross( up, e-a ));
+    const Vec3 v = Vec3::cross( w, u );
 
-    for( int j = 0; j < px; j++ )
-        for( int i = 0; i < px; i++ )
+    // i is x
+    // j is y
+
+    unsigned fixedYWidth;// = 400; // yPx
+    unsigned fixedXWidth;// = 400; // xPx
+
+    fixedYWidth = yPx;
+    fixedXWidth = xPx;
+
+
+    Ray r;
+    r.o = e;
+
+    const unsigned ymid = yPx / 2;
+
+
+    // cout << "Render with x " << xPx << " y " << yPx << "\n";
+
+    for( unsigned j = 0; j < yPx; j++ ) {
+        for( unsigned i = 0; i < xPx; i++ )
         {
-            cu = ((2.0f*i + 1)/(2.0f*px) - 0.5f);
-            cv = ((2.0f*j + 1)/(2.0f*px) - 0.5f);
-            pixel = a + u*cu + v*cv;
-            r.o = e;
-            r.d = pixel-e;
-            r.d.normalize();
-            //red = green = blue = 0;
+            // cu = ((p0*i + p1)/(p2*fixedXWidth) - p3); // xPx
+            // cv = ((p0*j + p1)/(p2*fixedYWidth) - p3); // yPx
+
+            const double cu = ((2.0f*i + 1)/(2.0f*fixedXWidth) - 0.5f); // xPx
+            const double cv = ((2.0f*j + 1)/(2.0f*fixedYWidth) - 0.5f); // yPx
+
+
+            const Vec3 pixel = a + u*cu + v*cv;
+            // const Ray r(e, Vec3::normalize(pixel-e));
+            r.d = Vec3::normalize(pixel-e);
 
 #ifdef ALLOW_PRINT
             g_i = i;
@@ -118,11 +156,14 @@ void RayEngine::_render( void ) noexcept {
             }
 #endif
 
-            this->rBuffer[i+j*px] = color[0];
-            this->gBuffer[i+j*px] = color[1];
-            this->bBuffer[i+j*px] = color[2];
+            const auto writeOut = (i+j*xPx);
+
+            this->rBuffer[writeOut] = color[0];
+            this->gBuffer[writeOut] = color[1];
+            this->bBuffer[writeOut] = color[2];
 
         }
+    }
 }
 
 
@@ -704,38 +745,35 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
     // double scale = 1.0/0.006;
     // scale = 256;
 
-    const uint32_t px = engine->px;
+    const uint32_t xPx = engine->xPx;
+    const uint32_t yPx = engine->yPx;
 
-    for( unsigned y = 0; y < px; y++ ) {
-        for( unsigned x = 0; x < px; x++ ) {
+    for( unsigned y = 0; y < yPx; y++ ) {
+        for( unsigned x = 0; x < xPx; x++ ) {
             
-            unsigned lookup;
-            if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
-                lookup = x+((px-1)-y)*px;
-            } else {
-                lookup = x+y*px;
-            }
+            const unsigned lookup = x + (xPx*(yPx - 1 - y));
 
-            const float r = engine->rBuffer[lookup];
-            const float g = engine->gBuffer[lookup];
-            const float b = engine->bBuffer[lookup];
-            const float rs = (r * scale);
-            const float gs = (g * scale);
-            const float bs = (b * scale);
+
+            const float fr = engine->rBuffer[lookup];
+            const float fg = engine->gBuffer[lookup];
+            const float fb = engine->bBuffer[lookup];
+            const float rs = (fr * scale);
+            const float gs = (fg * scale);
+            const float bs = (fb * scale);
 
             const uint8_t rb = (rs > 0) ? ( (rs>=255) ? 255 : rs ) : (0);
             const uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
             const uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
 
             if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
+                // png
                 arg0.emplace_back(rb);
                 arg0.emplace_back(gb);
                 arg0.emplace_back(bb);
                 arg0.emplace_back(255);
             } else {
-                *((uint32_t*)arg1 + ((px-1-y) * px) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
-
-                // *((Uint32*)screen->pixels + ((px-1-y) * px) + x) = SDL_MapRGB(screen->format, rb, gb, bb);
+                // wasm
+                *((uint32_t*)arg1 + ((y) * xPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
             }
         } // for x
     } // for y
@@ -748,7 +786,7 @@ void RayEngine::copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const
 
 void RayEngine::copyToPixels(std::vector<unsigned char>& buffer) const {
     buffer.resize(0);
-    buffer.reserve(px*px*4);
+    buffer.reserve(yPx*xPx*4);
 
     _copyToPixels<std::vector<unsigned char>&, void*>(buffer, 0, 0, this);
 }

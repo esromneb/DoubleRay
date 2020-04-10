@@ -62,17 +62,18 @@ public:
     Ray camera;
     Vec3 up;
 
-    // unsigned int xPx, yPx; // Dimensions of output in pixels
+    // Dimensions of output in pixels
+    unsigned xPx = 0;
+    unsigned yPx = 0;
 
     //void setxy( int xin, int yin ); //resize output image
 
-    void resize( const int _x );
+    void resize( const unsigned _x, const unsigned _y );
 
     float *rBuffer = 0;
     float *gBuffer = 0;
     float *bBuffer = 0;
 
-    int px = 0;
     Vec3 ia; // Ambient color
     Vec3 noHitColor = {0,0,0}; // What color if don't hit anything?
     double c;

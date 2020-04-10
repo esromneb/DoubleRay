@@ -10,6 +10,7 @@
 using namespace std;
 
 static RayEngine* engine = 0;
+static resize_canvas_cb_t resizeCallback=0;
 
 // this is required due to the way I originally wrote the files in this function:
 // as naked functions with a global engine
@@ -19,6 +20,13 @@ static RayEngine* engine = 0;
 void setRayApiTarget(RayEngine* e) {
     engine = e;
 }
+
+
+
+void setResizeCallback(const resize_canvas_cb_t cb) {
+    resizeCallback = cb;
+}
+
 
 
 
@@ -240,6 +248,15 @@ void setRefractShadows(const bool b) {
 void setEnableShadows(const bool b) {
     engine->enableShadows = b;
 }
+
+void resizeBuffer(const unsigned x, const unsigned y) {
+    engine->resize(x,y);
+
+    if( resizeCallback ) {
+        resizeCallback(x,y);
+    }
+}
+
 
 
 
