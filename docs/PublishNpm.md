@@ -1,6 +1,12 @@
 Publish Npm
 ===
 
+Build everything
+```bash
+make clean
+make build_publish
+```
+
 
 To see what would go
 ```bash

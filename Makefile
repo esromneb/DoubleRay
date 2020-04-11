@@ -134,9 +134,9 @@ out/empty:  $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 # We want to get the global html that emscripten dumps in the script tag
 # see https://unix.stackexchange.com/questions/446410/reverse-file-character-by-character-using-tac
 # this head/tail version only work on the NOOPT output
-out/rayInterface.js:
+out/doubleRayWorker.js:
 	$(MARK_WASM_DIRTY) && NOOPT=1 EXTRACT_HTML_TEMPLATE=1 make e && $(MARK_WASM_DIRTY)
-	cat out/ray.html | tail -c+9 | head -c-11  > out/rayInterface.js
+	cat out/ray.html | tail -c+9 | head -c-11  > out/doubleRayWorker.js
 
 
 
@@ -269,13 +269,15 @@ PUBLISH_COPY = \
 out/ray.wasm \
 out/ray.js \
 out/doubleRayInstantiate.js \
-out/doubleRayControls.js
+out/doubleRayControls.js \
+out/doubleRayWorker.js
+
 
 # copy everything we need over to dist
 dist/ray.wasm: out/ray.wasm out/ray.js
 	mkdir -p dist
 	cp $(PUBLISH_COPY) dist/
 
-build_publish: copy out/rayInterface.js dist/ray.wasm 
+build_publish: copy out/doubleRayWorker.js dist/ray.wasm 
 
 
