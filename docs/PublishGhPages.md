@@ -10,6 +10,7 @@ OPT3=1 make copy wasm
 git symbolic-ref HEAD refs/heads/gh-pages
 git reset
 rm .gitignore
+git pull
 git add out
 ```
 
@@ -24,3 +25,7 @@ git reset
 git checkout .gitignore
 ```
 
+
+
+# Issues with git pull
+If git pull is not working reset hard, pull, and go back to master and build and start over again
