@@ -298,6 +298,7 @@
 <input type="button" id="downloadGifButton" value="Download Gif" onclick="downloadGif()"/><br>
 <input type="button" id="rotateCameraButton" value="Rotate Camera (z)" onclick="simpleRotZClick()"/><br>
 <input type="button" id="downloadPngButton" value="Download PNG" onclick="downloadPng()"/><br>
+<a href="https://github.com/esromneb/DoubleRay">Github Page</a>
 </td><td>
 <textarea id="jsonscene" rows="13" cols="50">
 {
@@ -310,31 +311,29 @@
   "global": {
     "color": [0.2, 0.2, 0.2],
     "c": 10,
-"scale":166.6666666
+    "scale":166.6666666
   },
   "spheres": [{
       "rad": 1,
       "loc": [-1, 0, 0],
+      "ambient": 0.0,
+      "specular": 1.46,
+      "reflected": 1,
+      "transmitted": 1.0,
+      "diffuse": [0.0, 0.0, 0.0],
+      "n": 32,
+      "refraction":1.4
+    },
+    {
+      "rad": 1.0,
+      "loc": [-4, -1.1, 0],
       "ambient": 0.1,
       "specular": 1.46,
       "reflected": 0,
       "transmitted": 0.0,
-      "diffuse": [0.9, 0.0, 0.0],
+      "diffuse": [0.8, 0.0, 0.8],
       "n": 32
     },
-{
-      "rad": 0.3,
-      "loc": [-0.1, 0, 1.1],
-      "ambient": 0.1,
-      "specular": 1.46,
-      "reflected": 0,
-      "transmitted": 0.0,
-      "diffuse": [0.8, 0.8, 0.8],
-      "n": 32
-    },
-
-
-
     {
       "rad": 10,
       "loc": [-4, 0, -11],
@@ -352,6 +351,7 @@
   }
 ]
 }
+
 </textarea><br>
 <select id="loadScenesSel">
 </select>
