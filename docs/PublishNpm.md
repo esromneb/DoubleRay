@@ -14,3 +14,8 @@ Publish:
 ```bash
 npm publish
 ```
+
+
+See Also
+===
+* https://zellwk.com/blog/publish-to-npm/
