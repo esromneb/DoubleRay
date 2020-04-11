@@ -6,7 +6,7 @@ To publish github pages, get to the version you want to publish.
 
 Run
 ```bash
-make copy wasm
+OPT3=1 make copy wasm
 git symbolic-ref HEAD refs/heads/gh-pages
 git reset
 rm .gitignore
