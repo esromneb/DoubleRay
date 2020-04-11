@@ -161,7 +161,10 @@ template/LoadSave.js \
 template/GIFEncoder.js \
 template/LZWEncoder.js \
 template/NeuQuant.js \
-template/b64.js
+template/b64.js \
+template/doubleRayInstantiate.js \
+template/doubleRayControls.js
+
 
 # copy files required to compile the project (js etc)
 copy_files_target:
