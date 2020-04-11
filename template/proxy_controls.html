@@ -205,7 +205,6 @@
       // jsPrint('Window OnLoad');
       setupEngineClick();
       parseAndRender();
-      // doRenderOfficialClick();
     }
 
     // there can only be one of these
@@ -287,7 +286,7 @@
 <br>
 -->
 <input type="button" id="setupEngineButton" value="Setup Engine" onclick="setupEngineClick()"/><br>
-<input type="button" id="renderOfficialButton" value="Render Official" onclick="doRenderOfficialClick()"/><br>
+<input type="button" id="renderOfficialButton" value="Render Official" onclick="doRenderOfficial()"/><br>
 <br>
 <br>
 <input type="button" id="nextRainbowButton" value="Next Rainbow" onclick="nextRainbowClick()"/><br>
@@ -444,7 +443,6 @@ $sel.change(function(x){
     } else {
       // 
       parseJsonScene(scene, true);
-      // doRenderOfficialClick();
       determineCanvas(scene);
     }
   }

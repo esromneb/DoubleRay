@@ -1,6 +1,6 @@
 
 
-function doRenderOfficialClick() {
+function doRenderOfficial() {
   postCustomMessage({type:'call',fn:'doRenderOfficial',rt:'void'});
 }
 
@@ -369,5 +369,5 @@ function doubleRayExampleDoJsonCalls(obj) {
     setLightCount(0); // will delete all lights in vector
   }
 
-  doRenderOfficialClick();
+  doRenderOfficial();
 }
