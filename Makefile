@@ -253,18 +253,25 @@ movetestideal: rmideal
 
 
 clean:
-	rm -rf out/ray.wasm out/ray.js out/ray.html out/ray.data
+	rm -rf out/*
+	rm -rf dist/*
 
 
 .PHONY: build_publish copy_to_dist
 
 copy_to_dist: dist/ray.wasm
 
+PUBLISH_COPY = \
+out/ray.wasm \
+out/ray.js \
+out/doubleRayInstantiate.js \
+out/doubleRayControls.js
+
 # copy everything we need over to dist
 dist/ray.wasm: out/ray.wasm out/ray.js
 	mkdir -p dist
-	cp out/ray.wasm out/ray.js dist/
+	cp $(PUBLISH_COPY) dist/
 
-build_publish: dist/ray.wasm out/rayInterface.js
+build_publish: copy out/rayInterface.js dist/ray.wasm 
 
 

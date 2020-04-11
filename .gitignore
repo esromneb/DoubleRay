@@ -1,24 +1,24 @@
 # Project
 
-out/*
-root_fs/*
+/out
+/root_fs
 
-test_orbit
-test_orbit2
-test_vec
-test_refl
-test_parse
-test_parse2
-test_png
-test_ang
-
-
-
-img/test/*.png
+/test_orbit
+/test_orbit2
+/test_vec
+/test_refl
+/test_parse
+/test_parse2
+/test_png
+/test_ang
 
 
 
+/img/test/*.png
 
+
+
+/dist
 
 
 
