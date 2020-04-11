@@ -74,6 +74,13 @@ EXPORT_STRING = \
 TEMPLATE_FILE = template/proxy_controls.html
 JS_TEMPLATE_FILE = template/pre.ray.js
 
+ifdef EXTRACT_HTML_TEMPLATE
+  TEMPLATE_FILE = template/extract_script_template.html
+endif
+
+# this is a full command, put in your make body to mark wasm dirty for next build
+MARK_WASM_DIRTY=touch src/main2.cpp # force make to run again if "make all" is run next
+
 # warning and error flags
 CLANG_WARN_FLAGS = \
 -Wall -Wextra \
@@ -82,6 +89,16 @@ CLANG_WARN_FLAGS = \
 -Werror=return-type
 # -Wconversion
 # -Wshadow
+
+CLANG_O_FLAG = '-O3'
+
+ifdef NOOPT
+  CLANG_O_FLAG = ' '
+endif
+
+ifdef OPT3
+  CLANG_O_FLAG = '-O3'
+endif
 
 # works however adds 100ms or more to the
 # render time
@@ -96,8 +113,10 @@ out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPL
 	--pre-js $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
-	'-std=c++2a' '-O3' $(CLANG_WARN_FLAGS)
+	'-std=c++2a' $(CLANG_O_FLAG) $(CLANG_WARN_FLAGS)
 
+# this target doesn't actually exist
+.PHONY: out/empty
 
 e: out/empty
 
@@ -108,8 +127,14 @@ out/empty:  $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 	--pre-js $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='["_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
-	'-std=c++2a'
-	touch src/main2.cpp # force make to run again if "make all" is run next
+	'-std=c++2a' $(CLANG_O_FLAG) $(CLANG_WARN_FLAGS)
+	$(MARK_WASM_DIRTY)
+
+
+# We want to get the global html that emscripten dumps in the script tag
+out/rayInterface.js:
+	$(MARK_WASM_DIRTY) && NOOPT=1 EXTRACT_HTML_TEMPLATE=1 make e && $(MARK_WASM_DIRTY)
+	cat out/ray.html | cut -b 9- | rev | cut -b 10- | rev > out/rayInterface.js
 
 
 
@@ -226,3 +251,17 @@ movetestideal: rmideal
 
 clean:
 	rm -rf out/ray.wasm out/ray.js out/ray.html out/ray.data
+
+
+.PHONY: build_publish copy_to_dist
+
+copy_to_dist: dist/ray.wasm
+
+# copy everything we need over to dist
+dist/ray.wasm: out/ray.wasm out/ray.js
+	mkdir -p dist
+	cp out/ray.wasm out/ray.js dist/
+
+build_publish: dist/ray.wasm out/rayInterface.js
+
+
