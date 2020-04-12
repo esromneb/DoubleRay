@@ -3,14 +3,13 @@
 #include <iostream>
 #include <vector>
 #include <stdint.h>
-#include <chrono>
-#include <unistd.h> //usleep
-#include <functional>
-#include <cmath>
+// #include <chrono>
+// #include <unistd.h> //usleep
+// #include <functional>
+// #include <cmath>
 
 
 #include <stdio.h>
-#include <SDL/SDL.h>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>

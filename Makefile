@@ -37,8 +37,11 @@ src/Material.cpp \
 src/Ray.cpp \
 src/Parser.cpp \
 src/RayApi.cpp \
-src/JsApi.cpp \
 src/Vec.cpp
+
+# WASM only cpp files
+WASM_CPP_FILES = \
+src/JsApi.cpp
 
 # this is a list of all C functions we want to publish to javascript
 # In the main cpp file, each of these is wrapped in extern "C" {}
@@ -110,8 +113,8 @@ endif
 
 # don't need this until we get poly working
 #--preload-file 'root_fs'
-out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
-	emcc $(WASM_MAIN) $(CPP_FILES) -s WASM=1 -o out/ray.html \
+out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(WASM_CPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
+	emcc $(WASM_MAIN) $(WASM_CPP_FILES) $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
 	-s ALLOW_MEMORY_GROWTH=1 \
