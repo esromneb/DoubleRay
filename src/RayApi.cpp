@@ -1,4 +1,5 @@
 #include "RayApi.hpp"
+#include "HandlePng.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -456,7 +457,8 @@ void parseJsonScene(const char* scene, const bool andRender, const bool useCanva
                 }
             } else {
                 if( copyB64Callback ) {
-                    copyB64Callback(""); //FIXME
+                    std::string b64 = HandlePng::encodeB64(engine, true);
+                    copyB64Callback(b64);
                 }
             }
 

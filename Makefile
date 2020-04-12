@@ -23,7 +23,9 @@ src/RayApi.hpp \
 src/json.hpp \
 src/Macros.hpp \
 src/JsApi.hpp \
-src/Vec.hpp
+src/Vec.hpp \
+src/lodepng.h \
+src/HandlePng.hpp
 
 WASM_MAIN = src/main2.cpp
 
@@ -37,7 +39,9 @@ src/Material.cpp \
 src/Ray.cpp \
 src/Parser.cpp \
 src/RayApi.cpp \
-src/Vec.cpp
+src/Vec.cpp \
+src/lodepng.cpp \
+src/HandlePng.cpp
 
 # WASM only cpp files
 WASM_CPP_FILES = \
@@ -205,13 +209,10 @@ copy_scenes:
 
 # files need only for test or desktop builds (aka not WASM builds)
 
-HPP_TEST_FILES = \
-src/lodepng.h \
-src/HandlePng.hpp
+HPP_TEST_FILES =
 
-CPP_TEST_FILES = \
-src/lodepng.cpp \
-src/HandlePng.cpp
+
+CPP_TEST_FILES =
 
 
 

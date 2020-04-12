@@ -356,6 +356,10 @@ void resizeCanvasInternal(const unsigned x, const unsigned y) {
     yCanvas = y;
 }
 
+void gotB64String(const std::string& s) {
+    postB64(s.c_str());
+}
+
 int main(int argc, char ** argv) {
     (void)argc;
     (void)argv;
@@ -364,6 +368,7 @@ int main(int argc, char ** argv) {
     // initSetResolution(400, 400);
     setResizeCallback(resizeCanvasInternal);
     setCopyGlCallback(officialCopyBuffer);
+    setCopyB64Callback(gotB64String);
     
     frames_then = std::chrono::steady_clock::now();
 
