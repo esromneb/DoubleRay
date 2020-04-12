@@ -50,7 +50,7 @@ public:
 
     void render( void ) noexcept;
 
-    template <bool enableShadowsT, bool refractShadowsT>
+    template <bool enableShadowsT, bool refractShadowsT, bool saveAlphaT>
     void _render( void ) noexcept;
 
     template <bool enableShadowsT, bool refractShadowsT, bool shadowFeelingT>
@@ -70,9 +70,10 @@ public:
 
     void resize( const unsigned _x, const unsigned _y );
 
-    float *rBuffer = 0;
-    float *gBuffer = 0;
-    float *bBuffer = 0;
+    float *rBuffer = 0; // red buffer
+    float *gBuffer = 0; // blue buffer
+    float *bBuffer = 0; // green buffer
+    float *aBuffer = 0; // alpha buffer
 
     Vec3 ia; // Ambient color
     Vec3 noHitColor = {0,0,0}; // What color if don't hit anything?
@@ -96,9 +97,9 @@ public:
 
 #ifdef ALLOW_CHOKE
     int il = -1;
-    int ih = 500;
+    int ih = 9999999;
     int jl = -1;
-    int jh = 500;
+    int jh = 9999999;
 #endif
 
 #ifdef ALLOW_HIGHLIGHT
@@ -113,6 +114,7 @@ public:
     constexpr static double defaultScale = 255;
     constexpr static bool defaultMemberRefractShadows = true;
     constexpr static bool defaultEnableShadows = true;
+    constexpr static bool defaultEnableAlpha = false;
 
     ///
     /// these should not be read inside render() or trace()
@@ -125,6 +127,9 @@ public:
 
     /// do we calculate shadows at all
     bool enableShadows = defaultEnableShadows;
+
+    /// do we calculate alpha
+    bool enableAlpha = defaultEnableAlpha;
 
     // Factor used to scale in-engine floating point colors
     // to 0-255 rgb

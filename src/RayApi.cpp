@@ -249,6 +249,10 @@ void setEnableShadows(const bool b) {
     engine->enableShadows = b;
 }
 
+void setEnableAlpha(const bool b) {
+    engine->enableAlpha = b;
+}
+
 void resizeBuffer(const unsigned x, const unsigned y) {
     engine->resize(x,y);
 

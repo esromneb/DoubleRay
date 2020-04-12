@@ -34,7 +34,7 @@ RayEngine::RayEngine( void )
 
 void RayEngine::resize( const unsigned _x, const unsigned _y )
 {
-    if( rBuffer && gBuffer && bBuffer && xPx == _x && yPx == _y ) {
+    if( rBuffer && gBuffer && bBuffer && aBuffer && xPx == _x && yPx == _y ) {
         // resize requested for exactly same size
         // don't make any changes
         // cout << "Resize aborting\n";
@@ -43,11 +43,12 @@ void RayEngine::resize( const unsigned _x, const unsigned _y )
 
 
     // px = _x;
-    if( rBuffer && gBuffer && bBuffer )
+    if( rBuffer && gBuffer && bBuffer && aBuffer )
     {
         delete rBuffer;
         delete gBuffer;
         delete bBuffer;
+        delete aBuffer;
     }
 
     // cout << "Resize engine at " << _x << ", " << _y << "\n";
@@ -55,6 +56,7 @@ void RayEngine::resize( const unsigned _x, const unsigned _y )
     rBuffer = new float[_x*_y];
     gBuffer = new float[_x*_y];
     bBuffer = new float[_x*_y];
+    aBuffer = new float[_x*_y];
 
     xPx = _x;
     yPx = _y;
@@ -77,18 +79,31 @@ int g_j = 0;
 
 
 void RayEngine::render( void ) noexcept {
+    // cout << "Engine Alpha: " << (enableAlpha?"true":"false") << "\n";
     if( enableShadows ) {
         if( memberRefractShadows ) {
-            _render<true, true>();
+            if( enableAlpha ) {
+                _render<true, true, true>();
+            } else {
+                _render<true, true, false>();
+            }
         } else {
-            _render<true, false>();
+            if( enableAlpha ) {
+                _render<true, false, true>();
+            } else {
+                _render<true, false, false>();
+            }
         }
     } else {
-        _render<false, false>();
+        if( enableAlpha ) {
+            _render<false, false, true>();
+        } else {
+            _render<false, false, false>();
+        }
     }
 }
 
-template <bool enableShadowsT, bool refractShadowsT>
+template <bool enableShadowsT, bool refractShadowsT, bool saveAlphaT>
 void RayEngine::_render( void ) noexcept {
     Vec3 color;
 
@@ -107,6 +122,11 @@ void RayEngine::_render( void ) noexcept {
 
     Ray r;
     r.o = e;
+
+    bool hitSomething = false;
+    double visibilityLevel = -45;
+    (void)hitSomething;
+    (void)visibilityLevel;
 
 
     // cout << "Render with x " << xPx << " y " << yPx << "\n";
@@ -127,19 +147,26 @@ void RayEngine::_render( void ) noexcept {
             g_j = j;
 #endif
 
-#ifdef ALLOW_CHOKE
-            if( ((signed)i > il && (signed)i < ih) && ((signed)j > jl && (signed)j < jh ) ) {
 
+#ifdef ALLOW_CHOKE
+            const bool noChoke = ((signed)i > il && (signed)i < ih) && ((signed)j > jl && (signed)j < jh );
+#endif
+
+#ifdef ALLOW_CHOKE
+            if(noChoke) {
+#endif
+            if constexpr (saveAlphaT) { 
+                std::tie(hitSomething,visibilityLevel) = trace<enableShadowsT, refractShadowsT, false>( r, 0, color);
+            } else {
                 trace<enableShadowsT, refractShadowsT, false>( r, 0, color);
-                if( PRINT ) {
-                    cout << "\n Final: " << color[0] << "\n";
-                }
+            }
+#ifdef ALLOW_CHOKE
             } else {
                 color = Vec3(0,0,0);
             }
-#else
-            trace<enableShadowsT, refractShadowsT, false>( r, 0, color);
 #endif
+
+
 
 #ifdef ALLOW_HIGHLIGHT
             if( (highlightX >= 0 && highlightY >= 0) && ((signed)i == highlightX && (signed)j == highlightY) ) {
@@ -152,6 +179,11 @@ void RayEngine::_render( void ) noexcept {
             this->rBuffer[writeOut] = color[0];
             this->gBuffer[writeOut] = color[1];
             this->bBuffer[writeOut] = color[2];
+
+            if constexpr (saveAlphaT) {
+                this->aBuffer[writeOut] = 1.0 - visibilityLevel;
+                // cout << "x: " << i << " y: " << j << " vis " << visibilityLevel << "\n";
+            }
 
         }
     }
@@ -730,7 +762,7 @@ void typeTraitsExample(T a, P b) {
 /// the wasm mode is way more complicated requiring 1 funciton pointer and 2 void*
 /// we also have a different pixel order in the 2 modes
 ///
-template< class T, class P, class Q >
+template<bool writeAlphaT, class T, class P, class Q>
 void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
     double scale = engine->scale;
     // double scale = 1.0/0.006;
@@ -738,6 +770,8 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
 
     const uint32_t xPx = engine->xPx;
     const uint32_t yPx = engine->yPx;
+
+    uint8_t ab = 255;
 
     for( unsigned y = 0; y < yPx; y++ ) {
         for( unsigned x = 0; x < xPx; x++ ) {
@@ -756,12 +790,18 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
             const uint8_t gb = (gs > 0) ? ( (gs>=255) ? 255 : gs ) : (0);
             const uint8_t bb = (bs > 0) ? ( (bs>=255) ? 255 : bs ) : (0);
 
+            if constexpr (writeAlphaT) {
+                const float fa = engine->aBuffer[lookup];
+                const float as = (fa * RayEngine::defaultScale); // alpha channel does not have adjustible scale
+                ab = (as > 0) ? ( (as>=255) ? 255 : as ) : (0);
+            }
+
             if constexpr ( std::is_same<std::vector<unsigned char>&, T>::value ) {
                 // png
                 arg0.emplace_back(rb);
                 arg0.emplace_back(gb);
                 arg0.emplace_back(bb);
-                arg0.emplace_back(255);
+                arg0.emplace_back(ab);
             } else {
                 // wasm
                 *((uint32_t*)arg1 + ((y) * xPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
@@ -771,30 +811,28 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
 } // _copyToPixels
 
 
+// wasm
 void RayEngine::copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const format) const {
-    _copyToPixels(fn, pixels, format, this);
+    _copyToPixels<false>(fn, pixels, format, this);
 }
 
+// png
 void RayEngine::copyToPixels(std::vector<unsigned char>& buffer) const {
     buffer.resize(0);
     buffer.reserve(yPx*xPx*4);
 
-    _copyToPixels<std::vector<unsigned char>&, void*>(buffer, 0, 0, this);
+    if( enableAlpha ) {
+        _copyToPixels<true, std::vector<unsigned char>&, void*>(buffer, 0, 0, this);
+    } else {
+        _copyToPixels<false, std::vector<unsigned char>&, void*>(buffer, 0, 0, this);
+    }
+
 }
 
 
 
-/// Normally to force compiler to compile each of your template options you can use something like
-/// the code below this function
-/// however I can't figure out how to get it to work, so this is a more old school way of doing it
-void templateHack(void) {
-    RayEngine r;
+// this is the modern c++ way to include a template
+// due to the way I've written render() vs _render() these should
+// never be needed
+// template void RayEngine::_render<false, false, false>();
 
-    r._render<false, false>();
-    r._render<true, false>();
-    r._render<true, true>();
-}
-
-// template function RayEngine::render<bool>;
-// template function RayEngine::render<true>;
-// template function RayEngine::render<false>;

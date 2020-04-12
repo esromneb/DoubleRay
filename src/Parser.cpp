@@ -244,6 +244,12 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj) 
             setEnableShadows(RayEngine::defaultEnableShadows);
         }
 
+        if(valid_bool(gg, "alpha")) {
+            setEnableAlpha(gg["alpha"]);
+        } else {
+            setEnableAlpha(RayEngine::defaultEnableAlpha);
+        }
+
         if( valid_number(gg, "x") && valid_number(gg, "y") ) {
             cout << "Parse doing custom resize\n";
             resizeBuffer( gg["x"], gg["y"] );

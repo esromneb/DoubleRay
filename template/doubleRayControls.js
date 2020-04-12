@@ -235,6 +235,10 @@ function resizeCanvas(x,y) {
   postCustomMessage({type:'call',fn:'resizeCanvas',rt:'void',at:['number','number'],av:[x,y]});
 }
 
+function setEnableAlpha(b) {
+  postCustomMessage({type:'call',fn:'setEnableAlpha',rt:'void',at:['boolean'],av:[b]});
+}
+
 
 ///
 /// Looks at the parsed object and verifies all keys are there
