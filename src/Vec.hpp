@@ -2,25 +2,26 @@
 
 #include <string>
 
+// template<unsigned Y = 3>
 class Vec {
 public:
     static const int x = 1; // the x dimension, forced to 1 (and never used)
-    int y = 3; // the y dimension, must match DEFAULT_VEC // fixme change to unsigned
+    unsigned y = 3; // the y dimension, must match DEFAULT_VEC // fixme change to unsigned
     double *data = 0;
     explicit Vec(); //default will be DEFAULT_VEC
     Vec( const Vec &in );
     virtual ~Vec( void );
-    Vec( const int yin );
-    Vec( const int yin, const double d0 );
-    Vec( const int yin, const double d0, const double d1 );
-    Vec( const int yin, const double d0, const double d1, const double d2 );
+    Vec( const unsigned yin );
+    Vec( const unsigned yin, const double d0 );
+    Vec( const unsigned yin, const double d0, const double d1 );
+    Vec( const unsigned yin, const double d0, const double d1, const double d2 );
     Vec& operator= (const Vec &rhs);
     Vec operator* ( const Vec &rhs ) const;
     Vec operator* ( double rhs );
     Vec operator/ ( double rhs );
     Vec operator+ ( Vec &rhs );
     Vec operator- ( Vec &rhs );
-    double operator[] (int index);
+    double operator[] (const unsigned index);
     double mag( void ) const;
     double dot( const Vec &rhs ) const;
     void rot_y( const double theta );

@@ -57,9 +57,9 @@ double Matrix::det( void )
     return 0;
 }
 
-Vec Matrix::operator *(Vec &rhs)
+Vec Matrix::operator *(const Vec &rhs)
 {
-    if( x != rhs.y )
+    if( x != (signed)rhs.y )
     {
         Vec bad(0);// = new Vec(0);
         return bad;

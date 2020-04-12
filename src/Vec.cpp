@@ -9,22 +9,23 @@ Vec::Vec( const Vec &in )
 {
     y = in.y;
     data = new double[y];
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ ) {
         this->data[i] = in.data[i];
+    }
 }
 
-Vec::Vec( const int yin ): y(yin) {
+Vec::Vec( const unsigned yin ): y(yin) {
     data = new double[yin];
 }
 
-Vec::Vec( const int yin, const double d0 ): y(yin) {
+Vec::Vec( const unsigned yin, const double d0 ): y(yin) {
     data = new double[yin];
     if( yin > 0 ) {
         data[0] = d0;
     }
 }
 
-Vec::Vec( const int yin, const double d0, const double d1 ): y(yin) {
+Vec::Vec( const unsigned yin, const double d0, const double d1 ): y(yin) {
     data = new double[yin];
     if( yin > 0 ) {
         data[0] = d0;
@@ -34,7 +35,7 @@ Vec::Vec( const int yin, const double d0, const double d1 ): y(yin) {
     }
 }
 
-Vec::Vec( const int yin, const double d0, const double d1, const double d2 ): y(yin) {
+Vec::Vec( const unsigned yin, const double d0, const double d1, const double d2 ): y(yin) {
     data = new double[yin];
     if( yin > 0 ) {
         data[0] = d0;
@@ -63,7 +64,7 @@ Vec& Vec::operator= (const Vec &rhs)
         return *bad;
     }
 
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
     {
         this->data[i] = rhs.data[i];
     }
@@ -81,13 +82,13 @@ Vec Vec::operator* ( const Vec &rhs ) const
 
     Vec ret(y);// = new Vec(y);
 
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
         ret.data[i] = data[i] * rhs.data[i];
 
     return ret;
 }
 
-double Vec::operator[] (int index)
+double Vec::operator[] (const unsigned index)
 {
     return data[index];
 }
@@ -95,7 +96,7 @@ double Vec::operator[] (int index)
 double Vec::mag( void ) const
 {
     double ret = 0;
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
     {
         ret += data[i]*data[i];
     }
@@ -114,7 +115,7 @@ double Vec::dot( const Vec &rhs ) const
     Vec tmp = (*this)*rhs;
     double ret = 0;
 
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
         ret += tmp[i];
 
     return ret;
@@ -123,7 +124,7 @@ double Vec::dot( const Vec &rhs ) const
 Vec Vec::operator* ( double rhs )
 {
     Vec ret(y);// = new Vec(y);
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
     {
         ret.data[i] = data[i] * rhs;
     }
@@ -133,7 +134,7 @@ Vec Vec::operator* ( double rhs )
 Vec Vec::operator/ ( double rhs )
 {
     Vec ret(y);// = new Vec(y);
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
     {
         ret.data[i] = data[i] / rhs;
     }
@@ -148,7 +149,7 @@ Vec Vec::operator+ ( Vec &rhs )
         return bad;
     }
     Vec ret(y);// = new Vec(y);
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
     {
         ret.data[i] = data[i] + rhs.data[i];
     }
@@ -162,7 +163,7 @@ Vec Vec::operator- ( Vec &rhs )
         return bad;
     }
     Vec ret(y);// = new Vec(y);
-    for( int i = 0; i < y; i++ )
+    for( unsigned i = 0; i < y; i++ )
     {
         ret.data[i] = data[i] - rhs.data[i];
     }
@@ -311,14 +312,14 @@ std::string Vec::str(bool vertical) const {
     std::string out = "";
 
     if( vertical ) {
-        for(int i = 0; i < y; i++) {
+        for(unsigned i = 0; i < y; i++) {
             out += std::to_string(data[i]);
             out += "\n";
             // cout << data[0] << "\n";
         }
     } else {
         out = "[";
-        for(int i = 0; i < y; i++) {
+        for(unsigned i = 0; i < y; i++) {
             out += std::to_string(data[i]);
             out += ",";
             // cout << data[0] << "\n";
