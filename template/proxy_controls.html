@@ -202,9 +202,16 @@
   <script type="text/javascript">
 
     function onLoadRender() {
-      // jsPrint('Window OnLoad');
-      setupEngineClick();
-      parseAndRender();
+      // initial parse and load needs a small delay so that the rainbow render can finish
+      // should fix issue #12
+      // 100 seems too small and doesn't fix the issue
+      // this may be able to be fixed without delays by removing rainbow
+      // or by keeping it and detecting when the rainbow render/resize has passed
+      // or by looking at canvas size or something similar
+      setTimeout(()=>{
+        setupEngineClick();
+        parseAndRender();
+      },200);
     }
 
     // there can only be one of these
