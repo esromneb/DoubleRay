@@ -309,7 +309,12 @@ void officialCopyBuffer(void) {
 void officialCopyBuffer(void) {
     if (SDL_MUSTLOCK(screen)) SDL_LockSurface(screen);
 
-    engine->copyToPixels(SDL_MapRGB, screen->pixels, screen->format);
+    if( engine->enableAlpha ) {
+        engine->copyToPixels(SDL_MapRGBA, screen->pixels, screen->format);
+    } else {
+        engine->copyToPixels(SDL_MapRGB, screen->pixels, screen->format);
+    }
+
 
     if (SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
     SDL_Flip(screen);

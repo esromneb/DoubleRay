@@ -803,17 +803,29 @@ void _copyToPixels(T arg0, P arg1, Q arg2, const RayEngine* const engine) {
                 arg0.emplace_back(bb);
                 arg0.emplace_back(ab);
             } else {
-                // wasm
-                *((uint32_t*)arg1 + ((y) * xPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
+                if constexpr (writeAlphaT) {
+                    // wasm with alpha
+                    *((uint32_t*)arg1 + ((y) * xPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb, ab);
+                } else {
+                    // wasm no alpha
+                    *((uint32_t*)arg1 + ((y) * xPx) + x) = arg0((const SDL_PixelFormat*)arg2, rb, gb, bb);
+                }
             }
         } // for x
     } // for y
 } // _copyToPixels
 
 
-// wasm
+// wasm no alpha
 void RayEngine::copyToPixels(wasm_gl_pixel_t fn, void* const pixels, void* const format) const {
     _copyToPixels<false>(fn, pixels, format, this);
+}
+
+// wasm with alpha
+// this works however it seems like the canvas drops the alpha channel
+// so output in canvas is identical to no alpha :(
+void RayEngine::copyToPixels(wasm_gl_pixel_alpha_t fn, void* const pixels, void* const format) const {
+    _copyToPixels<true>(fn, pixels, format, this);
 }
 
 // png
