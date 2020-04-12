@@ -128,7 +128,7 @@ void RayEngine::_render( void ) noexcept {
 #endif
 
 #ifdef ALLOW_CHOKE
-            if( (i > il && i < ih) && (j > jl && j < jh ) ) {
+            if( ((signed)i > il && (signed)i < ih) && ((signed)j > jl && (signed)j < jh ) ) {
 
                 trace<enableShadowsT, refractShadowsT, false>( r, 0, color);
                 if( PRINT ) {
@@ -142,7 +142,7 @@ void RayEngine::_render( void ) noexcept {
 #endif
 
 #ifdef ALLOW_HIGHLIGHT
-            if( (highlightX >= 0 && highlightY >= 0) && (i == highlightX && j == highlightY) ) {
+            if( (highlightX >= 0 && highlightY >= 0) && ((signed)i == highlightX && (signed)j == highlightY) ) {
                 color = Vec3(2,0,0);
             }
 #endif
