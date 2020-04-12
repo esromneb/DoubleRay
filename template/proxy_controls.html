@@ -449,7 +449,7 @@ $sel.change(function(x){
       doJsonParse(scene);
     } else {
       // 
-      parseJsonScene(scene, true, true);
+      parseJsonScene(scene, true, true, 0);
       determineCanvas(scene);
     }
   }
@@ -570,8 +570,10 @@ function getEventLocation(element,event){
 
     <script type="text/javascript" src="doubleRayInstantiate.js"></script>
     <script type="text/javascript">
-      function myGotB64(x) {
+      function myGotB64(x, tag) {
         jsPrint(x);
+        jsPrint('');
+        jsPrint('above from tag ' + tag);
       }
       doubleRaySetB64Callback(myGotB64);
     </script>

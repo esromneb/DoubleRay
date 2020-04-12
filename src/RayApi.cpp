@@ -428,11 +428,11 @@ void setPrint(int p) {
 }
 
 // only called from wasm (For now)
-void parseJsonScene(const char* scene, const bool andRender, const bool useCanvas ) {
+void parseJsonScene(const char* scene, const bool andRender, const bool useCanvas, const int tag ) {
     // cout << "parseJsonScene() Got: " << scene << "\n";
     // cout << "parseJsonScene() bool: " << andRender << "\n";
 
-    // cout << "parseJsonScene() Got called\n";
+    // cout << "parseJsonScene() Got called tag:" << tag << "\n";
 
     // another hacked global
     mostRecentParseCallUsingCanvas = useCanvas;
@@ -458,11 +458,9 @@ void parseJsonScene(const char* scene, const bool andRender, const bool useCanva
             } else {
                 if( copyB64Callback ) {
                     std::string b64 = HandlePng::encodeB64(engine, true);
-                    copyB64Callback(b64);
+                    copyB64Callback(b64, tag);
                 }
             }
-
-
         }
     }
 }

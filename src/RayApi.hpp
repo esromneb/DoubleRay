@@ -10,7 +10,7 @@
 
 typedef std::function<void(const unsigned, const unsigned)> resize_canvas_cb_t;
 typedef std::function<void(void)> copy_gl_cb_t;
-typedef std::function<void(const std::string&)> copy_b64_cb_t;
+typedef std::function<void(const std::string&, const int tag)> copy_b64_cb_t;
 
 void setRayApiTarget(RayEngine* e);
 void setResizeCallback(const resize_canvas_cb_t cb);
@@ -64,7 +64,7 @@ void nextOrbitRender(const bool render = true);
 void dumpCamera();
 void chokeOutput(int il, int ih, int jl, int jh);
 void setPrint(int p);
-void parseJsonScene(const char* scene, const bool andRender, const bool useCanvas );
+void parseJsonScene(const char* scene, const bool andRender, const bool useCanvas, const int tag );
 // void parseJsonSceneFragment(const std::string scene, const bool andRender );
 
 } // extern C

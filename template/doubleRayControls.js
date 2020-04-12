@@ -227,8 +227,8 @@ function setHighlightPixel(x,y) {
   postCustomMessage({type:'call',fn:'setHighlightPixel',rt:'void',at:['number','number'],av:[x,y]});
 }
 
-function parseJsonScene(str,andRender,useCanvas) {
-  postCustomMessage({type:'call',fn:'parseJsonScene',rt:'void',at:['string','boolean','boolean'],av:[str,andRender,useCanvas]});
+function parseJsonScene(str,andRender,useCanvas,n) {
+  postCustomMessage({type:'call',fn:'parseJsonScene',rt:'void',at:['string','boolean','boolean','number'],av:[str,andRender,useCanvas,n]});
 }
 
 function resizeBuffer(x,y) {

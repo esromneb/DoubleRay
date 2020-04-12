@@ -356,8 +356,8 @@ void resizeCanvasInternal(const unsigned x, const unsigned y) {
     yCanvas = y;
 }
 
-void gotB64String(const std::string& s) {
-    postB64(s.c_str());
+void gotB64String(const std::string& s, const int tag) {
+    postB64(s.c_str(), tag);
 }
 
 int main(int argc, char ** argv) {
@@ -425,18 +425,18 @@ void doRenderOfficial(void) {
 
 
 void debugCallback(void) {
-    std::string val;
-    for(unsigned i = 0; i < 64; i++) {
-        val = std::string("some prefix: ") + std::to_string(i);
-        postB64(val.c_str());
-    }
-    postB64(val.c_str());
+    // std::string val;
+    // for(unsigned i = 0; i < 64; i++) {
+    //     val = std::string("some prefix: ") + std::to_string(i);
+    //     postB64(val.c_str());
+    // }
+    // postB64(val.c_str());
 
-    val = "second val";
-    postB64(val.c_str());
+    // val = "second val";
+    // postB64(val.c_str());
 
-    val = "3 val";
-    postB64(val.c_str());
+    // val = "3 val";
+    // postB64(val.c_str());
 }
 
 

@@ -25,8 +25,8 @@ using namespace std;
 ///
 
 
-EM_JS(void, postB64, (const char* v), {
-    postB64ToMain(v);
+EM_JS(void, postB64, (const char* v, const int tag), {
+    postB64ToMain(v, tag);
 });
 
 

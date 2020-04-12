@@ -82,10 +82,10 @@ function postToMain(data0, data1) {
 // the actual data0 will be a number
 // we need to pass this to AsciiToString() which gives us a javascript
 // string
-function postB64ToMain(data0) {
+function postB64ToMain(data0,tag) {
   let str = AsciiToString(data0);
   // console.log(bar);
-  postCustomMessage({type:'b64',s:str});
+  postCustomMessage({type:'b64',s:str,tag:tag});
 }
 
 

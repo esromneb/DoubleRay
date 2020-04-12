@@ -94,7 +94,7 @@ Module['mtDispatchCustomMessageType'] = (x) => {
     case 'b64': {
       // console.log(x.s);
       if( doubleRayB64Callback ) {
-        doubleRayB64Callback(x.s);
+        doubleRayB64Callback(x.s, x.tag);
       }
     }
   }
