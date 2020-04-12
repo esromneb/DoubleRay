@@ -254,7 +254,7 @@ void officialRenderRainbow(bool boolA, bool boolB) {
 #ifdef ORIGINAL_COPY_BUFFER
 // this is the original function we used to copy
 // to the wasm gl buffer
-void officialCopyBuffer(void) {
+void official_Copy_Buffer(void) {
     const uint32_t px = 400;
 
     auto scale = RayEngine::scale;
@@ -325,23 +325,30 @@ void officialCopyBuffer(void) {
 
 
 // sets global screen
-void initSetResolution(const unsigned x, const unsigned y) {
-    SDL_Init(SDL_INIT_VIDEO);
-    screen = SDL_SetVideoMode(x, y, 32, SDL_SWSURFACE);
+// void initSetResolution(const unsigned x, const unsigned y) {
+//     SDL_Init(SDL_INIT_VIDEO);
+//     screen = SDL_SetVideoMode(x, y, 32, SDL_SWSURFACE);
 
-    #ifdef TEST_SDL_LOCK_OPTS
-    EM_ASM("SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = true; SDL.defaults.opaqueFrontBuffer = false;");
-    #endif
+//     #ifdef TEST_SDL_LOCK_OPTS
+//     EM_ASM("SDL.defaults.copyOnLock = false; SDL.defaults.discardOnLock = true; SDL.defaults.opaqueFrontBuffer = false;");
+//     #endif
 
-    xCanvas = x;
-    yCanvas = y;
-}
+//     xCanvas = x;
+//     yCanvas = y;
+// }
+
+bool sdlInitCalled = false;
 
 // This is for wasm only, however it should not be visible to javascript
 // this gets called by RayApi::resizeBuffer
 // we should not call resizeBuffer() from here to avoid recursion loop
 void resizeCanvasInternal(const unsigned x, const unsigned y) {
-    // SDL_Init(SDL_INIT_VIDEO);
+
+    if( !sdlInitCalled ) {
+        SDL_Init(SDL_INIT_VIDEO);
+        sdlInitCalled = true;
+    }
+
     screen = SDL_SetVideoMode(x, y, 32, SDL_SWSURFACE);
 
     // resizeBuffer(x,y);
@@ -354,14 +361,14 @@ int main(int argc, char ** argv) {
     (void)argv;
 
 
-    // initSetResolution(256, 256);
-    initSetResolution(400, 400);
+    // initSetResolution(400, 400);
     setResizeCallback(resizeCanvasInternal);
+    setCopyGlCallback(officialCopyBuffer);
     
     frames_then = std::chrono::steady_clock::now();
 
 
-    officialRenderRainbow(false, false);
+    // officialRenderRainbow(false, false);
 
     // SDL_Quit();
 

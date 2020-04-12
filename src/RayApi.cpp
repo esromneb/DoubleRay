@@ -11,6 +11,8 @@ using namespace std;
 
 static RayEngine* engine = 0;
 static resize_canvas_cb_t resizeCallback=0;
+static copy_gl_cb_t copyGlCallback=0;
+static copy_b64_cb_t copyB64Callback=0;
 
 // this is required due to the way I originally wrote the files in this function:
 // as naked functions with a global engine
@@ -27,6 +29,13 @@ void setResizeCallback(const resize_canvas_cb_t cb) {
     resizeCallback = cb;
 }
 
+void setCopyGlCallback(const copy_gl_cb_t cb) {
+    copyGlCallback = cb;
+}
+
+void setCopyB64Callback(const copy_b64_cb_t cb) {
+    copyB64Callback = cb;
+}
 
 
 
@@ -253,10 +262,12 @@ void setEnableAlpha(const bool b) {
     engine->enableAlpha = b;
 }
 
+static bool mostRecentParseCallUsingCanvas = false;
+
 void resizeBuffer(const unsigned x, const unsigned y) {
     engine->resize(x,y);
 
-    if( resizeCallback ) {
+    if( resizeCallback && mostRecentParseCallUsingCanvas ) {
         resizeCallback(x,y);
     }
 }
@@ -415,11 +426,15 @@ void setPrint(int p) {
 #endif
 }
 
-void parseJsonScene(const char* scene, const bool andRender ) {
+// only called from wasm (For now)
+void parseJsonScene(const char* scene, const bool andRender, const bool useCanvas ) {
     // cout << "parseJsonScene() Got: " << scene << "\n";
     // cout << "parseJsonScene() bool: " << andRender << "\n";
 
     // cout << "parseJsonScene() Got called\n";
+
+    // another hacked global
+    mostRecentParseCallUsingCanvas = useCanvas;
 
     unsigned ret;
     std::string error;
@@ -433,7 +448,19 @@ void parseJsonScene(const char* scene, const bool andRender ) {
         return;
     } else {
         if( andRender ) {
-            doRenderOfficial();
+            render();
+
+            if(useCanvas) {
+                if( copyGlCallback ) {
+                    copyGlCallback();
+                }
+            } else {
+                if( copyB64Callback ) {
+                    copyB64Callback(""); //FIXME
+                }
+            }
+
+
         }
     }
 }

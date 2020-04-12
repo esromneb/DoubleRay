@@ -9,11 +9,15 @@
 #include <functional>
 
 typedef std::function<void(const unsigned, const unsigned)> resize_canvas_cb_t;
-// A bunch of naked functions
+typedef std::function<void(void)> copy_gl_cb_t;
+typedef std::function<void(const std::string&)> copy_b64_cb_t;
 
 void setRayApiTarget(RayEngine* e);
 void setResizeCallback(const resize_canvas_cb_t cb);
+void setCopyGlCallback(const copy_gl_cb_t cb);
+void setCopyB64Callback(const copy_b64_cb_t cb);
 
+// A bunch of naked functions with C bindings
 extern "C" {
 
 void setGlobalC(const int c);
@@ -60,7 +64,7 @@ void nextOrbitRender(const bool render = true);
 void dumpCamera();
 void chokeOutput(int il, int ih, int jl, int jh);
 void setPrint(int p);
-void parseJsonScene(const char* scene, const bool andRender );
-void parseJsonSceneFragment(const std::string scene, const bool andRender );
+void parseJsonScene(const char* scene, const bool andRender, const bool useCanvas );
+// void parseJsonSceneFragment(const std::string scene, const bool andRender );
 
 } // extern C
