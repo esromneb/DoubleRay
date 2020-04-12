@@ -2,6 +2,8 @@ var statusElement = document.getElementById('status');
 var progressElement = document.getElementById('progress');
 var spinnerElement = document.getElementById('spinner');
 
+var doubleRayB64Callback = null;
+
 var Module = {
   preRun: [],
   postRun: [],
@@ -73,6 +75,37 @@ window.onerror = function(event) {
     if (text) Module.printErr('[post-exception status] ' + text);
   };
 };
+
+// This is on main thread
+Module['onCustomMessage'] = (x) => {
+  // if( debugCustomDispatch ) {
+    // console.log('main thread got msg: ' + JSON.stringify(x.data));
+  // }
+  if(x.data.userData && x.data.userData.type) {
+    Module['mtDispatchCustomMessageType'](x.data.userData);
+  } else {
+  //   console.log('worker DROPPED: ' + JSON.stringify(x.data));
+  }
+}
+
+// This is on main thread
+Module['mtDispatchCustomMessageType'] = (x) => {
+  switch(x.type) {
+    case 'b64': {
+      // console.log(x.s);
+      if( doubleRayB64Callback ) {
+        doubleRayB64Callback(x.s);
+      }
+    }
+  }
+}
+
+
+
+function doubleRaySetB64Callback(f) {
+  doubleRayB64Callback = f;
+}
+
 
 /// copied from print above
 /// NOTE: we stripped the caching of getElementById() from above

@@ -22,6 +22,7 @@ src/Parser.hpp \
 src/RayApi.hpp \
 src/json.hpp \
 src/Macros.hpp \
+src/JsApi.hpp \
 src/Vec.hpp
 
 WASM_MAIN = src/main2.cpp
@@ -36,6 +37,7 @@ src/Material.cpp \
 src/Ray.cpp \
 src/Parser.cpp \
 src/RayApi.cpp \
+src/JsApi.cpp \
 src/Vec.cpp
 
 # this is a list of all C functions we want to publish to javascript
@@ -70,6 +72,7 @@ EXPORT_STRING = \
 "_setRefractShadows", \
 "_setEnableShadows", \
 "_setEnableAlpha", \
+"_debugCallback", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

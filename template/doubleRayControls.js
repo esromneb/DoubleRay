@@ -205,6 +205,10 @@ function dumpCamera() {
   postCustomMessage({type:'call',fn:'dumpCamera',rt:'void'});
 }
 
+function debugCallback() {
+  postCustomMessage({type:'call',fn:'debugCallback',rt:'void'});
+}
+
 function chokeOutput(a,b,c,d) {
 
 

@@ -6,6 +6,7 @@
 #include "fileio.h"
 #include "Parser.hpp"
 #include "RayApi.hpp"
+#include "JsApi.hpp"
 
 
 #include <iostream>
@@ -370,24 +371,8 @@ int main(int argc, char ** argv) {
 
 
 
-
-
 ///
-/// These are all of the C++ -> Javascript
-///
-
-EM_JS(void, call_alert, (), {
-  alert('hello world!');
-  // throw 'all done';
-});
-
-
-
-
-
-
-///
-/// These are all of the Javascript -> C++ functions
+/// These are some of the Javascript -> C++ functions
 ///
 
 extern "C" {
@@ -424,6 +409,22 @@ void doRenderOfficial(void) {
     // cout << "Render finished\n";
     officialCopyBuffer();
     // cout << "Copy finished\n";
+}
+
+
+void debugCallback(void) {
+    std::string val;
+    for(unsigned i = 0; i < 64; i++) {
+        val = std::string("some prefix: ") + std::to_string(i);
+        postB64(val.c_str());
+    }
+    postB64(val.c_str());
+
+    val = "second val";
+    postB64(val.c_str());
+
+    val = "3 val";
+    postB64(val.c_str());
 }
 
 

@@ -4,6 +4,7 @@
 
 let debugCustomDispatch = false;
 
+// This is on worker thread
 Module['onCustomMessage'] = (x) => {
   if( debugCustomDispatch ) {
     console.log('worker got msg: ' + JSON.stringify(x.data));
@@ -30,7 +31,7 @@ Module['onCustomMessage'] = (x) => {
 /// av -> argument values
 ///
 
-
+// This is on worker thread
 Module['dispatchCustomMessageType'] = (x) => {
   if( debugCustomDispatch ) {
     console.log('in dispatchCustomMessageType' + JSON.stringify(x));
@@ -65,6 +66,26 @@ Module['dispatchCustomMessageType'] = (x) => {
       console.log('dispatchCustomMessageType DROPPED: ' + JSON.stringify(x));
     }
   }
+}
+
+function postToMain(data0, data1) {
+  if( data0 == 0 ) {
+    postCustomMessage({type:'call',fn:'setupOrbit',rt:'void',at:['number'],av:[30]});
+  } else if ( data0 == 1) {
+    postCustomMessage(data1);
+  }
+}
+
+// https://groups.google.com/forum/#!topic/emscripten-discuss/_M75jXb2-HY
+// https://emscripten.org/docs/api_reference/preamble.js.html#preamble-js
+// data0 is a char* from c
+// the actual data0 will be a number
+// we need to pass this to UTF8ToString() which gives us a javascript
+// string
+function postB64ToMain(data0) {
+  let str = UTF8ToString(data0);
+  // console.log(bar);
+  postCustomMessage({type:'b64',s:str});
 }
 
 

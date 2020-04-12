@@ -569,7 +569,14 @@ function getEventLocation(element,event){
     <textarea id="output" rows="8"></textarea>
 
     <script type="text/javascript" src="doubleRayInstantiate.js"></script>
+    <script type="text/javascript">
+      function myGotB64(x) {
+        jsPrint(x);
+      }
+      doubleRaySetB64Callback(myGotB64);
+    </script>
     {{{ SCRIPT }}}
+
   </body>
 </html>
 
