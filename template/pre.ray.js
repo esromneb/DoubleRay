@@ -80,10 +80,10 @@ function postToMain(data0, data1) {
 // https://emscripten.org/docs/api_reference/preamble.js.html#preamble-js
 // data0 is a char* from c
 // the actual data0 will be a number
-// we need to pass this to UTF8ToString() which gives us a javascript
+// we need to pass this to AsciiToString() which gives us a javascript
 // string
 function postB64ToMain(data0) {
-  let str = UTF8ToString(data0);
+  let str = AsciiToString(data0);
   // console.log(bar);
   postCustomMessage({type:'b64',s:str});
 }
