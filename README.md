@@ -115,6 +115,7 @@ See Also Emscripten
 * https://brionv.com/log/2019/10/24/exception-handling-in-emscripten-how-it-works-and-why-its-disabled-by-default/ - exceptions
 * https://emscripten.org/docs/compiling/Travis.html - travis
 * https://emscripten.org/docs/api_reference/emscripten.h.html?highlight=build_as_worker#worker-api - workers
+* https://livebook.manning.com/book/webassembly-in-action/c-emscripten-macros/v-7/64 - in-depth passing c->js
 
 See Also Offtopic
 ===
