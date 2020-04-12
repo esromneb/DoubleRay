@@ -66,5 +66,11 @@ Module['dispatchCustomMessageType'] = (x) => {
     }
   }
 }
+
+
+function myfn() {
+  console.log('myfn() got called');
+}
+
 ////////////////////////////////////////
 // end of pre.ray.js

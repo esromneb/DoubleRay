@@ -129,7 +129,7 @@ std::string idealPathForInput(const std::string& s1) {
 }
 
 
-void batchRender(const std::vector<std::string>& paths, const bool cleanBetween, const bool skipWrite) {
+void batchRender(const std::vector<std::string>& paths, const bool cleanBetween, const bool skipWrite, const bool outputB64) {
 
     RayEngine* engine;
     if( !cleanBetween ) {
@@ -164,12 +164,19 @@ void batchRender(const std::vector<std::string>& paths, const bool cleanBetween,
 
         // std::string savePath = "img/test/test_shadow_3.png";
 
-        auto [ret2,error2] = HandlePng::save(outputPath, engine);
+        if( outputB64 ) {
+            std::string b64 = HandlePng::encodeB64(engine);
+            cout << "Base64:\n" << b64 << "\n";
+        } else {
 
-        // cout << "PNG Got code " << ret2 << " with message [" << error2 << "]\n";
-        if( ret2 != 0 ) {
-            cout << "Writin file to disk " << outputPath << " failed with " << error2 << "\n";
+            auto [ret2,error2] = HandlePng::save(outputPath, engine);
+
+            // cout << "PNG Got code " << ret2 << " with message [" << error2 << "]\n";
+            if( ret2 != 0 ) {
+                cout << "Writin file to disk " << outputPath << " failed with " << error2 << "\n";
+            }
         }
+
     }
 }
 
@@ -434,6 +441,7 @@ int main(int argc, char** argv) {
     bool compareAndRender = false;
     bool printAllValues = false;
     bool skipWrite = false;
+    bool outputB64 = false;
 
 
     std::string onePath;
@@ -479,6 +487,13 @@ int main(int argc, char** argv) {
     };
     app.add_flag_function("-p", printAllValuesCb,
         "Print every pixel value that does not match during compare");
+
+    auto saveB64Cb = [&](const std::int64_t count) {
+        (void)count;
+        outputB64 = true;
+    };
+    app.add_flag_function("-b", saveB64Cb,
+        "Write base64 to stdout instead of saving");
 
 
     auto cleanCb = [&](const std::int64_t count) {
@@ -566,7 +581,7 @@ int main(int argc, char** argv) {
             cout << "Please note that -c is implied when -g is used\n";
         }
         cout << "Render First\n";
-        batchRender(paths,newEnginePerRender, skipWrite);
+        batchRender(paths,newEnginePerRender, skipWrite, outputB64);
         cout << "Then Compare\n";
         return batchCompare(paths, printAllValues);
     }
@@ -577,7 +592,7 @@ int main(int argc, char** argv) {
         }
         return batchCompare(paths, printAllValues);
     } else if( renderAll || renderOne ) {
-        batchRender(paths,newEnginePerRender, skipWrite);
+        batchRender(paths,newEnginePerRender, skipWrite, outputB64);
     } else {
         cout << "internal options error\n";
         cout << app.help();
