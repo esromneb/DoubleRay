@@ -110,6 +110,7 @@ out/ray.wasm: $(WASM_MAIN) $(CPP_FILES) $(HPP_FILES) $(TEMPLATE_FILE) $(JS_TEMPL
 	emcc $(WASM_MAIN) $(CPP_FILES) -s WASM=1 -o out/ray.html \
 	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
+	-s ALLOW_MEMORY_GROWTH=1 \
 	--pre-js $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='[$(EXPORT_STRING) "_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
@@ -124,6 +125,7 @@ out/empty:  $(TEMPLATE_FILE) $(JS_TEMPLATE_FILE) Makefile
 	emcc src/Empty.cpp -s WASM=1 -o out/ray.html \
 	--shell-file $(TEMPLATE_FILE) \
 	--proxy-to-worker \
+	-s ALLOW_MEMORY_GROWTH=1 \
 	--pre-js $(JS_TEMPLATE_FILE) \
 	-s EXPORTED_FUNCTIONS='["_main"]' \
 	-s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
