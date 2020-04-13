@@ -1,6 +1,6 @@
 {
   "name": "doubleray",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "WASM raytracer",
   "main": "index.js",
   "directories": {
