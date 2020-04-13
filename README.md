@@ -122,6 +122,8 @@ See Also Emscripten
 * https://emscripten.org/docs/compiling/Travis.html - travis
 * https://emscripten.org/docs/api_reference/emscripten.h.html?highlight=build_as_worker#worker-api - workers
 * https://livebook.manning.com/book/webassembly-in-action/c-emscripten-macros/v-7/64 - in-depth passing c->js
+* https://emscripten.org/docs/porting/connecting_cpp_and_javascript/Interacting-with-code.html
+* https://emscripten.org/docs/api_reference/preamble.js.html
 
 See Also Offtopic
 ===
