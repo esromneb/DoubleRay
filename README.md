@@ -107,6 +107,12 @@ See Also Ratracing
 * https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/light-transport-ray-tracing-whitted
 * http://www.cs.unc.edu/~rademach/xroads-RT/RTarticle.html - texture mapping
 
+See Also RayMarching / Shaders
+===
+* https://github.com/gpujs/gpu.js/blob/develop/examples/mandelbulb.html
+* https://observablehq.com/@ondras/fragment-shader-raytracer - shaders
+
+
 See Also Emscripten
 ===
 * https://emscripten.org/docs/compiling/Deploying-Pages.html - emscripten instructions for custom html
