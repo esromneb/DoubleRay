@@ -65,6 +65,8 @@ void dumpCamera();
 void chokeOutput(int il, int ih, int jl, int jh);
 void setPrint(int p);
 void parseJsonScene(const char* scene, const bool andRender, const bool useCanvas, const int tag );
+void setPrintRenderTime(const bool b);
+void setPrintRotCamera(const bool b);
 // void parseJsonSceneFragment(const std::string scene, const bool andRender );
 
 } // extern C

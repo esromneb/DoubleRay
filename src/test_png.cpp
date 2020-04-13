@@ -23,13 +23,6 @@ using std::min;
 using std::max;
 
 
-// Annoying but required for now in the tests until we fix the RayApi
-extern "C" {
-void doRenderOfficial() {
-}
-}
-
-
 // returns a list of paths to scenes that are under test
 std::vector<std::string> getAllScenes(void) {
     std::vector<std::string> out;

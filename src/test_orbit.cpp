@@ -43,9 +43,3 @@ int main(void) {
     // c.rot_x(0.4);
 }
 
-
-// Annoying but required for now in the tests until we fix the RayApi
-extern "C" {
-void doRenderOfficial() {
-}
-}

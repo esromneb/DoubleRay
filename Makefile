@@ -80,6 +80,8 @@ EXPORT_STRING = \
 "_setEnableShadows", \
 "_setEnableAlpha", \
 "_debugCallback", \
+"_setPrintRenderTime", \
+"_setPrintRotCamera", \
 "_setScale",
 
 TEMPLATE_FILE = template/proxy_controls.html

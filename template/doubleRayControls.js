@@ -223,6 +223,15 @@ function setPrint(val) {
   postCustomMessage({type:'call',fn:'setPrint',rt:'void',at:['number'],av:[val]});
 }
 
+function setPrintRenderTime(val) {
+  postCustomMessage({type:'call',fn:'setPrintRenderTime',rt:'void',at:['number'],av:[val]});
+}
+
+function setPrintRotCamera(val) {
+  postCustomMessage({type:'call',fn:'setPrintRotCamera',rt:'void',at:['number'],av:[val]});
+}
+
+
 function setHighlightPixel(x,y) {
   postCustomMessage({type:'call',fn:'setHighlightPixel',rt:'void',at:['number','number'],av:[x,y]});
 }

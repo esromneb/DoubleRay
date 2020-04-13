@@ -251,10 +251,10 @@ std::tuple<unsigned,std::string> Parser::parseGlobal(const nlohmann::json& obj) 
         }
 
         if( valid_number(gg, "x") && valid_number(gg, "y") ) {
-            cout << "Parse doing custom resize\n";
+            // cout << "Parse doing custom resize\n";
             resizeBuffer( gg["x"], gg["y"] );
         } else {
-            cout << "Parse doing default resize\n";
+            // cout << "Parse doing default resize\n";
             resizeBuffer( 400, 400 );
         }
 

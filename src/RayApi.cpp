@@ -15,6 +15,9 @@ static resize_canvas_cb_t resizeCallback=0;
 static copy_gl_cb_t copyGlCallback=0;
 static copy_b64_cb_t copyB64Callback=0;
 
+static bool printRenderTime = false;
+static bool printRotCamera = false;
+
 // this is required due to the way I originally wrote the files in this function:
 // as naked functions with a global engine
 // now that I've moved these to their own file we have an ugly hack
@@ -51,10 +54,6 @@ void growOnly(const size_t index, T& vec) {
 }
 
 
-extern "C" {
-    extern void doRenderOfficial(void);
-}
-
 
 
 ///
@@ -62,6 +61,14 @@ extern "C" {
 ///
 
 extern "C" {
+
+void setPrintRenderTime(const bool b) {
+    printRenderTime = b;
+}
+
+void setPrintRotCamera(const bool b) {
+    printRotCamera = b;
+}
 
 
 void render(void) {
@@ -71,7 +78,7 @@ void render(void) {
     const auto end = std::chrono::steady_clock::now();
 
 
-    if( true ) {
+    if( printRenderTime ) {
         const size_t elapsed_us = std::chrono::duration_cast<std::chrono::microseconds>( 
             end - start
         ).count();
@@ -299,7 +306,9 @@ void setupOrbit(const int _frames) {
     }
 
     const unsigned frames = (unsigned)_frames;
-    cout << "Orbit frames: " << frames << "\n";
+    if( printRotCamera ) {
+        cout << "Orbit frames: " << frames << "\n";
+    }
 
     cameraOrbit.resize(0);
     nextOrbitFrame = 0;
@@ -334,14 +343,16 @@ void setupOrbit(const int _frames) {
     for(unsigned i = 0; i < frames; i++) {
 
         cameraOrbit.emplace_back([=](void) {
-            cout << "executing frame i: " << i << "\n";
+            if( printRotCamera ) {
+                cout << "executing frame i: " << i << "\n";
+            }
             engine->camera.o = Vec3(originX, originY, originZ);
 
             engine->camera.d = Vec3(dirX, dirY, dirZ);
             engine->camera.d.normalize(); // should not be needed if only rotating
         });
 
-        if( true ) {
+        if( printRotCamera ) {
             cout << cameraOrigin.str() << "  " << cameraDir.str() << "\n";
         }
 
@@ -364,7 +375,7 @@ void setupOrbit(const int _frames) {
 
 }
 
-void nextOrbitRender(const bool render) {
+void nextOrbitRender(const bool andRender) {
     if( cameraOrbit.size() == 0 ) {
         cout << "nextOrbitRender() cannot run without setupOrbit() first\n";
         return;
@@ -376,9 +387,12 @@ void nextOrbitRender(const bool render) {
     // update the scene
     cameraOrbit[nextOrbitFrame]();
 
-    if( render ) {
+    if( andRender ) {
         // render
-        doRenderOfficial();
+        render();
+        if( copyGlCallback ) {
+            copyGlCallback();
+        }
     }
 
     nextOrbitFrame++;

@@ -128,11 +128,3 @@ int main(void) {
     return 0;
 }
 
-
-
-
-// Annoying but required for now in the tests until we fix the RayApi
-extern "C" {
-void doRenderOfficial() {
-}
-}
