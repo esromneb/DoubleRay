@@ -106,6 +106,7 @@ See Also Ratracing
 * https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-to-shading/reflection-refraction-fresnel
 * https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-overview/light-transport-ray-tracing-whitted
 * http://www.cs.unc.edu/~rademach/xroads-RT/RTarticle.html - texture mapping
+* https://github.com/fidofetch/RayCasting-Processing3 - 2d raytracer
 
 See Also RayMarching / Shaders
 ===
